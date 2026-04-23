@@ -1,0 +1,534 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, user-scalable=yes"
+    />
+    <title>Gym Split Info Card | PPL Template</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        background: linear-gradient(145deg, #e0e5ec 0%, #f0f4fa 100%);
+        font-family:
+          "Inter",
+          system-ui,
+          -apple-system,
+          "Segoe UI",
+          Roboto,
+          Helvetica,
+          Arial,
+          sans-serif;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+        padding: 2rem 1.5rem;
+      }
+
+      /* main card container — like a modern info card */
+      .split-card {
+        max-width: 1300px;
+        width: 100%;
+        background: #ffffff;
+        border-radius: 2.5rem;
+        box-shadow:
+          0 25px 45px -12px rgba(0, 0, 0, 0.25),
+          0 8px 18px rgba(0, 0, 0, 0.05);
+        overflow: hidden;
+        transition: all 0.2s ease;
+      }
+
+      /* header with accent */
+      .card-header {
+        background: #0b2b26;
+        padding: 1.6rem 2rem;
+        color: white;
+      }
+
+      .card-header h1 {
+        font-size: 1.9rem;
+        font-weight: 600;
+        letter-spacing: -0.3px;
+        display: flex;
+        align-items: center;
+        gap: 0.65rem;
+        flex-wrap: wrap;
+      }
+
+      .card-header h1 span {
+        background: #d9b48b;
+        font-size: 0.85rem;
+        font-weight: 500;
+        padding: 0.2rem 0.8rem;
+        border-radius: 40px;
+        color: #0b2b26;
+      }
+
+      .split-tagline {
+        margin-top: 0.5rem;
+        font-size: 0.95rem;
+        opacity: 0.85;
+        display: flex;
+        gap: 1rem;
+        flex-wrap: wrap;
+      }
+
+      /* content padding */
+      .card-content {
+        padding: 2rem 2rem 2rem 2rem;
+      }
+
+      /* general info grid */
+      .info-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+        gap: 1rem;
+        background: #f8fafc;
+        border-radius: 1.5rem;
+        padding: 1.25rem 1.5rem;
+        margin-bottom: 2rem;
+        border: 1px solid #eef2f8;
+      }
+
+      .info-item {
+        display: flex;
+        flex-direction: column;
+        gap: 0.3rem;
+      }
+
+      .info-label {
+        font-size: 0.7rem;
+        text-transform: uppercase;
+        font-weight: 700;
+        letter-spacing: 0.5px;
+        color: #5a6e7a;
+      }
+
+      .info-value {
+        font-weight: 600;
+        font-size: 1.05rem;
+        color: #0f172a;
+      }
+
+      .info-desc {
+        font-size: 0.85rem;
+        color: #2c3e44;
+        margin-top: 0.2rem;
+      }
+
+      /* section titles */
+      .section-title {
+        font-size: 1.35rem;
+        font-weight: 600;
+        margin: 1.8rem 0 1rem 0;
+        padding-bottom: 0.3rem;
+        border-bottom: 3px solid #d9b48b;
+        display: inline-block;
+        color: #0f2c28;
+      }
+
+      /* weekly schedule table - responsive */
+      .schedule-table {
+        overflow-x: auto;
+        margin: 1.2rem 0 1rem 0;
+        border-radius: 1.2rem;
+        border: 1px solid #e9edf2;
+        background: #ffffff;
+      }
+
+      .schedule-table table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 0.9rem;
+        min-width: 500px;
+      }
+
+      .schedule-table th {
+        background-color: #f1f5f9;
+        padding: 0.9rem 1rem;
+        text-align: left;
+        font-weight: 600;
+        color: #1e3a3a;
+      }
+
+      .schedule-table td {
+        padding: 0.8rem 1rem;
+        border-top: 1px solid #eef2f6;
+        vertical-align: top;
+      }
+
+      .schedule-table tr:hover td {
+        background-color: #fefcf7;
+      }
+
+      /* external links row (articles & videos) */
+      .links-row {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 2rem;
+        margin: 1.5rem 0 1.2rem 0;
+      }
+
+      .links-col {
+        flex: 1;
+        min-width: 220px;
+        background: #fefaf5;
+        border-radius: 1.2rem;
+        padding: 1.1rem 1.2rem;
+        border: 1px solid #ffe6cc;
+      }
+
+      .links-col h3 {
+        font-size: 1.1rem;
+        margin-bottom: 0.8rem;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        font-weight: 600;
+        color: #7b4a2e;
+      }
+
+      .links-col ul {
+        list-style: none;
+        padding-left: 0;
+      }
+
+      .links-col li {
+        margin-bottom: 0.7rem;
+      }
+
+      .links-col a {
+        text-decoration: none;
+        color: #1f6392;
+        font-weight: 500;
+        font-size: 0.85rem;
+        transition: color 0.2s;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.3rem;
+        flex-wrap: wrap;
+      }
+
+      .links-col a:hover {
+        color: #b45f2b;
+        text-decoration: underline;
+      }
+
+      /* tips section */
+      .tips-box {
+        background: #eef6f2;
+        border-left: 6px solid #d9b48b;
+        border-radius: 1.2rem;
+        padding: 1.3rem 1.6rem;
+        margin: 1.6rem 0 0.8rem 0;
+      }
+
+      .tips-box p {
+        font-weight: 600;
+        margin-bottom: 0.5rem;
+        color: #1e3a2f;
+      }
+
+      .tips-box ul {
+        margin-left: 1.2rem;
+        color: #2c4b3e;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5rem 1.5rem;
+      }
+
+      .tips-box li {
+        margin-bottom: 0.25rem;
+      }
+
+      .footer-note {
+        font-size: 0.75rem;
+        text-align: center;
+        margin-top: 2rem;
+        padding-top: 0.8rem;
+        border-top: 1px solid #e2e8f0;
+        color: #6b7b8c;
+      }
+
+      @media (max-width: 680px) {
+        .card-content {
+          padding: 1.5rem;
+        }
+        .card-header h1 {
+          font-size: 1.5rem;
+        }
+        .info-grid {
+          grid-template-columns: 1fr;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="split-card">
+      <div class="card-header">
+        <h1>
+          🔥 Push / Pull / Legs (PPL)
+          <span>intermediate</span>
+        </h1>
+        <div class="split-tagline">
+          <span>🎯 Goal: Hypertrophy & Strength</span>
+          <span>⚡ Frequency: 2x per muscle group / week</span>
+        </div>
+      </div>
+
+      <div class="card-content">
+        <!-- 📋 GENERAL INFO (structured) -->
+        <div class="info-grid">
+          <div class="info-item">
+            <div class="info-label">📆 Days needed</div>
+            <div class="info-value">3–6 days / week</div>
+            <div class="info-desc">
+              Core PPL runs 6 days (3 on / 1 off) or 3–4 day variant
+            </div>
+          </div>
+          <div class="info-item">
+            <div class="info-label">🎯 Muscle targeted</div>
+            <div class="info-value">Push: chest, shoulders, triceps</div>
+            <div class="info-desc">
+              Pull: back, biceps, rear delts | Legs: quads, glutes, hams, calves
+            </div>
+          </div>
+          <div class="info-item">
+            <div class="info-label">⏱️ Session duration</div>
+            <div class="info-value">50–75 min</div>
+            <div class="info-desc">Depends on volume & rest periods</div>
+          </div>
+          <div class="info-item">
+            <div class="info-label">🧠 Experience level</div>
+            <div class="info-value">Intermediate to Advanced</div>
+            <div class="info-desc">Beginners can use modified 3-day PPL</div>
+          </div>
+          <div class="info-item">
+            <div class="info-label">✅ Best for</div>
+            <div class="info-value">High frequency & balanced upper/lower</div>
+            <div class="info-desc">Hitting each muscle twice weekly</div>
+          </div>
+          <div class="info-item">
+            <div class="info-label">⚠️ Drawbacks</div>
+            <div class="info-value">Requires 5–6 days commitment</div>
+            <div class="info-desc">May be fatiguing for new lifters</div>
+          </div>
+        </div>
+
+        <!-- 📅 SAMPLE WEEKLY SCHEDULE -->
+        <div>
+          <div class="section-title">📅 Sample weekly schedule (6-day PPL)</div>
+          <div class="schedule-table">
+            <table>
+              <thead>
+                <tr>
+                  <th>Day</th>
+                  <th>Focus</th>
+                  <th>Example exercises</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Day 1</td>
+                  <td><strong>Push A</strong> (Chest/Shoulders/Tris)</td>
+                  <td>
+                    Barbell bench press, OHP, triceps rope pushdown, lateral
+                    raises
+                  </td>
+                </tr>
+                <tr>
+                  <td>Day 2</td>
+                  <td><strong>Pull A</strong> (Back/Biceps)</td>
+                  <td>
+                    Pull-ups, barbell rows, seated cable row, dumbbell curls
+                  </td>
+                </tr>
+                <tr>
+                  <td>Day 3</td>
+                  <td><strong>Legs A</strong> (Quad focus)</td>
+                  <td>Squats, leg press, walking lunges, calf raises</td>
+                </tr>
+                <tr>
+                  <td>Day 4</td>
+                  <td><strong>Push B</strong> (Incline/triceps)</td>
+                  <td>
+                    Incline DB press, dips, overhead triceps extension, front
+                    raises
+                  </td>
+                </tr>
+                <tr>
+                  <td>Day 5</td>
+                  <td><strong>Pull B</strong> (Deadlift/horizontal pull)</td>
+                  <td>Deadlifts, face pulls, hammer curls, lat pulldowns</td>
+                </tr>
+                <tr>
+                  <td>Day 6</td>
+                  <td><strong>Legs B</strong> (Posterior chain)</td>
+                  <td>
+                    Romanian deadlifts, hamstring curls, hip thrusts, goblet
+                    squats
+                  </td>
+                </tr>
+                <tr>
+                  <td>Day 7</td>
+                  <td><strong>Rest / Active recovery</strong></td>
+                  <td>Light cardio, mobility or full rest</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <p style="font-size: 0.8rem; color: #4f6f6b; margin-top: 6px">
+            💡 Alternate: run PPL as 3 days/week (push/pull/legs once weekly) +
+            2 accessory days.
+          </p>
+        </div>
+
+        <!-- 🔗 EXTERNAL LINKS (articles & videos) -->
+        <div>
+          <div class="section-title">🔗 External resources</div>
+          <div class="links-row">
+            <!-- articles column -->
+            <div class="links-col">
+              <h3>📖 Articles & guides</h3>
+              <ul>
+                <li>
+                  🔹
+                  <a
+                    href="https://www.bodybuilding.com/content/the-ultimate-push-pull-legs-routine.html"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    >Ultimate PPL Guide (Bodybuilding.com)</a
+                  >
+                </li>
+                <li>
+                  🔹
+                  <a
+                    href="https://www.healthline.com/health/fitness/upper-lower-split"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    >Upper/Lower Split breakdown (Healthline)</a
+                  >
+                </li>
+                <li>
+                  🔹
+                  <a
+                    href="https://www.strongerbyscience.com/full-body-vs-bro-split/"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    >Full Body vs Bro Split (Stronger by Science)</a
+                  >
+                </li>
+                <li>
+                  🔹
+                  <a
+                    href="https://www.muscleandstrength.com/workouts/push-pull-legs-workout-split"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    >PPL for mass (Muscle & Strength)</a
+                  >
+                </li>
+              </ul>
+            </div>
+            <!-- videos column -->
+            <div class="links-col">
+              <h3>🎥 Video deep dives</h3>
+              <ul>
+                <li>
+                  🎬
+                  <a
+                    href="https://www.youtube.com/watch?v=Y2Xh0XdYk4A"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    >PPL Complete Science (Jeff Nippard)</a
+                  >
+                </li>
+                <li>
+                  🎬
+                  <a
+                    href="https://www.youtube.com/watch?v=QZ5lG1O6h7k"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    >Upper/Lower Split for Mass (Jeremy Ethier)</a
+                  >
+                </li>
+                <li>
+                  🎬
+                  <a
+                    href="https://www.youtube.com/watch?v=6c6Tz7H8R6Y"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    >Best & Worst Gym Splits (RP Dr. Mike)</a
+                  >
+                </li>
+                <li>
+                  🎬
+                  <a
+                    href="https://www.youtube.com/watch?v=9pUh5jQnVWY"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    >How to structure PPL (Sean Nalewanyj)</a
+                  >
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <!-- ✅ TIPS FOR SUCCESS -->
+        <div class="tips-box">
+          <p>💪 Progressive overload & recovery — success tips</p>
+          <ul>
+            <li>✔️ Add 2–5 lbs or 1–2 reps each week on main lifts</li>
+            <li>✔️ Track your workouts (app or notebook) to avoid plateaus</li>
+            <li>
+              ✔️ Start with 2–3 working sets per exercise, adjust volume based
+              on recovery
+            </li>
+            <li>✔️ Prioritize form before ego lifting → prevents injury</li>
+            <li>✔️ Deload every 6–8 weeks: reduce intensity by 40–50%</li>
+            <li>
+              ✔️ Sleep 7–9h & eat enough protein (~1.6-2.2g/kg bodyweight)
+            </li>
+          </ul>
+        </div>
+
+        <!-- alternative split reference (extra micro info) -->
+        <div
+          style="
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            gap: 0.8rem;
+            margin-top: 1.2rem;
+            font-size: 0.75rem;
+            background: #f9fbfd;
+            padding: 0.8rem 1rem;
+            border-radius: 1rem;
+          "
+        >
+          <div>
+            🏋️ <strong>Other splits:</strong> Upper/Lower (4 days) • Full Body
+            (3 days) • Bro Split (5 days)
+          </div>
+          <div>
+            📌 <strong>Customization:</strong> Swap leg days order, add arm
+            focus, or combine shoulders with legs for flexibility.
+          </div>
+        </div>
+
+        <div class="footer-note">
+          ⚡ Gym Split Info Card — PPL template. Adjust days & volume according
+          to recovery. Always consult a professional before starting new
+          routines.
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
