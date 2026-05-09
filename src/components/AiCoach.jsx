@@ -104,6 +104,7 @@ const AICoach = () => {
       time: "09:41 AM",
     },
   ]);
+  const API_BASE = import.meta.env.VITE_API_URL || "http://localhost:5000/api";
 
   // Auto-scroll to bottom when a new message arrives
   useEffect(() => {
@@ -141,7 +142,7 @@ const AICoach = () => {
 
     try {
       // 🎯 POINTING TO YOUR BACKEND (Change 5000 to your actual backend port)
-      const response = await fetch("http://localhost:5000/api/chat", {
+      const response = await fetch(`${API_BASE}/chat`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ message: currentInput }),
