@@ -1,6 +1,7 @@
 import React from "react";
 import Header from "./Header";
 import Hr from "./Hr";
+import Button from "./Button";
 
 const FeedBackSec = () => {
   return (

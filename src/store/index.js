@@ -1,13 +1,16 @@
 // src/store/index.js
 import { configureStore } from "@reduxjs/toolkit";
-import splitReducer from "./slices/splitSlice";
 import searchReducer from "./slices/searchSlice";
-
+import exercisesReducer from "./slices/exercisesSlice";
+import authReducer from "./slices/authSlice ";
+import splitsReducer from "./slices/splitsSlice";
+import tipsReducer from "./slices/tipsSlice";
 export const store = configureStore({
   reducer: {
-    splits : splitReducer,
-    search : searchReducer,
-
-    // Add other slices here (e.g., user: userReducer)
+    search: searchReducer,
+    exercises: exercisesReducer,
+    auth: authReducer,
+    splits: splitsReducer,
+    tips: tipsReducer,
   },
 });

@@ -1,19 +1,22 @@
-import chestCardImg from "../imgs/chest-card-img.png";
-import backCardImg from "../imgs/back-card-img.png";
-import legsCardImg from "../imgs/legs-card-img.png";
-import shouldersCardImg from "../imgs/shoulders-card-img.png";
-import tricepsCardImg from "../imgs/triceps-card-img.jpg";
-import bicepsCardImg from "../imgs/biceps-card-img.png";
-import absCardImg from "../imgs/abs-card-img.png";
-import forearmsCardImg from "../imgs/forearms-card-img.png";
+import chestCardImg from "../../imgs/chest-card-img.png";
+import backCardImg from "../../imgs/back-card-img.png";
+import legsCardImg from "../../imgs/legs-card-img.png";
+import shouldersCardImg from "../../imgs/shoulders-card-img.png";
+import tricepsCardImg from "../../imgs/triceps-card-img.jpg";
+import bicepsCardImg from "../../imgs/biceps-card-img.png";
+import absCardImg from "../../imgs/abs-card-img.png";
+import forearmsCardImg from "../../imgs/forearms-card-img.png";
+import cover from "../../imgs/gym-cover-02.jpg";
+
 import { useNavigate } from "react-router";
-import Header from "../components/Header";
-import Card from "../components/Card";
-import Hr from "../components/Hr";
-import cover from "../imgs/gym-cover-02.jpg";
-import Anatomy from "../components/Anatomy";
-import { useEffect } from "react";
-import QuickLink from "../components/QuickLink";
+import { useEffect, useRef } from "react";
+
+import Header from "../../components/Header";
+import Card from "../../components/Card";
+import Hr from "../../components/Hr";
+import Anatomy from "../../components/Anatomy";
+import QuickLink from "../../components/QuickLink";
+
 const muscleGroups = [
   {
     id: "01",
@@ -87,6 +90,7 @@ const Library = () => {
     });
   }, []);
 
+  const libraryRef = useRef(null);
   return (
     <div>
       <Header
@@ -101,7 +105,7 @@ const Library = () => {
         bodyClassName="max-w-[280px]"
       />
 
-      <QuickLink />
+      <QuickLink label="go to library" targetRef={libraryRef} />
       <Hr />
       <section>
         <Header
@@ -114,7 +118,7 @@ const Library = () => {
         <Anatomy />
       </section>
       <Hr />
-      <section>
+      <section ref={libraryRef}>
         <Header
           className="mb-16"
           plainTitle="EXERCISE"
@@ -134,7 +138,7 @@ const Library = () => {
               image={group.img}
               key={group.id}
               onClick={() => {
-                navigate("/exercises");
+                navigate("/library/" + group.title.toLowerCase());
               }}
             />
           ))}

@@ -1,5 +1,5 @@
-import Card from "../components/Card";
-import Header from "../components/Header";
+import Card from "../../components/Card";
+import Header from "../../components/Header";
 const tipsContent = [
   {
     tag: "NUTRITION",
@@ -140,7 +140,7 @@ const FilterBar = ({ activeFilter, setActiveFilter }) => {
   const filters = ["All", "Exercises", "Splits", "Nutrition", "Mindset"];
 
   return (
-    <div className="sticky top-16 z-30 w-full bg-[#131313]/80 backdrop-blur-md border-b border-white/5 overflow-hidden">
+    <div className="sticky top-16 z-30 w-full bg-[#131313] border-b border-white/5 overflow-hidden">
       <div className="max-w-7xl mx-auto">
         <div className="flex flex-nowrap overflow-x-auto no-scrollbar gap-3 md:px-0 py-6 scroll-smooth">
           {filters.map((filter) => {

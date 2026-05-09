@@ -1,9 +1,9 @@
 const Hr = ({ label, className = "", py = "py-10" }) => {
   return (
-    <div className={`max-w-7xl mx-auto relative ${className}`}>
+    <div className={`max-w-7xl mx-auto mt-20 mb-10 relative ${className}`}>
       {label ? (
         /* Variant 1: Label with Left-Aligned Gradient */
-        <div className={`max-w-7xl mx-auto  mt-20 mb-10 relative ${py}`}>
+        <div className={`max-w-7xl mx-auto  relative ${py}`}>
           <div className="h-px w-full bg-gradient-to-r from-white/20 via-white/5 to-transparent"></div>
 
           <div className="absolute top-1/2 left-8 -translate-y-1/2 pr-12 flex items-center group">

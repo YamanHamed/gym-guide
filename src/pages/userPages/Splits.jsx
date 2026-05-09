@@ -1,8 +1,8 @@
 import React from "react";
-import cover from "../imgs/gym-cover-03.webp";
-import Header from "../components/Header";
-import Card from "../components/Card";
-import Hr from "../components/Hr";
+import cover from "../../imgs/gym-cover-03.webp";
+import Header from "../../components/Header";
+import Card from "../../components/Card";
+import Hr from "../../components/Hr";
 import { useNavigate } from "react-router";
 const Splits = () => {
   const navigate = useNavigate();

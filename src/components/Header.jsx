@@ -12,7 +12,7 @@ const Header = ({
   bodyClassName = "",
   dir,
   pageHeader = false,
-  subTitle = "Build your physique smartly",
+  // subTitle = "Build your physique smartly",
 }) => {
   // PAGE HEADER
   if (pageHeader) {

@@ -195,7 +195,7 @@ function Card({
     return (
       <div
         onClick={onClick}
-        className={` relative group  transition-all duration-500 overflow-hidden cursor-pointer
+        className={`h-full relative group flex justify-between flex-col  transition-all duration-500 overflow-hidden cursor-pointer
           ${rounded || ""}
           ${bgStyles[bg] || ""} 
           ${border && !className.includes("border") ? borderStyles[border] : ""}
@@ -203,12 +203,12 @@ function Card({
         `}
       >
         {/* == IMAGES == */}
-        <div className=" w-full overflow-hidden bg-surface-container-low relative border-b border-white/10">
+        <div className=" w-full  overflow-hidden bg-surface-container-low relative border-b border-white/10">
           <img className="w-full h-full object-cover " src={image} />
         </div>
 
         {/* == CONTENT == */}
-        <div className="flex-1 flex flex-col py-8  px-6  md:p-8 ">
+        <div className="flex-1  flex flex-col py-8  px-6  md:p-8 ">
           {/* == TITLE == */}
           <div className={`flex items-top justify-between gap-3 mb-6`}>
             <h2 className="text-2xl text-white uppercase  italic font-black ">
@@ -261,7 +261,7 @@ function Card({
       >
         {/* === DESKTOP LAYOUT  ===*/}
         {reverse ? (
-          <div className="hidden md:flex  flex-row min-h-[300px]">
+          <div className="hidden h-full md:flex  flex-row min-h-[300px]">
             {/* == IMAGE ==*/}
             <div className="flex-2 relative overflow-hidden">
               <img
@@ -313,7 +313,7 @@ function Card({
             </div>
           </div>
         ) : (
-          <div className="hidden md:flex  flex-row min-h-[300px]">
+          <div className="hidden h-full md:flex  flex-row min-h-[300px]">
             {/* == CONTENT == */}
             <div className="flex-1 flex flex-col p-12 pe-6">
               {/* == TITLE == */}
@@ -412,7 +412,6 @@ function Card({
       </div>
     );
   }
-
   return (
     <div
       className={`
@@ -498,5 +497,4 @@ function Card({
     </div>
   );
 }
-
 export default Card;

@@ -1,9 +1,9 @@
 import React, { useState } from "react";
-import cover from "../imgs/gym-cover-03.webp";
-import Header from "../components/Header";
-import Card from "../components/Card";
-import Hr from "../components/Hr";
-import Note from "../components/Note";
+import cover from "../../imgs/gym-cover-03.webp";
+import Header from "../../components/Header";
+import Card from "../../components/Card";
+import Hr from "../../components/Hr";
+import Note from "../../components/Note";
 import { useNavigate } from "react-router";
 const pplSchedule = [
   {
