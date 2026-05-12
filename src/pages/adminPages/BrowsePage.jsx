@@ -19,14 +19,19 @@ import { deleteTip, fetchTips } from "../../store/slices/tipsSlice";
 const BrowsePage = () => {
   // == PARAMS
   const { type } = useParams();
+  const navigate = useNavigate();
 
-  // 404
-  if (
-    type.toLowerCase() !== "exercises" &&
-    type.toLowerCase() !== "splits" &&
-    type.toLowerCase() !== "tips"
-  ) {
-    return <div>404 </div>; // TODO : navigate to a 404 page
+  const validTypes = ["exercises", "splits", "tips"];
+
+  useEffect(() => {
+    if (!type || !validTypes.includes(type.toLowerCase())) {
+      navigate("/404", { replace: true, state: { role: "admin" } });
+    }
+  }, [type, navigate]);
+
+  // If invalid, return null while redirecting
+  if (!type || !validTypes.includes(type.toLowerCase())) {
+    return null;
   }
 
   return (

@@ -1,37 +1,35 @@
 import Header from "../../components/Header";
 import Hr from "../../components/Hr";
 import Card from "../../components/Card";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 // import { useDispatch, useSelector } from "react-redux";
 import { MUSCLE_DETAILS } from "../../constants/muscleData";
+import { useEffect } from "react";
 // import { fetchExercisesByMuscle } from "../store/slices/exercisesSlice";
 
 const MusclePage = () => {
   const { muscle } = useParams(); // 'chest', 'back', etc.
-  // const dispatch = useDispatch();
+
+  const navigate = useNavigate();
+  useEffect(() => {
+    if (!muscle || !MUSCLE_DETAILS[muscle]) {
+      navigate("/404", { replace: true });
+    }
+  }, [muscle, navigate]);
 
   // == THE MUSCLE DATA ==
   const MuscleData = MUSCLE_DETAILS[muscle];
 
   // == THE EXERCISES DATA ==
-  // const { data: exercises, loading } = useSelector((state) => state.exercises);
-
-  // useEffect(() => {
-  //   if (muscle) {
-  //     dispatch(fetchExercisesByMuscle(muscle));
-  //   }
-  // }, [muscle, dispatch]);
-
-  // if (!MuscleData) return <div>Muscle not found.</div>; // todo: 404 handling
 
   return (
     <div>
       <Header
         className="mb-16"
         pageHeader={true}
-        plainTitle={MuscleData.pageHeader.plainTitle}
-        highlightTitle={MuscleData.pageHeader.highlightedTitle}
-        body={MuscleData.pageHeader.body}
+        plainTitle={MuscleData?.pageHeader?.plainTitle}
+        highlightTitle={MuscleData?.pageHeader?.highlightedTitle}
+        body={MuscleData?.pageHeader?.body}
         image="https://images.unsplash.com/photo-1534438327276-14e5300c3a48?q=80&w=1000&auto=format&fit=crop"
         imageClassName="opacity-30"
         titleSize="text-5xl md:text-7xl"
@@ -43,13 +41,13 @@ const MusclePage = () => {
       <section>
         <Header
           className="mb-16"
-          plainTitle={MuscleData.sectionHeader.plainTitle}
-          highlightTitle={MuscleData.sectionHeader.highlightedTitle}
-          body={MuscleData.sectionHeader.body}
+          plainTitle={MuscleData?.sectionHeader?.plainTitle}
+          highlightTitle={MuscleData?.sectionHeader?.highlightedTitle}
+          body={MuscleData?.sectionHeader?.body}
         />
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-12">
-          {MuscleData.heads.map((head) => {
+          {MuscleData?.heads.map((head) => {
             return (
               <Card
                 key={head.id}

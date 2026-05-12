@@ -8,7 +8,6 @@ const ProtectedRoute = () => {
   const { isAuthenticated, status } = useSelector((state) => state.auth);
 
   useEffect(() => {
-    // Validate token every time this route is accessed
     dispatch(getMe());
   }, [dispatch]);
   if (status === "loading") return <div>Loading...</div>;

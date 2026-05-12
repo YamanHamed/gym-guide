@@ -20,11 +20,14 @@ import BrowsePage from "./pages/adminPages/BrowsePage";
 import { Toaster } from "react-hot-toast";
 import Login from "./pages/adminPages/Login";
 import ProtectedRoute from "./components/ProtectedRoute";
+import NotFound from "./pages/NotFound";
+import ScrollToTop from "./components/ScrolltoTop";
 // import { useState, useEffect, useRef } from "react";
 function App() {
   return (
     <>
       <Toaster position="top-right" />
+      <ScrollToTop />
       <Routes>
         <Route path="/" element={<UserLayout />}>
           <Route index element={<Home />} />
@@ -38,6 +41,7 @@ function App() {
 
         <Route path="/dashboard/login" element={<Login />} />
         <Route path="/login" element={<Login />} />
+
         <Route element={<ProtectedRoute />}>
           <Route path="/dashboard" element={<AdminLayout />}>
             <Route index element={<DashboardHome />} />
@@ -46,7 +50,9 @@ function App() {
             <Route path="create/:type" element={<CreatePage />} />
           </Route>
         </Route>
-        <Route path="*" element={<div>404</div>} />
+
+        <Route path="*" element={<NotFound />} />
+        <Route path="/404" element={<NotFound />} />
       </Routes>
     </>
   );

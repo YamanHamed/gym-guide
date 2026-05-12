@@ -9,7 +9,7 @@ import forearmsCardImg from "../../imgs/forearms-card-img.png";
 import cover from "../../imgs/gym-cover-02.jpg";
 
 import { useNavigate } from "react-router";
-import { useEffect, useRef } from "react";
+import { useRef } from "react";
 
 import Header from "../../components/Header";
 import Card from "../../components/Card";
@@ -82,13 +82,6 @@ const muscleGroups = [
 ];
 const Library = () => {
   const navigate = useNavigate();
-  useEffect(() => {
-    window.scrollTo({
-      top: 0,
-      left: 0,
-      behavior: "smooth",
-    });
-  }, []);
 
   const libraryRef = useRef(null);
   return (
