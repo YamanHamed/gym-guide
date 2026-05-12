@@ -21,7 +21,7 @@ import { Toaster } from "react-hot-toast";
 import Login from "./pages/adminPages/Login";
 import ProtectedRoute from "./components/ProtectedRoute";
 import NotFound from "./pages/NotFound";
-import ScrollToTop from "./components/ScrolltoTop";
+import ScrollToTop from "./components/ScrollToTop";
 // import { useState, useEffect, useRef } from "react";
 function App() {
   return (
