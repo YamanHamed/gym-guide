@@ -1,4 +1,9 @@
 import { useState, useRef, useEffect } from "react";
+import Input from "./Input";
+import Button from "./Button";
+import { useDispatch, useSelector } from "react-redux";
+import { addUserMessage, sendMessage } from "../store/slices/chatSlice";
+import toast from "react-hot-toast";
 
 // Sub-component for individual messages
 const Message = ({ role, content, time }) => {
@@ -11,7 +16,7 @@ const Message = ({ role, content, time }) => {
         {isAI && (
           <div className="w-6 h-6 rounded-md bg-surface-container-high flex items-center justify-center">
             <span
-              className="material-symbols-outlined text-[#0070FF] text-sm"
+              className="notranslate material-symbols-outlined text-[#0070FF] text-sm"
               style={{ fontVariationSettings: "'FILL' 1" }}
             >
               smart_toy
@@ -42,7 +47,7 @@ const LoadingDots = () => {
       <div className="flex items-center gap-2 mb-2 ml-1">
         <div className="w-6 h-6 rounded-md bg-surface-container-high flex items-center justify-center">
           <span
-            className="material-symbols-outlined text-[#0070FF] text-sm animate-pulse"
+            className="notranslate material-symbols-outlined text-[#0070FF] text-sm animate-pulse"
             style={{ fontVariationSettings: "'FILL' 1" }}
           >
             smart_toy
@@ -70,41 +75,33 @@ const LoadingDots = () => {
     </div>
   );
 };
+const quickActions = [
+  {
+    id: 1,
+    label: "Form Check",
+    prompt: "Can you help me check my form for my deadlift?",
+  },
+  {
+    id: 2,
+    label: "Meal Plan",
+    prompt: "I need a high-protein meal plan for lean bulking.",
+  },
+  {
+    id: 3,
+    label: "Fix My Split",
+    prompt: "My current 3-day split feels stale. How can I optimize it?",
+  },
+  {
+    id: 4,
+    label: "Supplement Guide",
+    prompt: "What are the essential supplements for muscle recovery?",
+  },
+];
 const AICoach = () => {
   const [inputValue, setInputValue] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
   const scrollRef = useRef(null);
-
-  const quickActions = [
-    {
-      id: 1,
-      label: "Form Check",
-      prompt: "Can you help me check my form for my deadlift?",
-    },
-    {
-      id: 2,
-      label: "Meal Plan",
-      prompt: "I need a high-protein meal plan for lean bulking.",
-    },
-    {
-      id: 3,
-      label: "Fix My Split",
-      prompt: "My current 3-day split feels stale. How can I optimize it?",
-    },
-    {
-      id: 4,
-      label: "Supplement Guide",
-      prompt: "What are the essential supplements for muscle recovery?",
-    },
-  ];
-  const [messages, setMessages] = useState([
-    {
-      role: "assistant",
-      content: "Welcome back, ready to crush your workout ?",
-      time: "09:41 AM",
-    },
-  ]);
-  const API_BASE = import.meta.env.VITE_API_URL || "http://localhost:5000/api";
+  const dispatch = useDispatch();
+  const { messages, isLoading } = useSelector((state) => state.chat);
 
   // Auto-scroll to bottom when a new message arrives
   useEffect(() => {
@@ -125,8 +122,7 @@ const AICoach = () => {
 
   const handleSendMessage = async () => {
     if (!inputValue.trim() || isLoading) return;
-
-    const userMessage = {
+    const userMsg = {
       role: "user",
       content: inputValue,
       time: new Date().toLocaleTimeString([], {
@@ -134,36 +130,13 @@ const AICoach = () => {
         minute: "2-digit",
       }),
     };
-
-    setMessages((prev) => [...prev, userMessage]);
-    const currentInput = inputValue;
+    dispatch(addUserMessage(userMsg));
+    const currentMsg = inputValue;
     setInputValue("");
-    setIsLoading(true);
-
     try {
-      // 🎯 POINTING TO YOUR BACKEND (Change 5000 to your actual backend port)
-      const response = await fetch(`${API_BASE}/chat`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ message: currentInput }),
-      });
-
-      const data = await response.json();
-
-      const aiMessage = {
-        role: "assistant",
-        content: data.reply,
-        time: new Date().toLocaleTimeString([], {
-          hour: "2-digit",
-          minute: "2-digit",
-        }),
-      };
-
-      setMessages((prev) => [...prev, aiMessage]);
-    } catch (error) {
-      console.error("Frontend Fetch Error:", error);
-    } finally {
-      setIsLoading(false);
+      await dispatch(sendMessage(currentMsg)).unwrap();
+    } catch (err) {
+      toast.error(err || "Failed to get AI response");
     }
   };
 
@@ -210,31 +183,30 @@ const AICoach = () => {
 
           {/* Main Input Container */}
           <div className="relative group">
-            <div className="absolute -inset-0.5 bg-gradient-to-r from-[#0070FF]/20 to-[#0070FF]/20 rounded-full blur opacity-50 group-focus-within:opacity-100 transition duration-500"></div>
-            <div className="relative flex items-center bg-surface-container rounded-full p-2 border border-white/10 shadow-2xl">
-              {/* <button className="flex items-center justify-center w-12 h-12 rounded-full text-zinc-500 hover:text-[#0070FF] transition-colors">
-                <span className="material-symbols-outlined">add_circle</span>
-              </button> */}
-              <input
-                className="flex-grow bg-transparent border-none focus:ring-0 text-on-surface placeholder-zinc-600 ps-4 px-2 py-3 text-sm outline-none"
+            {/* Outer glow (same as your original) */}
+            <div className="absolute -inset-0.5 bg-gradient-to-r from-[#0070FF]/20 to-[#0070FF]/20 rounded-xl blur opacity-50 group-focus-within:opacity-100 transition duration-500"></div>
+
+            {/* Container: relative for absolute button */}
+            <div className="relative bg-surface-container rounded-xl border border-white/10 shadow-2xl">
+              {/* Your Input component as a textarea */}
+              <Input
+                type="textarea"
                 placeholder="Ask Coach about your performance..."
-                type="text"
                 value={inputValue}
                 onChange={(e) => setInputValue(e.target.value)}
+                rows={1}
+                className="w-full pr-12 resize-none overflow-hidden !bg-transparent !border-none focus:ring-0 mb-20"
               />
-              <button
+
+              {/* Send button – absolute at bottom-right */}
+              <Button
                 onClick={handleSendMessage}
-                className="flex items-center justify-center w-12 h-12 rounded-full bg-[#0070FF] text-white shadow-lg hover:scale-105 active:scale-90 transition-all"
-              >
-                <span
-                  className="material-symbols-outlined"
-                  style={{ fontVariationSettings: "'FILL' 1" }}
-                >
-                  send
-                </span>
-              </button>
+                icon="arrow_upward"
+                className="absolute bottom-2 right-2 flex items-center justify-center w-10 h-10 m-1 !rounded-1xl"
+              />
             </div>
           </div>
+
           <p className="text-center text-[10px] text-zinc-600 uppercase tracking-widest font-bold">
             Coach can make mistakes. Verify critical training data.
           </p>

@@ -5,6 +5,7 @@ import exercisesReducer from "./slices/exercisesSlice";
 import authReducer from "./slices/authSlice ";
 import splitsReducer from "./slices/splitsSlice";
 import tipsReducer from "./slices/tipsSlice";
+import chatReducer from "./slices/chatSlice";
 export const store = configureStore({
   reducer: {
     search: searchReducer,
@@ -12,5 +13,6 @@ export const store = configureStore({
     auth: authReducer,
     splits: splitsReducer,
     tips: tipsReducer,
+    chat: chatReducer,
   },
 });
