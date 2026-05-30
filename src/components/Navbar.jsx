@@ -7,8 +7,8 @@ import Button from "./Button";
 const USER_NAV_LINKS = [
   { name: "Library", path: "library" },
   { name: "Splits", path: "splits" },
-  { name: "Ai Coach", path: "aicoach" },
   { name: "Tips", path: "tips" },
+  { name: "Ai Coach", path: "aicoach" },
 ];
 const ADMIN_NAV_LINKS = [
   { name: "Exercises", path: "exercises" },
@@ -109,7 +109,12 @@ const Navbar = ({ role = "user" }) => {
             })}
 
             <div className="mt-4 pt-6 border-t border-white/5">
-              <SearchBar mobile={true} />
+              <SearchBar
+                mobile={true}
+                onSearchEffect={() => {
+                  setIsOpen(false);
+                }}
+              />
             </div>
           </div>
         </div>
@@ -134,7 +139,7 @@ const Navbar = ({ role = "user" }) => {
             </div>
           </div>
 
-          <SearchBar />
+          <SearchBar role="admin" />
         </div>
       </nav>
     );

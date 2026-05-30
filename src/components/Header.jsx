@@ -26,7 +26,7 @@ const Header = ({
           <div className="absolute hidden sm:block inset-0 z-0 overflow-hidden pointer-events-none">
             <img
               src={image}
-              className={`w-full h-full object-cover object-center transition-opacity duration-1000 opacity-60 mix-blend-lighten ${imageClassName}`}
+              className={`w-full h-full object-cover object-center transition-opacity opacity-70 duration-1000 mix-blend-lighten ${imageClassName}`}
               alt=""
             />
 
@@ -37,7 +37,7 @@ const Header = ({
               className="absolute inset-0"
               style={{
                 background:
-                  "radial-gradient(ellipse at center, transparent 20%, #131313 100%)",
+                  "radial-gradient(ellipse at center, transparent 70%, #131313 100%)",
               }}
             ></div>
 

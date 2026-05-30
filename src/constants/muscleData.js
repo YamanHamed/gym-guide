@@ -1,259 +1,253 @@
+import upperChestImg from "../imgs/muscles/upper-chest.png";
+import midChestImg from "../imgs/muscles/middle-chest.png";
+import lowerChestImg from "../imgs/muscles/lower-chest.png";
+
+import latsImg from "../imgs/muscles/lats-back.png";
+import upperBackImg from "../imgs/muscles/upper-back.png";
+import lowerBackImg from "../imgs/muscles/lower-back.png";
+// import trapsImg from "../imgs/muscles/traps-back.png";
+// import middleBackImg from "../imgs/muscles/middle-back.png";
+
+import frontdeltImg from "../imgs/muscles/front-shoulders.png";
+import sidedeltImg from "../imgs/muscles/side-shoulders.png";
+import reardeltImg from "../imgs/muscles/rear-shoulders.png";
+
+import quadsImg from "../imgs/muscles/quads-legs.png";
+import hamsImg from "../imgs/muscles/hamstrings-legs.png";
+import calvesImg from "../imgs/muscles/calves-legs.png";
+
+import shortBicepsImg from "../imgs/muscles/short-biceps.png";
+import longBicepsImg from "../imgs/muscles/long-biceps.png";
+import brachialisImg from "../imgs/muscles/brachi-biceps.png";
+
+import tricepsLongImg from "../imgs/muscles/long-triceps.png";
+import tricepsLateralImg from "../imgs/muscles/lateral-triceps.png";
+import tricepsMedialImg from "../imgs/muscles/medial-triceps.png";
+
+import flexorsForearmsImg from "../imgs/muscles/flexors-forearms.png";
+import extensorsForearmsImg from "../imgs/muscles/extensors-forearms.png";
+import brachioForearmsImg from "../imgs/muscles/brachirad-forearms.png";
+
 export const MUSCLE_DETAILS = {
   chest: {
     pageHeader: {
       plainTitle: "Chest",
-      highlightedTitle: "Pectoralis",
-      body: "The powerhouse of upper body pushing movements and horizontal adduction.",
+      highlightedTitle: "Muscle",
+      body: "the needed knowledge to build a powerful chest",
     },
     sectionHeader: {
       plainTitle: "Chest",
       highlightedTitle: "Anatomy",
-      body: "The chest is primarily composed of the Pectoralis Major and the Pectoralis Minor. Understanding how these fibers run is the key to choosing the right pressing angles for a balanced physique.",
+      body: "The chest has three main heads : upper ,middle and lower. ",
+      note: " Any chest exercise will target all three heads but when we say that this is an upper chest exercise for an example , this means that the exercise activates the upper head the most , but it still activates the middle and lower head with lesser precentage.",
     },
+    headNames: ["upper chest", "middle chest", "lower chest"],
     heads: [
       {
         id: 1,
         name: "Upper Chest ",
         description:
-          "These fibers originate from the clavicle (collarbone) and run down toward the humerus. They are primarily responsible for shoulder flexion—lifting your arms upward and inward.",
-        image: "/assets/anatomy/chest-upper.png",
-        links: [
-          {
-            label: "Incline Press Mechanics",
-            url: "https://example.com/upper-pecs",
-          },
-          {
-            label: "Shoulder Flexion Study",
-            url: "https://example.com/flexion",
-          },
-        ],
+          "The upper chest is one hardest heads to grow , it is resposible of the 3d look of the chest. It is mostly activated by incline movements ( incline press, incline flyes ...etc) ",
+        image: upperChestImg,
       },
       {
         id: 2,
         name: "Middle Chest",
         description:
-          "The largest portion of the chest. These fibers run horizontally from the sternum. Their main job is horizontal adduction—bringing your arms together across the center of your body.",
-        image: "/assets/anatomy/chest-mid.png",
-        links: [
-          {
-            label: "Flat Bench Optimization",
-            url: "https://example.com/mid-pecs",
-          },
-          {
-            label: "Horizontal Adduction",
-            url: "https://example.com/adduction",
-          },
-        ],
+          "The largest head of the chest so it gives the size. It is mostly activated by flat movements ( flat press, flat flyes ...etc) ",
+        image: midChestImg,
       },
       {
         id: 3,
         name: "Lower Chest",
         description:
-          "The lower fibers of the Pectoralis Major. They originate from the upper part of the abdominal sheath and help with downward pushing movements and shoulder extension.",
-        image: "/assets/anatomy/chest-lower.png",
-        links: [
-          {
-            label: "Decline Press Benefits",
-            url: "https://example.com/lower-pecs",
-          },
-          {
-            label: "Dip Mechanics",
-            url: "https://example.com/dips",
-          },
-        ],
+          "The lower chest is mostly activated by decline movements ( decline press, dips ...etc)",
+        image: lowerChestImg,
       },
     ],
   },
+
   back: {
     pageHeader: {
       plainTitle: "Back",
-      highlightedTitle: "Latissimus Dorsi",
-      body: "The cornerstone of the 'V-taper.' The back is a complex network of muscles responsible for pulling and stabilization.",
+      highlightedTitle: "Muscle",
+      body: "the needed knowledge to build a powerful back",
     },
     sectionHeader: {
       plainTitle: "Back",
       highlightedTitle: "Anatomy",
-      body: "From the broad lats to the thick traps, training the back requires multiple angles to hit all the distinct muscle groups.",
+      body: "The back has three main heads: lats (wing muscles), upper back and lower back.",
+      note: "Any back exercise will target all three heads but when we say that this is a lat exercise for example, this means that the exercise activates the lats the most, but it still activates the upper and lower back with lesser percentage.",
     },
+    headNames: ["lats", "upper back", "lower back"],
     heads: [
       {
         id: 1,
-        name: "Latissimus Dorsi (Lats)",
+        name: "Lats ",
         description:
-          "The largest muscle in the upper body. These fibers run diagonally and are responsible for pulling the arms down and back.",
-        image: "/assets/anatomy/back-lats.png",
-        links: [
-          { label: "Vertical Pulling Mechanics", url: "#" },
-          { label: "Lat Activation Guide", url: "#" },
-        ],
+          "The lats give your back that V‑shape look. They are mostly activated by pulling movements (pull‑ups, lat pulldowns, rows).",
+        image: latsImg,
       },
       {
         id: 2,
-        name: "Trapezius (Traps)",
+        name: "Upper Back",
         description:
-          "A large diamond-shaped muscle covering the upper and mid back. It controls scapular elevation and retraction.",
-        image: "/assets/anatomy/back-traps.png",
-        links: [{ label: "Scapular Movement Study", url: "#" }],
+          "The upper back adds thickness and helps with posture. It is mostly activated by rowing movements (bent‑over rows, face pulls, shrugs).",
+        image: upperBackImg,
       },
       {
         id: 3,
-        name: "Rhomboids & Lower Back",
+        name: "Lower Back",
         description:
-          "Key for posture and pulling the shoulder blades together. The Erector Spinae supports the spine during heavy lifts.",
-        image: "/assets/anatomy/back-lower.png",
-        links: [{ label: "Deadlift Form", url: "#" }],
+          "The lower back stabilises your spine and helps with heavy lifts. It is mostly activated by extension movements (deadlifts, back extensions).",
+        image: lowerBackImg,
       },
     ],
   },
   shoulders: {
     pageHeader: {
       plainTitle: "Shoulders",
-      highlightedTitle: "Deltoids",
-      body: "The 3D look comes from well-rounded deltoids. Crucial for all overhead and pushing movements.",
+      highlightedTitle: "Muscle",
+      body: "the needed knowledge to build strong, rounded shoulders",
     },
     sectionHeader: {
       plainTitle: "Shoulders",
       highlightedTitle: "Anatomy",
-      body: "The deltoid is split into three distinct heads: front, side, and rear. Each requires a different movement pattern to fully engage.",
+      body: "The shoulder (delts) has three heads: front, side, and rear.",
     },
+    headNames: ["front delt", "side delt", "rear delt"],
     heads: [
       {
         id: 1,
-        name: "Anterior (Front) Delt",
+        name: "Front Delt ",
         description:
-          "Primarily used in pressing and front raising. Originates from the collarbone and assists in internal rotation.",
-        image: "/assets/anatomy/shoulders-front.png",
-        links: [{ label: "Front Raise Form", url: "#" }],
+          "The front delt is involved in most pressing movements. It is mostly activated by overhead presses and front raises.",
+        image: frontdeltImg,
       },
       {
         id: 2,
-        name: "Lateral (Side) Delt",
+        name: "Side Delt ",
         description:
-          "Responsible for shoulder abduction (lifting arms to the side). This head creates shoulder width.",
-        image: "/assets/anatomy/shoulders-side.png",
-        links: [{ label: "Side Lateral Mechanics", url: "#" }],
+          "The side delt gives your shoulder width. It is mostly activated by lateral raises.",
+        image: sidedeltImg,
       },
       {
         id: 3,
-        name: "Posterior (Rear) Delt",
+        name: "Rear Delt ",
         description:
-          "Located at the back of the shoulder. Essential for shoulder health and posture. Pulls the arms backward.",
-        image: "/assets/anatomy/shoulders-rear.png",
-        links: [{ label: "Face Pull Science", url: "#" }],
+          "The rear delt gives the shoulder the 3d look. It is mostly activated by face pulls, reverse flyes.",
+        image: reardeltImg,
       },
     ],
   },
   biceps: {
     pageHeader: {
       plainTitle: "Biceps",
-      highlightedTitle: "Brachii",
-      body: "Small but iconic. The biceps are responsible for elbow flexion and forearm supination (turning the palm up).",
+      highlightedTitle: "Muscle",
+      body: "the needed knowledge to build arm peaks",
     },
     sectionHeader: {
       plainTitle: "Biceps",
       highlightedTitle: "Anatomy",
-      body: "Though small, the biceps have two distinct heads and an underlying muscle that dictates the 'peak' and thickness of the arm.",
+      body: "The biceps has two heads: long head (outer) and short head (inner). A third muscle, the brachialis, sits underneath and adds thickness.",
+      note: "Any biceps exercise will target all heads but when we say that this is a long head exercise, this means that the exercise activates the outer head the most, but it still activates the short head with lesser percentage.",
     },
+    headNames: ["long head", "short head", "brachialis"],
     heads: [
       {
         id: 1,
         name: "Long Head (Outer)",
         description:
-          "The outer portion of the bicep that creates the 'peak.' It runs over the shoulder joint and is best targeted with arms behind the body.",
-        image: "/assets/anatomy/biceps-long.png",
-        links: [{ label: "Bicep Peak Science", url: "#" }],
+          "The long head is mostly activated by curls but when your arms are behind your body (incline curls, cable curls with elbows back).",
+        image: longBicepsImg,
       },
       {
         id: 2,
         name: "Short Head (Inner)",
         description:
-          "The inner portion that provides bicep thickness and width. It is best targeted with arms in front of the body.",
-        image: "/assets/anatomy/biceps-short.png",
-        links: [{ label: "Preacher Curl Mechanics", url: "#" }],
+          "The short head is mostly activated by curls but when your arms are infront of your body (preacher curls).",
+        image: shortBicepsImg,
+      },
+      {
+        id: 3,
+        name: "Brachialis",
+        description:
+          "The brachialis gives more thickness and width to the arm. It is mostly activated by hammer curls.",
+        image: brachialisImg,
       },
     ],
   },
   triceps: {
     pageHeader: {
       plainTitle: "Triceps",
-      highlightedTitle: "Brachii",
-      body: "Making up two-thirds of the arm's mass, the triceps are the primary extensors of the elbow.",
+      highlightedTitle: "Muscle",
+      body: "the needed knowledge to build powerful arms",
     },
     sectionHeader: {
       plainTitle: "Triceps",
       highlightedTitle: "Anatomy",
-      body: "Named for its three heads, the triceps require varied arm positions to ensure each head is properly stimulated.",
+      body: "The triceps has three heads: long head (inner), lateral head (outer), and medial head (small head near elbow).",
+      note: "Any triceps exercise will target all three heads but when we say that this is a long head exercise, this means that the exercise activates this head the most, but it still activates the lateral and medial heads with lesser percentage.",
     },
+    headNames: ["long head", "lateral head", "medial head"],
     heads: [
       {
         id: 1,
         name: "Long Head",
         description:
-          "The largest head. It attaches to the scapula, meaning it is best stretched when the arm is overhead.",
-        image: "/assets/anatomy/triceps-long.png",
-        links: [{ label: "Overhead Extension Benefits", url: "#" }],
+          "The long head is the biggest head of the triceps. It is mostly activated by overhead extensions (overhead cable/dumbbell extensions).",
+        image: tricepsLongImg,
       },
       {
         id: 2,
         name: "Lateral Head",
         description:
-          "Located on the outside of the arm. Responsible for the 'horseshoe' look. Targeted by pushdowns.",
-        image: "/assets/anatomy/triceps-lateral.png",
-        links: [{ label: "Pushdown Variations", url: "#" }],
+          "The lateral head creates the horseshoe shape on the outside of your arm. It is mostly activated by pushdowns (cable pushdowns).",
+        image: tricepsLateralImg,
       },
       {
         id: 3,
         name: "Medial Head",
         description:
-          "The deepest head, mostly visible near the elbow. Provides stability and consistent force.",
-        image: "/assets/anatomy/triceps-medial.png",
-        links: [{ label: "Elbow Stability", url: "#" }],
+          "The medial head is small head but helps with pressing movements. It is mostly activated by any triceps exercise especially lateral head exercises.",
+        image: tricepsMedialImg,
       },
     ],
   },
   legs: {
     pageHeader: {
       plainTitle: "Legs",
-      highlightedTitle: "Lower Body",
-      body: "The foundation of human movement. The largest and most powerful muscle groups in the body.",
+      highlightedTitle: "Muscle",
+      body: "the needed knowledge to build strong, powerful legs",
     },
     sectionHeader: {
       plainTitle: "Legs",
       highlightedTitle: "Anatomy",
-      body: "Training legs involves complex multi-joint movements that engage the quads, hamstrings, glutes, and calves.",
+      body: "Your legs have three main groups: quads (front), hamstrings (back), and calves (lower leg).",
+      note: "Legs is a complex muscle group and there are many exercises that target each group. But some exercises like squat work all groups ( this kind of exercise is called a compound movement ), and some exercises target one group more than the others (this kind of exercise is called an isolation movement ) ",
     },
+    headNames: ["quads", "hamstrings", "calves"],
     heads: [
       {
         id: 1,
-        name: "Quadriceps",
+        name: "Quads (Front Thigh)",
         description:
-          "A group of four muscles on the front of the thigh. They are the primary knee extensors.",
-        image: "/assets/anatomy/legs-quads.png",
-        links: [{ label: "Squat Depth Study", url: "#" }],
+          "The quads extend your knee. They are mostly activated by squats, leg presses, lunges, and leg extensions.",
+        image: quadsImg,
       },
       {
         id: 2,
-        name: "Hamstrings",
+        name: "Hamstrings (Back Thigh)",
         description:
-          "Located on the back of the thigh. Crucial for knee flexion and hip extension.",
-        image: "/assets/anatomy/legs-hams.png",
-        links: [{ label: "Hinge Movement Guide", url: "#" }],
+          "The hamstrings bend your knee and extend your hip. They are mostly activated by Romanian deadlifts, leg curls.",
+        image: hamsImg,
       },
       {
         id: 3,
-        name: "Glutes",
-        description:
-          "The strongest muscle group in the body, responsible for hip extension and stabilization.",
-        image: "/assets/anatomy/legs-glutes.png",
-        links: [{ label: "Glute Activation", url: "#" }],
-      },
-      {
-        id: 4,
         name: "Calves",
         description:
-          "Comprised of the Gastrocnemius and Soleus. Responsible for plantar flexion (pointing the toes).",
-        image: "/assets/anatomy/legs-calves.png",
-        links: [{ label: "Calf Growth Mechanics", url: "#" }],
+          "The calves are mostly activated by standing calf raises (straight leg) and seated calf raises (knees bent).",
+        image: calvesImg,
       },
     ],
   },
@@ -268,6 +262,7 @@ export const MUSCLE_DETAILS = {
       highlightedTitle: "Anatomy",
       body: "The core includes the visible 'six-pack' muscles as well as the deeper stabilization muscles and the obliques.",
     },
+    headNames: ["rectus-abdominis", "obliques"],
     heads: [
       {
         id: 1,
@@ -290,44 +285,37 @@ export const MUSCLE_DETAILS = {
   forearms: {
     pageHeader: {
       plainTitle: "Forearms",
-      highlightedTitle: "Antebrachium",
-      body: "The foundation of grip strength and the finishing touch on arm development. Essential for every pulling movement in the gym.",
+      highlightedTitle: "Muscle",
+      body: "the needed knowledge to build strong, defined forearms",
     },
     sectionHeader: {
       plainTitle: "Forearms",
       highlightedTitle: "Anatomy",
-      body: "The forearm is a complex intersection of over 20 muscles. We categorize them into the flexor and extensor compartments to simplify your training approach.",
+      body: "The forearms have three heads: flexors (palm side), extensors (back of hand side), and brachioradialis (thumb side).",
+      note: "the forearms are involved in almost every upper body exercise. So you might see people ignoring training them , but it is preferable to include one forearms exercise in your routine.",
     },
+    headNames: ["flexors", "extensors", "brachioradialis"],
     heads: [
       {
         id: 1,
-        name: "Wrist Flexors (Inner)",
+        name: "Flexors (Palm Side)",
         description:
-          "Located on the underside of the forearm. These muscles are responsible for curling the palm toward the wrist and are heavily involved in crushing grip strength.",
-        image: "/assets/anatomy/forearms-flexors.png",
-        links: [
-          { label: "Grip Strength Mechanics", url: "#" },
-          { label: "Wrist Curl Form", url: "#" },
-        ],
+          "The wrist flexors is one of the biggest muscles in the forearm. It is mostly activated by wrist curls.",
+        image: flexorsForearmsImg,
       },
       {
         id: 2,
-        name: "Wrist Extensors (Outer)",
+        name: "Extensors (Back of Hand)",
         description:
-          "Located on the top side of the forearm. They allow you to extend your hand backward. Training these is key for wrist stability and preventing 'tennis elbow'.",
-        image: "/assets/anatomy/forearms-extensors.png",
-        links: [
-          { label: "Extensor Stability Study", url: "#" },
-          { label: "Reverse Curl Science", url: "#" },
-        ],
+          "The extensors bend your wrist back. They are mostly activated by reverse wrist curls.",
+        image: extensorsForearmsImg,
       },
       {
         id: 3,
-        name: "Brachioradialis",
+        name: "Brachioradialis (Thumb Side)",
         description:
-          "The thick muscle that connects the upper arm to the forearm. It is most active during elbow flexion when the palm is in a neutral (hammer) position.",
-        image: "/assets/anatomy/forearms-brachio.png",
-        links: [{ label: "Hammer Curl Optimization", url: "#" }],
+          "The brachioradialis adds thickness to the upper forearm. It is mostly activated by reverse curls.",
+        image: brachioForearmsImg,
       },
     ],
   },

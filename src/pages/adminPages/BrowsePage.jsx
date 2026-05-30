@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import Header from "../../components/Header";
-import { useNavigate, useParams } from "react-router";
+import { useLocation, useNavigate, useParams } from "react-router";
 import { useDispatch, useSelector } from "react-redux";
 import {
   fetchExercises,
@@ -17,19 +17,18 @@ import { useModal } from "../../contexts/ModalContext";
 import { deleteTip, fetchTips } from "../../store/slices/tipsSlice";
 
 const BrowsePage = () => {
-  // == PARAMS
+  // == GENERAL ==
   const { type } = useParams();
   const navigate = useNavigate();
-
   const validTypes = ["exercises", "splits", "tips"];
 
+  // == 404 HANDLING ==
   useEffect(() => {
     if (!type || !validTypes.includes(type.toLowerCase())) {
       navigate("/404", { replace: true, state: { role: "admin" } });
     }
+    // eslint-disable-next-line
   }, [type, navigate]);
-
-  // If invalid, return null while redirecting
   if (!type || !validTypes.includes(type.toLowerCase())) {
     return null;
   }
@@ -90,6 +89,23 @@ const Exercises = () => {
       },
     });
   };
+  // == SCROLLING TO EXERCISES WHEN SEARCHED ==
+  useEffect(() => {
+    if (status === "succeeded" && list.length > 0) {
+      const hash = location.hash;
+      if (hash && hash.startsWith("#exercise-")) {
+        const exerciseName = hash.replace("#exercise-", "");
+        // Small delay ensures DOM is ready
+        setTimeout(() => {
+          const element = document.getElementById(`exercise-${exerciseName}`);
+          if (element) {
+            element.scrollIntoView({ behavior: "smooth", block: "start" });
+          }
+        }, 100);
+      }
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [status, location.hash]);
 
   if (status === "loading") {
     return (
@@ -112,6 +128,7 @@ const Exercises = () => {
           {list.map((exercise) => (
             <div key={exercise._id} className="relative">
               <Card
+                id={exercise.name}
                 links={exercise.links}
                 type="side-image"
                 title={exercise.name}
@@ -225,6 +242,7 @@ const Splits = () => {
 
 const Tips = () => {
   // == GENERAL
+  const location = useLocation();
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { openModal } = useModal();
@@ -234,7 +252,7 @@ const Tips = () => {
     if (status === "idle") {
       dispatch(fetchTips());
     }
-  }, [status, dispatch]);
+  }, [status, dispatch, location]);
   // == HANDLERS
   const handleEdit = (tip) => {
     navigate("/dashboard/create/tips", { state: { tip, isEditing: true } });
@@ -267,6 +285,7 @@ const Tips = () => {
   if (status === "failed") {
     return <ErrorTag error={error} />;
   }
+
   return (
     <div>
       {list.length === 0 ? (

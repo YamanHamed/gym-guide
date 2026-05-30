@@ -21,6 +21,7 @@ const CreateTipForm = () => {
   const [formData, setFormData] = useState({
     title: "",
     content: "",
+    tag: "general",
     links: [],
   });
   // == LINKS STATE
@@ -134,6 +135,19 @@ const CreateTipForm = () => {
           label="Content *"
           value={formData.content}
           onChange={handleChange}
+        />
+        <Input
+          type="select"
+          name="tag"
+          label="Category"
+          value={formData.tag}
+          onChange={handleChange}
+          options={[
+            { value: "general", label: "General" },
+            { value: "technique", label: "Technique" },
+            { value: "nutrition", label: "Nutrition" },
+            { value: "motivation", label: "Motivation" },
+          ]}
         />
 
         <div>

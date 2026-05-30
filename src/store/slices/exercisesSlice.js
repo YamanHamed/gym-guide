@@ -2,6 +2,8 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 
 const API_BASE = import.meta.env.VITE_API_URL || "http://localhost:5000/api";
+const CACHE_TTL = 5 * 60 * 1000; // 5 minutes (set to Infinity to never re‑fetch)
+
 const getToken = () => localStorage.getItem("token");
 
 // ---------- Fetch all exercises (public) ----------
@@ -24,16 +26,23 @@ export const fetchExercises = createAsyncThunk(
 // ---------- Fetch exercises by muscle (public) ----------
 export const fetchExercisesByMuscle = createAsyncThunk(
   "exercises/fetchByMuscle",
-  async (muscle, { rejectWithValue }) => {
+  async (muscle, { getState, rejectWithValue }) => {
+    const { muscleCache } = getState().exercises;
+    const cached = muscleCache[muscle];
+
+    // If cached and fresh, return cached data directly (no API call)
+    if (cached && cached.data && Date.now() - cached.lastFetched < CACHE_TTL) {
+      return { muscle, data: cached.data, fromCache: true };
+    }
+
+    // Otherwise fetch from API
     try {
       const response = await axios.get(`${API_BASE}/exercises/${muscle}`);
-      return { muscle, data: response.data };
+      return { muscle, data: response.data, fromCache: false };
     } catch (err) {
       const message =
-        err.response?.data?.message ||
-        err.message ||
-        "Failed to fetch exercises by muscle";
-      return rejectWithValue(message);
+        err.response?.data?.message || err.message || "Failed to fetch";
+      return rejectWithValue({ muscle, message });
     }
   },
 );
@@ -107,12 +116,18 @@ const exercisesSlice = createSlice({
     error: null,
     filteredStatus: "idle", // for fetchByMuscle
     filteredError: null,
+    muscleCache: {}, // { chest: { data, status, error, lastFetched } }
   },
   reducers: {
     clearFilteredList: (state) => {
       state.filteredList = [];
       state.filteredStatus = "idle";
       state.filteredError = null;
+    },
+    clearCache: (state, action) => {
+      const muscle = action.payload;
+      if (muscle) delete state.muscleCache[muscle];
+      else state.muscleCache = {};
     },
   },
   extraReducers: (builder) => {
@@ -132,17 +147,32 @@ const exercisesSlice = createSlice({
       })
 
       // ========== Fetch by muscle ==========
-      .addCase(fetchExercisesByMuscle.pending, (state) => {
-        state.filteredStatus = "loading";
-        state.filteredError = null;
+      .addCase(fetchExercisesByMuscle.pending, (state, action) => {
+        const muscle = action.meta.arg;
+        state.muscleCache[muscle] = {
+          ...state.muscleCache[muscle],
+          status: "loading",
+          error: null,
+        };
       })
       .addCase(fetchExercisesByMuscle.fulfilled, (state, action) => {
-        state.filteredStatus = "succeeded";
-        state.filteredList = action.payload.data;
+        const { muscle, data, fromCache } = action.payload;
+        state.muscleCache[muscle] = {
+          data,
+          status: "succeeded",
+          error: null,
+          lastFetched: fromCache
+            ? state.muscleCache[muscle]?.lastFetched
+            : Date.now(),
+        };
       })
       .addCase(fetchExercisesByMuscle.rejected, (state, action) => {
-        state.filteredStatus = "failed";
-        state.filteredError = action.payload;
+        const { muscle, message } = action.payload;
+        state.muscleCache[muscle] = {
+          ...state.muscleCache[muscle],
+          status: "failed",
+          error: message,
+        };
       })
 
       // ========== Create ==========

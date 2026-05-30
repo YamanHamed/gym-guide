@@ -43,7 +43,7 @@ const QuickLink = ({
   );
 
   return (
-    <div className={`flex w-full mt-10  ${alignmentStyles[align]}`}>
+    <div className={`flex w-full ${alignmentStyles[align]}`}>
       {href ? (
         <a href={href} className="cursor-pointer no-underline">
           {Content}

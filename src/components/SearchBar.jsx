@@ -1,49 +1,170 @@
 import { useDispatch, useSelector } from "react-redux";
-import { setSearch, submitSearch } from "../store/slices/searchSlice";
+import {
+  setQuery,
+  fetchSearchResults,
+  clearSearch,
+} from "../store/slices/searchSlice";
+import { useEffect, useRef, useState } from "react";
+import { useNavigate } from "react-router-dom";
 
-const SearchBar = ({ mobile = false }) => {
+const SearchBar = ({
+  mobile = false,
+  className,
+  role = "user",
+  onSearchEffect,
+}) => {
   const dispatch = useDispatch();
-  const { searchValue } = useSelector((state) => state.search);
+  const navigate = useNavigate();
+  const { query, results, status, error } = useSelector(
+    (state) => state.search,
+  );
+  const [showResults, setShowResults] = useState(false);
+  const containerRef = useRef(null);
 
-  const handleSearchChange = (e) => {
-    dispatch(setSearch({ searchValue: e.target.value }));
+  // Immediate dispatch on every keystroke
+  const handleChange = (e) => {
+    const newQuery = e.target.value;
+    dispatch(setQuery(newQuery));
+    setShowResults(true);
+    // Trigger search immediately (the thunk will cancel previous inflight request)
+    if (newQuery.trim()) {
+      dispatch(fetchSearchResults(newQuery));
+    } else {
+      dispatch(clearSearch());
+    }
   };
 
-  const handleSearchSubmit = (e) => {
-    if (e) e.preventDefault();
-    dispatch(submitSearch());
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if (query.trim()) {
+      dispatch(fetchSearchResults(query));
+      setShowResults(true);
+    }
   };
 
   const handleKeyDown = (e) => {
     if (e.key === "Enter") {
-      handleSearchSubmit(e);
+      handleSubmit(e);
     }
   };
 
-  // Mobile and Desktop share logic but have slightly different container styles
+  const handleResultClick = (item) => {
+    setShowResults(false);
+    dispatch(clearSearch());
+    if (role === "admin") {
+      if (item.type === "exercise") {
+        navigate(`/dashboard/exercises/#exercise-${item.name}`);
+      } else if (item.type === "split") {
+        navigate(`/dashboard/splits/#split-${item.name}`);
+      }
+    } else {
+      if (item.type === "exercise") {
+        navigate(`/library/${item.muscle}#exercise-${item.id}`);
+      } else if (item.type === "split") {
+        navigate(`/splits/${item.name}`);
+      }
+    }
+    onSearchEffect();
+  };
+
+  // Click outside to close results
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (
+        containerRef.current &&
+        !containerRef.current.contains(event.target)
+      ) {
+        setShowResults(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
   const desktopClasses =
     "hidden md:flex items-center bg-white/5 border border-white/5 rounded-full px-4 py-1.5 focus-within:border-[#0070FF]/50 transition-colors";
   const mobileClasses =
-    "flex items-center bg-white/5 border border-white/10 rounded-2xl px-4 py-3";
+    "flex md:hidden items-center bg-white/5 border border-white/10 rounded-2xl px-4 py-3";
 
   return (
-    <div className={mobile ? mobileClasses : desktopClasses}>
-      <span
-        onClick={handleSearchSubmit}
-        className="material-symbols-outlined text-zinc-500 text-sm cursor-pointer hover:text-white transition-colors"
+    <div ref={containerRef} className={`relative  ${className}`}>
+      <form
+        onSubmit={handleSubmit}
+        className={mobile ? mobileClasses : desktopClasses}
       >
-        search
-      </span>
-      <input
-        type="text"
-        placeholder={mobile ? "SEARCH PROTOCOLS" : "SEARCH EXERCISES"}
-        className={`bg-transparent border-none outline-none font-bold tracking-widest text-white placeholder-zinc-600 ml-2 ${
-          mobile ? "text-xs w-full ml-3" : "text-[10px] w-32"
-        }`}
-        value={searchValue}
-        onChange={handleSearchChange}
-        onKeyDown={handleKeyDown} // enter key submits search
-      />
+        <button
+          type="submit"
+          className="material-symbols-outlined text-zinc-500 text-sm cursor-pointer hover:text-white transition-colors"
+        >
+          search
+        </button>
+        <input
+          type="text"
+          placeholder={mobile ? "SEARCH PROTOCOLS" : "SEARCH EXERCISES"}
+          className={`bg-transparent border-none outline-none font-bold tracking-widest text-white placeholder-zinc-600 ml-2 ${
+            mobile ? "text-xs w-full ml-3" : "text-[10px] w-32"
+          }`}
+          value={query}
+          onChange={handleChange}
+          onKeyDown={handleKeyDown}
+        />
+      </form>
+
+      {/* Results dropdown */}
+      {showResults &&
+        (status === "loading" ||
+          status === "succeeded" ||
+          status === "failed") && (
+          <div
+            className={`absolute z-50 mt-2 bg-[#1a1a1a] border border-white/10 rounded-xl shadow-2xl w-full max-h-80 overflow-y-auto ${
+              mobile ? "left-0 right-0" : "right-0 left-auto w-80"
+            }`}
+          >
+            {status === "loading" && (
+              <div className="p-4 text-zinc-400 text-sm">Searching...</div>
+            )}
+            {status === "failed" && (
+              <div className="p-4 text-red-400 text-sm">Error: {error}</div>
+            )}
+            {status === "succeeded" && (
+              <>
+                {results.length === 0 ? (
+                  <div className="p-4 text-zinc-400 text-sm">
+                    No results found.
+                  </div>
+                ) : (
+                  results.map((item) => (
+                    <button
+                      key={`${item.type}-${item.id}`}
+                      onClick={() => handleResultClick(item)}
+                      className="w-full text-left px-4 py-3 hover:bg-white/5 transition-colors border-b border-white/5 last:border-0"
+                    >
+                      <div className="flex items-center gap-3">
+                        {item.image && (
+                          <img
+                            src={item.image}
+                            alt=""
+                            className="w-8 h-8 rounded object-cover"
+                          />
+                        )}
+                        <div>
+                          <div className="text-white font-semibold text-sm">
+                            {item.name}
+                          </div>
+                          <div className="text-zinc-400 text-xs">
+                            {item.type === "exercise"
+                              ? `Exercise • ${item.muscle}`
+                              : "Split"}
+                          </div>
+                        </div>
+                      </div>
+                    </button>
+                  ))
+                )}
+              </>
+            )}
+          </div>
+        )}
     </div>
   );
 };

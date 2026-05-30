@@ -34,7 +34,7 @@ const CreateSplitForm = () => {
     },
     schedulesSection: {
       sectionHeader: { plainTitle: "", highlightedTitle: "", body: "" },
-      schedules: [], // [  {  title, trainingDays: [ {title, subTitle, exercises: [name, webName]} ]  },  ]
+      schedules: [], // [  {  title, trainingDays: [ {title, subTitle, exercises: [name, webName, muscle]} ]  },  ]
       tip: {}, // { body, externalUrl }
     },
   });
@@ -107,6 +107,7 @@ const CreateSplitForm = () => {
     }
   }, [location.state]);
 
+  console.log(location.state);
   // === HANDLERS ===
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -489,6 +490,7 @@ const CreateSplitForm = () => {
   const [newExercise, setNewExercise] = useState({
     name: "",
     webName: "",
+    muscle: "",
   });
   const addExercise = () => {
     if (!newExercise.name.trim()) return;
@@ -501,10 +503,11 @@ const CreateSplitForm = () => {
           webName:
             newExercise.webName ||
             newExercise.name.toLowerCase().replace(/\s/g, "-"),
+          muscle: newExercise.muscle,
         },
       ],
     }));
-    setNewExercise({ name: "", webName: "" });
+    setNewExercise({ name: "", webName: "", muscle: "" });
   };
   const removeExercise = (idx) => {
     setNewTrainingSession((prev) => ({
@@ -1180,6 +1183,18 @@ const CreateSplitForm = () => {
                               setNewExercise((prev) => ({
                                 ...prev,
                                 webName: e.target.value,
+                              }))
+                            }
+                            className="flex-1"
+                          />
+                          <Input
+                            type="text"
+                            placeholder="Web name (slug)"
+                            value={newExercise.muscle}
+                            onChange={(e) =>
+                              setNewExercise((prev) => ({
+                                ...prev,
+                                muscle: e.target.value,
                               }))
                             }
                             className="flex-1"

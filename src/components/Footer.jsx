@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import { copyToClipboard } from "../utils/copyToClipboard";
 
 const Footer = () => {
   // Centralized Nav Configuration
@@ -6,26 +7,26 @@ const Footer = () => {
     { label: "Home", path: "/" },
     { label: "Library", path: "/library" },
     { label: "Splits", path: "/splits" },
-    { label: "Coach", path: "/aicoach" },
     { label: "Tips", path: "/tips" },
+    { label: "Coach", path: "/aicoach" },
   ];
   const YamanSocialLinks = [
     {
       label: "LinkedIn",
-      path: "https://linkedin.com/in/your-profile",
+      path: "https://www.linkedin.com/in/yaman-hamed-819b113b5/",
       icon: "link",
       isExternal: true,
     },
     {
       label: "Email",
-      path: "mailto:your-email@example.com",
+      path: "yamanhamed200@gmail.com",
       icon: "alternate_email",
       isExternal: true,
     },
   ];
   const MajdSocialLinks = [
     {
-      label: "LinkedIn",
+      label: "Instagram",
       path: "https://linkedin.com/in/your-profile",
       icon: "link",
       isExternal: true,
@@ -79,12 +80,19 @@ const Footer = () => {
               <div className="flex items-center gap-4">
                 {YamanSocialLinks.map((social) => (
                   <a
+                    target="_blank"
+                    rel="noopener noreferrer"
                     key={social.label}
-                    href={social.path}
+                    onClick={() => {
+                      if (social.label === "Email") {
+                        copyToClipboard(social.path);
+                      }
+                    }}
+                    href={social.label !== "Email" && social.path}
                     className="group flex items-center gap-1.5"
                   >
                     <span
-                      className={`material-symbols-outlined text-[12px] text-zinc-700 group-hover:text-[#0070FF] transition-all ${
+                      className={`notranslate material-symbols-outlined text-[12px] text-zinc-700 group-hover:text-[#0070FF] transition-all ${
                         social.label === "Email"
                           ? "group-hover:-translate-y-0.5"
                           : "group-hover:rotate-12"
@@ -110,12 +118,20 @@ const Footer = () => {
                 {/* Using Majd's specific links here */}
                 {MajdSocialLinks.map((social) => (
                   <a
+                    target="_blank"
+                    rel="noopener noreferrer"
                     key={social.label}
-                    href={social.path}
+                    onClick={() => {
+                      if (social.label === "Email") {
+                        copyToClipboard(social.path);
+                      }
+                    }}
+                    href={social.label !== "Email" && social.path}
+                    key={social.label}
                     className="group flex items-center gap-1.5"
                   >
                     <span
-                      className={`material-symbols-outlined text-[12px] text-zinc-700 group-hover:text-[#0070FF] transition-all ${
+                      className={`notranslate material-symbols-outlined text-[12px] text-zinc-700 group-hover:text-[#0070FF] transition-all ${
                         social.label === "Email"
                           ? "group-hover:-translate-y-0.5"
                           : "group-hover:rotate-12"

@@ -1,8 +1,8 @@
 const Hr = ({ label, className = "", py = "py-10" }) => {
   return (
-    <div className={`max-w-7xl mx-auto mt-20 mb-10 relative ${className}`}>
+    <div className={`max-w-7xl mx-auto mt-10 mb-10 relative ${className}`}>
       {label ? (
-        /* Variant 1: Label with Left-Aligned Gradient */
+        /* === WITH LABEL === */
         <div className={`max-w-7xl mx-auto  relative ${py}`}>
           <div className="h-px w-full bg-gradient-to-r from-white/20 via-white/5 to-transparent"></div>
 
@@ -13,7 +13,7 @@ const Hr = ({ label, className = "", py = "py-10" }) => {
           </div>
         </div>
       ) : (
-        /* Variant 2: Clean Centered Gradient */
+        /* === WITHOUT LABEL (just a horizontal line) === */
         <div className={`px-8  ${py}`}>
           <div className="h-px w-full bg-gradient-to-r from-transparent via-white/10 to-transparent"></div>
         </div>

@@ -1,6 +1,7 @@
 function Card({
   // styles for the whole card ( usually for margins and width )
   className = "",
+  id,
   // type = {"steps" , " full-image" or default }
   type,
   // == step
@@ -25,6 +26,7 @@ function Card({
   image,
   imageAlt = "",
   imageRounded = "rounded-xl",
+  imageClassName,
   // == styles
   bg = "",
   rounded,
@@ -204,7 +206,10 @@ function Card({
       >
         {/* == IMAGES == */}
         <div className=" w-full  overflow-hidden bg-surface-container-low relative border-b border-white/10">
-          <img className="w-full h-full object-cover " src={image} />
+          <img
+            className={`w-full h-full object-cover ${imageClassName || ""} `}
+            src={image}
+          />
         </div>
 
         {/* == CONTENT == */}
@@ -234,6 +239,8 @@ function Card({
                 <a
                   key={i}
                   href={link.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
                   className="flex justify-between text-xs uppercase text-zinc-500 hover:text-primary-container transition-all transition-500 tracking-widest"
                 >
                   {link.label}
@@ -251,6 +258,7 @@ function Card({
   if (type === "side-image") {
     return (
       <div
+        id={id}
         onClick={onClick}
         className={` group  transition-all duration-500 overflow-hidden cursor-pointer
           ${rounded || ""}
@@ -300,10 +308,12 @@ function Card({
                     <a
                       key={i}
                       href={link.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
                       className="flex justify-between text-xs uppercase text-zinc-500 hover:text-primary-container transition-all transition-500 tracking-widest"
                     >
                       {link.label}
-                      <span className="material-symbols-outlined text-xl">
+                      <span className="notranslate material-symbols-outlined text-xl">
                         north_east
                       </span>
                     </a>
@@ -337,10 +347,12 @@ function Card({
                   <a
                     key={i}
                     href={link.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
                     className="flex justify-between text-xs  uppercase text-zinc-500 hover:text-primary-container transition-all transition-500 tracking-widest"
                   >
                     {link.label}
-                    <span className="material-symbols-outlined text-xl">
+                    <span className="notranslate material-symbols-outlined text-xl">
                       north_east
                     </span>
                   </a>
@@ -378,6 +390,7 @@ function Card({
                 {icon || "fitness_center"}
               </span>
             </div>
+            {/* == BODY == */}
             <p className="text-md text-zinc-500 font-light leading-relaxed ">
               {body}
             </p>
@@ -399,10 +412,12 @@ function Card({
               <a
                 key={i}
                 href={link.url}
+                target="_blank"
+                rel="noopener noreferrer"
                 className="flex justify-between text-xs text-zinc-500 hover:text-primary-container uppercase tracking-widest"
               >
                 {link.label}
-                <span className="material-symbols-outlined text-sm">
+                <span className="notranslate material-symbols-outlined text-sm">
                   north_east
                 </span>
               </a>
@@ -468,7 +483,7 @@ function Card({
       {/* == BODY == */}
       {body && (
         <p
-          className={`text-zinc-500 text-md leading-relaxed font-light ${bodyClassName} ${bodySize}`}
+          className={`text-zinc-500 text-md leading-relaxed font-light mb-10 ${bodyClassName} ${bodySize}`}
         >
           {body}
         </p>
@@ -484,6 +499,8 @@ function Card({
             <a
               key={i}
               href={link.url}
+              target="_blank"
+              rel="noopener noreferrer"
               className="flex justify-between text-xs uppercase text-zinc-500 hover:text-primary-container transition-all transition-500 tracking-widest"
             >
               {link.label}

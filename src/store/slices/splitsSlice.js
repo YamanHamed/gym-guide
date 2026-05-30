@@ -20,11 +20,11 @@ export const fetchSplits = createAsyncThunk(
 );
 
 // ---------- Fetch a single split by ID (public) ----------
-export const fetchSplitById = createAsyncThunk(
-  "splits/fetchById",
-  async (id, { rejectWithValue }) => {
+export const fetchSplitByName = createAsyncThunk(
+  "splits/fetchByName",
+  async (name, { rejectWithValue }) => {
     try {
-      const response = await axios.get(`${API_BASE}/splits/${id}`);
+      const response = await axios.get(`${API_BASE}/splits/${name}`);
       return response.data;
     } catch (err) {
       return rejectWithValue(
@@ -123,15 +123,15 @@ const splitsSlice = createSlice({
         state.error = action.payload;
       })
       // ========== Fetch single ==========
-      .addCase(fetchSplitById.pending, (state) => {
+      .addCase(fetchSplitByName.pending, (state) => {
         state.status = "loading";
         state.error = null;
       })
-      .addCase(fetchSplitById.fulfilled, (state, action) => {
+      .addCase(fetchSplitByName.fulfilled, (state, action) => {
         state.status = "succeeded";
         state.currentSplit = action.payload;
       })
-      .addCase(fetchSplitById.rejected, (state, action) => {
+      .addCase(fetchSplitByName.rejected, (state, action) => {
         state.status = "failed";
         state.error = action.payload;
       })

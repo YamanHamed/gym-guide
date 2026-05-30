@@ -142,7 +142,7 @@ const CreateExerciseForm = () => {
         links: [],
       });
     }
-  }, []);
+  }, [location.state]);
 
   return (
     <div className=" border border-white/10 p-8">

@@ -36,7 +36,7 @@ function App() {
           <Route path="aicoach" element={<AICoach />} />
           <Route path="splits" element={<Splits />} />
           <Route path="tips" element={<Tips />} />
-          <Route path="splits/:splitName" element={<Split />} />
+          <Route path="splits/:name" element={<Split />} />
         </Route>
 
         <Route path="/dashboard/login" element={<Login />} />

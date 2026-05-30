@@ -6,7 +6,7 @@ import tricepsCardImg from "../../imgs/triceps-card-img.jpg";
 import bicepsCardImg from "../../imgs/biceps-card-img.png";
 import absCardImg from "../../imgs/abs-card-img.png";
 import forearmsCardImg from "../../imgs/forearms-card-img.png";
-import cover from "../../imgs/gym-cover-02.jpg";
+import cover from "../../imgs/covers/cover-02.png";
 
 import { useNavigate } from "react-router";
 import { useRef } from "react";
@@ -80,6 +80,7 @@ const muscleGroups = [
     size: "md:col-span-1",
   },
 ];
+
 const Library = () => {
   const navigate = useNavigate();
 
@@ -91,22 +92,42 @@ const Library = () => {
         pageHeader={true}
         plainTitle="EXERCISES"
         highlightTitle="LIBRARY"
-        subTitle="Optimize Every Rep"
-        body="Scientific progression starts with technical mastery."
+        body="the exercises you need to build muscle"
         image={cover}
         titleSize="text-5xl md:text-7xl"
         bodyClassName="max-w-[280px]"
       />
 
-      <QuickLink label="go to library" targetRef={libraryRef} />
-      <Hr />
+      <QuickLink
+        className="mb-0 sm:mb-16 mt-8 sm:mt-10 "
+        label="jump to exercises"
+        targetRef={libraryRef}
+      />
+      <Hr className="lg:hidden" />
       <section>
         <Header
           className="mb-16"
-          plainTitle="TRAINING"
-          highlightTitle="MECHANICS"
+          plainTitle=" muscles"
+          highlightTitle=" work"
           subTitle="The Science of Hypertrophy"
-          body="Muscle growth is governed by three primary pillars: Mechanical Tension, Metabolic Stress, and Progressive Overload. While frequency and exercise selection can vary, the total effective volume—the number of hard sets taken close to failure each week—is the master variable that dictates your physiological adaptation."
+          bodyClassName="!max-w-3xl"
+          body={
+            <>
+              <p className="mb-1">
+                Exercise does a lot for your heart, your mind, and burning fat.
+                But the main focus here is building and growing muscle. (Some
+                exercises aren't meant for muscle growth – but in this guide,
+                we'll talk specifically about muscle‑building.)
+              </p>
+              <p>
+                Your body has several major muscle groups: chest, shoulders,
+                legs, back, and more – see the map below. Each group can be
+                trained with a certain motion. That motion becomes an exercise
+                when you add tension to the muscle, for example by grabbing some
+                dumbbells while moving.
+              </p>
+            </>
+          }
         />
         <Anatomy />
       </section>
@@ -114,10 +135,10 @@ const Library = () => {
       <section ref={libraryRef}>
         <Header
           className="mb-16"
-          plainTitle="EXERCISE"
-          highlightTitle="DIRECTORY"
+          plainTitle="muscle "
+          highlightTitle="groups"
           subTitle="Targeted Training Protocols"
-          body="Access our comprehensive library of movements categorized by physiological region. Select a muscle group to initialize specific training protocols, ensuring every set aligns with your structural objectives and maximizes fiber recruitment."
+          body="Now here our exercises are divided by muscle groups. Click at any group to see its exercises "
         />
         {/* ==  MUSCLES GRID == */}
         <div className="grid grid-cols-1 md:grid-cols-4 auto-rows-[300px] gap-8 ">

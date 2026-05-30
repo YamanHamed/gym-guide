@@ -53,7 +53,7 @@ const Login = () => {
           fullWidth
           disabled={status === "loading"}
         />
-        <ErrorTag error={error} />
+        <ErrorTag type="small" severity="error" error={error} />
       </form>
     </div>
   );

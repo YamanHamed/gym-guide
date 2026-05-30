@@ -4,6 +4,7 @@ import { useLocation, useNavigate } from "react-router";
 import Button from "./Button";
 import { useModal } from "../contexts/ModalContext";
 import toast from "react-hot-toast";
+import SearchBar from "./SearchBar";
 
 const ADMIN_NAV_LINKS = [
   {
@@ -126,43 +127,27 @@ const Sidebar = () => {
           md:translate-x-0 md:block
           ${isMobileMenuOpen ? "translate-x-0" : "-translate-x-full"}
         `}
-        // className="hidden  md:block fixed left-0 top-0 h-full w-64 z-40 bg-[#131313] pt-20 border-e border-white/10"
       >
         <div className="flex flex-col justify-between h-full">
-          <nav className="mt-12  overflow-y-auto">
-            {ADMIN_NAV_LINKS.map((group) => {
-              if (group.key === "home") {
-                const active = isActive(group.path);
-                return (
-                  <div
-                    key={group.key}
-                    onClick={() => {
-                      toggleGroup(group.key);
-                      handleNavigation(group.path);
-                    }}
-                    className={`flex items-center justify-between cursor-pointer py-3 px-6 text-sm font-bold uppercase tracking-wider text-zinc-400 hover:text-white hover:bg-white/5 transition-all duration-300    
+          <div>
+            <nav className="mt-12  overflow-y-auto">
+              {ADMIN_NAV_LINKS.map((group) => {
+                if (group.key === "home") {
+                  const active = isActive(group.path);
+                  return (
+                    <div
+                      key={group.key}
+                      onClick={() => {
+                        toggleGroup(group.key);
+                        handleNavigation(group.path);
+                      }}
+                      className={`flex items-center justify-between cursor-pointer py-3 px-6 text-sm font-bold uppercase tracking-wider text-zinc-400 hover:text-white hover:bg-white/5 transition-all duration-300    
                     ${
                       active
                         ? "text-[#0070FF] bg-gradient-to-r from-[#0070FF]/10 to-transparent border-l-4 border-[#0070FF]"
                         : "text-zinc-400 hover:text-white hover:bg-white/5"
                     }
                   `}
-                  >
-                    <div className="flex items-center gap-3">
-                      <span className="material-symbols-outlined">
-                        {group.icon}
-                      </span>
-                      <span>{group.label}</span>
-                    </div>
-                  </div>
-                );
-              } else
-                return (
-                  <div key={group.key} className="mb-2">
-                    {/* Group header (accordion trigger) */}
-                    <div
-                      onClick={() => toggleGroup(group.key)}
-                      className="flex items-center justify-between cursor-pointer py-3 px-6 text-sm font-bold uppercase tracking-wider text-zinc-400 hover:text-white hover:bg-white/5 transition-all duration-300"
                     >
                       <div className="flex items-center gap-3">
                         <span className="material-symbols-outlined">
@@ -170,25 +155,43 @@ const Sidebar = () => {
                         </span>
                         <span>{group.label}</span>
                       </div>
-                      <span className="material-symbols-outlined text-base">
-                        {openGroups[group.key] ? "expand_less" : "expand_more"}
-                      </span>
                     </div>
+                  );
+                } else
+                  return (
+                    <div key={group.key} className="mb-2">
+                      {/* Group header (accordion trigger) */}
+                      <div
+                        onClick={() => toggleGroup(group.key)}
+                        className="flex items-center justify-between cursor-pointer py-3 px-6 text-sm font-bold uppercase tracking-wider text-zinc-400 hover:text-white hover:bg-white/5 transition-all duration-300"
+                      >
+                        <div className="flex items-center gap-3">
+                          <span className="material-symbols-outlined">
+                            {group.icon}
+                          </span>
+                          <span>{group.label}</span>
+                        </div>
+                        <span className="material-symbols-outlined text-base">
+                          {openGroups[group.key]
+                            ? "expand_less"
+                            : "expand_more"}
+                        </span>
+                      </div>
 
-                    {/* Nested items */}
-                    <div
-                      className={`transition-all duration-300 overflow-hidden ${
-                        openGroups[group.key] ? "max-h-96" : "max-h-0"
-                      }`}
-                    >
-                      <div className="ml-4">
-                        {group.items.map((item) => {
-                          const active = isActive(item.path);
-                          return (
-                            <div
-                              key={item.name}
-                              onClick={() => handleNavigation(item.path)}
-                              className={`
+                      {/* Nested items */}
+                      <div
+                        className={`transition-all duration-300 overflow-hidden ${
+                          openGroups[group.key] ? "max-h-96" : "max-h-0"
+                        }`}
+                      >
+                        <div className="ml-4">
+                          {group.items.map((item) => {
+                            const active = isActive(item.path);
+                            return (
+                              <div
+                                key={item.name}
+                                onClick={() => handleNavigation(item.path)}
+                                className={`
                           cursor-pointer flex items-center gap-3 py-3 px-6 text-sm font-medium
                           transition-all duration-300 rounded-r-full
                           ${
@@ -197,20 +200,27 @@ const Sidebar = () => {
                               : "text-zinc-400 hover:text-white hover:bg-white/5"
                           }
                         `}
-                            >
-                              <span className="material-symbols-outlined text-base group-hover:translate-x-1 transition-transform duration-200">
-                                {item.icon}
-                              </span>
-                              <span>{item.name}</span>
-                            </div>
-                          );
-                        })}
+                              >
+                                <span className="material-symbols-outlined text-base group-hover:translate-x-1 transition-transform duration-200">
+                                  {item.icon}
+                                </span>
+                                <span>{item.name}</span>
+                              </div>
+                            );
+                          })}
+                        </div>
                       </div>
                     </div>
-                  </div>
-                );
-            })}
-          </nav>
+                  );
+              })}
+            </nav>{" "}
+            <SearchBar
+              mobile={true}
+              role="admin"
+              className="mx-4"
+              onSearchEffect={closeMobileMenu}
+            />
+          </div>
 
           <Button
             type="outlined"
