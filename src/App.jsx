@@ -33,10 +33,12 @@ function App() {
           <Route index element={<Home />} />
           <Route path="library" element={<Library />} />
           <Route path="library/:muscle" element={<MusclePage />} />
-          <Route path="aicoach" element={<AICoach />} />
           <Route path="splits" element={<Splits />} />
           <Route path="tips" element={<Tips />} />
           <Route path="splits/:name" element={<Split />} />
+        </Route>
+        <Route element={<UserLayout hideFooter={true} mainClassName="pb-0" />}>
+          <Route path="/aicoach" element={<AICoach />} />
         </Route>
 
         <Route path="/dashboard/login" element={<Login />} />

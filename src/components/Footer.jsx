@@ -1,11 +1,14 @@
 import { Link } from "react-router-dom";
 import { copyToClipboard } from "../utils/copyToClipboard";
+import { useTranslation } from "react-i18next";
 
 const Footer = () => {
+  const { t } = useTranslation();
+
   // Centralized Nav Configuration
   const navItems = [
     { label: "Home", path: "/" },
-    { label: "Library", path: "/library" },
+    { label: "Exercises", path: "/library" },
     { label: "Splits", path: "/splits" },
     { label: "Tips", path: "/tips" },
     { label: "Coach", path: "/aicoach" },
@@ -27,13 +30,13 @@ const Footer = () => {
   const MajdSocialLinks = [
     {
       label: "Instagram",
-      path: "https://linkedin.com/in/your-profile",
+      path: "https://www.instagram.com/majd_alakraa",
       icon: "link",
       isExternal: true,
     },
     {
       label: "Email",
-      path: "mailto:your-email@example.com",
+      path: "majdalakraa1@gmail.com",
       icon: "alternate_email",
       isExternal: true,
     },
@@ -52,7 +55,7 @@ const Footer = () => {
               </span>
             </div>
             <p className="text-[10px] text-zinc-600 uppercase tracking-[0.2em] font-medium max-w-[200px] leading-relaxed italic">
-              Built for the next generation of lifters. All protocols encrypted.
+              {t("footer.tagline")}
             </p>
           </div>
 
@@ -64,7 +67,7 @@ const Footer = () => {
                 to={item.path}
                 className="text-[10px] font-bold uppercase tracking-[0.2em] text-zinc-500 hover:text-primary-container transition-colors"
               >
-                {item.label}
+                {t(`footer.${item.label.toLowerCase()}`)}
               </Link>
             ))}
           </nav>
@@ -74,8 +77,8 @@ const Footer = () => {
             {/* Creator Block: Yaman */}
             <div className="flex flex-col gap-2">
               <span className="text-[8px] uppercase tracking-[0.4em] text-zinc-700 font-black mb-1">
-                Core Architecture //{" "}
-                <span className="text-zinc-400">Yaman</span>
+                {t("footer.coreArchitecture")}
+                <span className="text-zinc-400"> {t("footer.yaman")}</span>
               </span>
               <div className="flex items-center gap-4">
                 {YamanSocialLinks.map((social) => (
@@ -112,7 +115,8 @@ const Footer = () => {
             <div className="flex flex-col gap-2 border-l md:border-l-0 border-white/5 ">
               {/* pl-6 md:pl-0 */}
               <span className="text-[8px] uppercase tracking-[0.4em] text-zinc-700 font-black mb-1">
-                Content Curation // <span className="text-zinc-400">Majd</span>
+                {t("footer.contentCuration")}{" "}
+                <span className="text-zinc-400"> {t("footer.majd")}</span>
               </span>
               <div className="flex items-center gap-4">
                 {/* Using Majd's specific links here */}

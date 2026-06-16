@@ -4,8 +4,10 @@ import Hr from "./Hr";
 import Button from "./Button";
 import axios from "axios";
 import toast from "react-hot-toast";
+import { useTranslation } from "react-i18next";
 
 const FeedBackSec = () => {
+  const { t } = useTranslation();
   return (
     <>
       {/* Transition Divider */}
@@ -15,9 +17,9 @@ const FeedBackSec = () => {
         {/* Header Section */}
         <Header
           className="mb-16"
-          plainTitle="YOUR"
-          highlightTitle="FEEDBACK"
-          body="We would be so happy to receive your suggestions, criticisms, or anything you would like to share with us regarding this guide ♥"
+          plainTitle={t("feedback.plainTitle")}
+          highlightTitle={t("feedback.highlightTitle")}
+          body={t("feedback.body")}
         />
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
@@ -27,12 +29,11 @@ const FeedBackSec = () => {
               <div className="flex items-center gap-3 mb-4">
                 <div className="w-2 h-2 rounded-full bg-[#0070FF] animate-pulse"></div>
                 <span className="text-[10px] uppercase tracking-[0.3em] font-black text-white/50">
-                  Uplink Status: Active
+                  {t("feedback.status")}
                 </span>
               </div>
               <p className="text-zinc-500 text-xs leading-relaxed italic">
-                "Your feedback is the data that drives our progression. Every
-                report is reviewed for system optimization."
+                {t("feedback.quote")}
               </p>
             </div>
 
@@ -47,7 +48,7 @@ const FeedBackSec = () => {
             {/* Form Title */}
             <div>
               <h3 className="text-white text-xl font-bold italic tracking-tight uppercase">
-                contact us
+                {t("feedback.formTitle")}
               </h3>
 
               <div className="h-0.5 w-12 bg-[#0070FF] mt-2 mb-6"></div>
@@ -63,6 +64,7 @@ const FeedBackSec = () => {
 export default FeedBackSec;
 
 const ContactForm = () => {
+  const { t } = useTranslation();
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [message, setMessage] = useState("");
@@ -98,14 +100,14 @@ const ContactForm = () => {
           value={name}
           onChange={(e) => setName(e.target.value)}
           type="text"
-          placeholder=" NAME"
+          placeholder={t("contactForm.namePlaceholder")}
           className="w-full bg-white/5 border border-white/10 rounded-xl px-6 py-4 text-white text-[10px] font-bold tracking-widest outline-none focus:border-[#0070FF]/50 transition-all placeholder:text-zinc-700"
         />
         <input
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           type="email"
-          placeholder="EMAIL (optional)"
+          placeholder={t("contactForm.emailPlaceholder")}
           className="w-full bg-white/5 border border-white/10 rounded-xl px-6 py-4 text-white text-[10px] font-bold tracking-widest outline-none focus:border-[#0070FF]/50 transition-all placeholder:text-zinc-700"
         />
       </div>
@@ -114,7 +116,7 @@ const ContactForm = () => {
         value={message}
         onChange={(e) => setMessage(e.target.value)}
         rows="5"
-        placeholder="TYPE YOUR MESSAGE HERE..."
+        placeholder={t("contactForm.messagePlaceholder")}
         className="w-full bg-white/5 border border-white/10 rounded-2xl px-6 py-4 text-white text-[10px] font-bold tracking-widest outline-none focus:border-[#0070FF]/50 transition-all placeholder:text-zinc-700 resize-none"
       ></textarea>
 
@@ -124,7 +126,7 @@ const ContactForm = () => {
         className="group relative w-full py-5 bg-[#0070FF] hover:bg-[#005ed4] rounded-xl overflow-hidden transition-all shadow-[0_0_20px_-5px_rgba(0,112,255,0.4)] active:scale-[0.98]"
       >
         <span className="relative text-[11px] font-black uppercase tracking-[0.4em] text-white flex items-center justify-center gap-3">
-          {isSending ? "sending..." : "send message"}
+          {isSending ? t("contactForm.sending") : t("contactForm.send")}
           <span className="notranslate material-symbols-outlined text-sm group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform">
             north_east
           </span>

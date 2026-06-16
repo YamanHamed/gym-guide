@@ -2,6 +2,7 @@ import React from "react";
 import Header from "./Header";
 import Hr from "./Hr";
 import Card from "./Card";
+import { useTranslation } from "react-i18next";
 
 const STEPS = [
   {
@@ -25,28 +26,31 @@ const STEPS = [
 ];
 
 const AboutSec = () => {
+  const { t } = useTranslation();
+  const steps = t("about.steps", { returnObjects: true }); // array of { title, desc }
+
   return (
     <>
       <Hr />
       <section className="max-w-7xl mx-auto">
         <Header
           className="mb-16"
-          plainTitle="ABOUT"
-          highlightTitle="GYM GUIDE"
-          body="Our guide is designed to provide you with all the necessary information for the gym. To benefit from it, we highly recommend following these steps."
+          plainTitle={t("about.plainTitle")}
+          highlightTitle={t("about.highlightTitle")}
+          body={t("about.body")}
         />
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          {STEPS.map((item) => (
+          {steps.map((item, idx) => (
             <Card
               type="steps"
-              key={item.step}
-              step={item.step} // Passes "01", "02", etc.
-              icon={item.icon} // "analytics", "calculate", etc.
+              key={idx}
+              step={`0${idx + 1}`} // or keep static "01", "02", "03"
+              icon={["database", "architecture", "smart_toy"][idx]}
               title={item.title}
               body={item.desc}
               className="border border-white/5 hover:border-primary-container/30"
-              rounded="rounded-2xl" // Consistent rounded corners
+              rounded="rounded-2xl"
             />
           ))}
         </div>

@@ -14,10 +14,13 @@ import backLegs from "../imgs/anatomy/back/back-legs.png";
 import backTriceps from "../imgs/anatomy/back/back-triceps.png";
 import backForearms from "../imgs/anatomy/back/back-forearms.png";
 import backDelts from "../imgs/anatomy/back/back-delts.png";
+import { useTranslation } from "react-i18next";
 
 const Anatomy = () => {
   // We use a single state to track which muscle is being hovered
   const [activeMuscle, setActiveMuscle] = useState(null);
+  const { i18n, t } = useTranslation();
+  const isArabic = i18n.language === "ar";
 
   return (
     <div className=" text-white">
@@ -26,16 +29,18 @@ const Anatomy = () => {
 
         {/* === FRONT VIEW COLUMN === */}
         <div className="flex flex-col items-center">
-          <h2 className=" text-xl font-bold tracking-widest text-[#68A2CF] uppercase">
-            Anterior
+          <h2
+            className={` text-xl font-bold tracking-widest text-[#68A2CF] uppercase `}
+          >
+            {t("libraryPage.anatomySection.anterior")}
           </h2>
           <div
-            className="relative aspect-[2/3] mx-auto 
-                w-[130%] -translate-x-[11%] 
-                md:w-full md:max-w-[400px] md:translate-x-0"
+            className={`relative aspect-[2/3] mx-auto 
+                w-[130%]  ${isArabic ? "translate-x-[11%] md:translate-x-0" : "-translate-x-[11%] md:translate-x-0"}
+                md:w-full md:max-w-[400px] `}
           >
             {/* 1. GROUNDING GLOW: Keeps the focus center-stage */}
-            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[70%] h-[70%] bg-[#68A2CF]/5 blur-[80px] rounded-full z-0" />
+            <div className="absolute top-1/2 start-1/2 -translate-x-1/2 -translate-y-1/2 w-[70%] h-[70%] bg-[#68A2CF]/5 blur-[80px] rounded-full z-0" />
             {/* == BASE IMAGE == */}
             <img
               src={frontFull}
@@ -166,12 +171,12 @@ const Anatomy = () => {
         {/* === BACK VIEW COLUMN === */}
         <div className="flex flex-col items-center">
           <h2 className="mb-6 text-xl font-bold tracking-widest text-[#68A2CF] uppercase">
-            Posterior
+            {t("libraryPage.anatomySection.posterior")}
           </h2>
           <div
-            className="relative aspect-[2/3] mx-auto 
-                w-[130%] -translate-x-[11%] 
-                md:w-full md:max-w-[400px] md:translate-x-0"
+            className={`relative aspect-[2/3] mx-auto 
+                w-[130%] ${isArabic ? "translate-x-[11%] md:translate-x-0" : "-translate-x-[11%] md:translate-x-0"}
+                md:w-full md:max-w-[400px]    `}
           >
             {/* 1. GROUNDING GLOW: Keeps the focus center-stage */}
             <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[70%] h-[70%] bg-[#68A2CF]/5 blur-[80px] rounded-full z-0" />

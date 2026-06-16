@@ -1,5 +1,5 @@
-import React, { useEffect, useRef } from "react";
-import cover from "../../imgs/gym-cover-03.webp";
+import React, { useEffect, useMemo, useRef, useState } from "react";
+import cover from "../../imgs/covers/cover-05.png";
 import Header from "../../components/Header";
 import Card from "../../components/Card";
 import Hr from "../../components/Hr";
@@ -9,9 +9,13 @@ import { fetchSplits } from "../../store/slices/splitsSlice";
 import SkeletonCard from "../../components/SkeletonCard";
 import ErrorTag from "../../components/ErrorTag";
 import QuickLink from "../../components/QuickLink";
+import FilterBar from "../../components/FilterBar";
+import { useTranslation } from "react-i18next";
 
 const Splits = () => {
   // == GENERAL ==
+  const { t, i18n } = useTranslation();
+  const isArabic = i18n.language === "ar";
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const { list, status, error } = useSelector((state) => state.splits);
@@ -27,46 +31,87 @@ const Splits = () => {
     navigate(`/splits/${split.name}`, { state: { split } });
   };
 
+  // == HELPER ==
+  const getLocalized = (item, field) => {
+    return isArabic && item[`${field}_ar`] ? item[`${field}_ar`] : item[field];
+  };
+
+  // == SPLITS FILTERING ==
+  const dayOptions = [
+    { value: "All", label: t("splitsPage.daysFilter.all") },
+    { value: "1", label: t("splitsPage.daysFilter.1") },
+    { value: "2", label: t("splitsPage.daysFilter.2") },
+    { value: "3", label: t("splitsPage.daysFilter.3") },
+    { value: "4", label: t("splitsPage.daysFilter.4") },
+    { value: "5", label: t("splitsPage.daysFilter.5") },
+    { value: "6", label: t("splitsPage.daysFilter.6") },
+    { value: "7", label: t("splitsPage.daysFilter.7") },
+  ];
+  const [selectedFilters, setSelectedFilters] = useState(["All"]);
+  const filteredSplits = useMemo(() => {
+    // If "All" is selected (and it's the only one or explicitly included), show all
+    if (selectedFilters.includes("All")) return list;
+
+    // Otherwise, filter splits where the normalized daysAWeek matches any selected filter
+    return list.filter((split) => {
+      console.log("Selected filters:", selectedFilters);
+      return selectedFilters.some((filter) =>
+        split.daysAWeek?.includes(
+          Number(filter.replace("days/week", "").trim()),
+        ),
+      );
+    });
+  }, [list, selectedFilters]);
+
   return (
     <div>
       <Header
-        // className="mb-16"
         pageHeader={true}
-        plainTitle="TRAINING"
-        highlightTitle="SPLITS"
-        subTitle="Optimize Every Rep"
-        body="Scientific progression starts with technical mastery. Select a target area to initialize protocols."
+        plainTitle={t("splitsPage.header.plainTitle")}
+        highlightTitle={t("splitsPage.header.highlightTitle")}
+        body={t("splitsPage.header.body")}
         image={cover}
-        titleSize="text-5xl md:text-7xl"
+        titleSize="text-5xl md:text-6xl"
         bodyClassName="max-w-[280px]"
       />
       <QuickLink
         className="mb-0 sm:mb-16 mt-8 sm:mt-10 "
-        label="jump to splits"
+        label={t("splitsPage.quickLink")}
         targetRef={splitsRef}
       />
+      <Hr className="lg:hidden" />
 
-      <section className="mb-32 ">
+      <section>
         <Header
           className="mb-16"
-          plainTitle="THEORY &"
-          highlightTitle="SYNERGY"
-          subTitle="One Goal, Multiple Paths"
-          body="Hypertrophy is a result of total weekly volume. Whether you hit a muscle once, twice, or three times a week, the physiological destination is the same."
+          plainTitle={t("splitsPage.whatIsSplit.plainTitle")}
+          highlightTitle={t("splitsPage.whatIsSplit.highlightTitle")}
+          subTitle={t("splitsPage.whatIsSplit.subTitle")}
+          body={
+            <>
+              <p className="mb-1">{t("splitsPage.whatIsSplit.paragraph1")}</p>
+              <p>{t("splitsPage.whatIsSplit.paragraph2")}</p>
+            </>
+          }
         />
         <SplitCreationSection />
       </section>
 
       <Hr />
       <section>
+        <div className=" m-0" ref={splitsRef} />
         <Header
           className="mb-16"
-          plainTitle="SELECT YOUR"
-          highlightTitle="SPLIT"
-          subTitle="Deployment Options"
-          body="Choose a framework that matches your weekly availability. Each protocol is optimized for a specific recovery-to-stimulus ratio."
+          plainTitle={t("splitsPage.selectSplit.plainTitle")}
+          highlightTitle={t("splitsPage.selectSplit.highlightTitle")}
+          subTitle={t("splitsPage.selectSplit.subTitle")}
+          body={t("splitsPage.selectSplit.body")}
         />
-        <div className=" m-0" ref={splitsRef} />
+        <FilterBar
+          filters={dayOptions}
+          value={selectedFilters}
+          onChange={setSelectedFilters}
+        />
         {status === "failed" && <ErrorTag error={error} />}
         {status === "loading" && (
           <div className="flex flex-col gap-12">
@@ -77,14 +122,17 @@ const Splits = () => {
         )}
         {status === "succeeded" && (
           <div className="flex flex-col gap-12">
-            {list.map((split) => (
+            {filteredSplits.map((split) => (
               <Card
+                tag={t("splitsPage.cardTag", {
+                  days: split?.daysAWeek?.join(", "),
+                })}
                 type="side-image"
                 reverse={true}
                 key={split._id}
-                title={split.name}
+                title={getLocalized(split, "name")}
                 links={split.links}
-                body={split.description}
+                body={getLocalized(split, "description")}
                 image={split.image}
                 onClick={() => handleCardClick(split)}
                 rounded="rounded-2xl"
@@ -99,102 +147,24 @@ const Splits = () => {
 
 export default Splits;
 
-const SplitCard = ({ split }) => {
-  return (
-    <article className="group relative w-full min-h-[400px] bg-[#0A0A0A] border border-white/5 rounded-2xl overflow-hidden flex flex-col md:flex-row transition-all duration-500 hover:border-[#0070FF]/30">
-      {/* 1. Visual Anchor (Left Side) */}
-      <div className="relative w-full md:w-3/5 overflow-hidden h-64 md:h-auto">
-        <img
-          src={split.img}
-          className="w-full h-full object-cover grayscale opacity-40 transition-all duration-1000 group-hover:scale-105 group-hover:grayscale-0 group-hover:opacity-60"
-          alt={split.title}
-        />
-        {/* Subtle Side-Gradient to blend image into the info box */}
-        <div className="absolute inset-0 bg-gradient-to-r from-transparent via-transparent to-[#0A0A0A] hidden md:block" />
-        <div className="absolute inset-0 bg-gradient-to-t from-[#0A0A0A] via-transparent to-transparent md:hidden" />
-      </div>
-
-      {/* 2. Command Center (Right Side) */}
-      <div className="w-full md:w-2/5 p-8 md:p-12 flex flex-col justify-center relative z-10">
-        {/* Meta Header */}
-        <div className="flex items-center gap-3 mb-6">
-          <div className="w-1.5 h-1.5 rounded-full bg-[#0070FF] animate-pulse" />
-          <span className="notranslate text-[10px] font-black tracking-[0.4em] text-blue-400 uppercase">
-            {split.id} // ACTIVE_PROTOCOL
-          </span>
-        </div>
-
-        {/* Title & Description */}
-        <h2 className="text-4xl md:text-5xl font-black italic text-white mb-4 tracking-tighter leading-none uppercase">
-          {split.title}
-        </h2>
-
-        <p className="text-zinc-500 text-sm italic leading-relaxed mb-8 max-w-md">
-          {split.description ||
-            "High-threshold motor unit recruitment focus. Prioritize mechanical tension and strict tempo control."}
-        </p>
-
-        {/* Resource Links (Horizontal Row) */}
-        <div className="pt-8 border-t border-white/5">
-          <h3 className="text-[9px] font-black tracking-[0.3em] text-zinc-700 mb-6 uppercase">
-            Tutorial Resources
-          </h3>
-
-          <div className="flex flex-wrap gap-3">
-            <button className="flex items-center gap-2 px-4 py-2 bg-white/5 hover:bg-[#0070FF]/20 border border-white/5 hover:border-[#0070FF]/40 rounded-xl transition-all text-[10px] font-bold uppercase tracking-widest text-white group/btn">
-              <span className="material-symbols-outlined text-sm text-[#0070FF]">
-                play_circle
-              </span>
-              Technique
-            </button>
-
-            <button className="flex items-center gap-2 px-4 py-2 bg-white/5 hover:bg-[#0070FF]/20 border border-white/5 hover:border-[#0070FF]/40 rounded-xl transition-all text-[10px] font-bold uppercase tracking-widest text-white group/btn">
-              <span className="material-symbols-outlined text-sm text-[#0070FF]">
-                description
-              </span>
-              Protocol
-            </button>
-          </div>
-        </div>
-      </div>
-    </article>
-  );
-};
-
 const SplitCreationSection = () => {
+  const { t } = useTranslation();
+  const steps = t("splitsPage.splitCreation.steps", { returnObjects: true });
+  const icons = [
+    "analytics",
+    "select_window_2",
+    "account_tree",
+    "fitness_center",
+  ];
+
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-      {[
-        {
-          step: "01",
-          icon: "analytics",
-          title: "RECOVERY AUDIT",
-          desc: "Assess your lifestyle constraints. Your split must fit your biological recovery window, not just your calendar.",
-        },
-        {
-          step: "02",
-          icon: "calculate",
-          title: "VOLUME MATH",
-          desc: "Determine total weekly sets per muscle. Divide this by your training days to find your ideal per-session load.",
-        },
-        {
-          step: "03",
-          icon: "account_tree",
-          title: "PATTERN MAPPING",
-          desc: "Assign movement patterns (Push, Pull, Hinge, Squat) to each slot to ensure structural balance and synergy.",
-        },
-        {
-          step: "04",
-          icon: "biotech",
-          title: "DATA REFINEMENT",
-          desc: "Monitor performance markers. Adjust the frequency if strength plateaus or systemic fatigue exceeds recovery.",
-        },
-      ].map((item) => (
+      {steps.map((item, idx) => (
         <Card
-          key={item.step}
+          key={idx}
           type="steps"
-          step={item.step}
-          icon={item.icon}
+          step={`0${idx + 1}`}
+          icon={icons[idx]}
           title={item.title}
           body={item.desc}
           className="border border-white/5 hover:border-primary-container/30"

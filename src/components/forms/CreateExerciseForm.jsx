@@ -13,7 +13,6 @@ import ErrorTag from "../ErrorTag";
 import { useModal } from "../../contexts/ModalContext";
 
 const CreateExerciseForm = () => {
-  // == METHODS AND HOOKS
   const location = useLocation();
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -21,26 +20,45 @@ const CreateExerciseForm = () => {
   const { status, error } = useSelector((state) => state.exercises);
   const [isEditing, setIsEditing] = useState(false);
   const [editingId, setEditingId] = useState(null);
-  // == MAIN STATE
+
+  // State with Arabic fields
   const [formData, setFormData] = useState({
     name: "",
+    name_ar: "",
     muscle: "",
+    muscle_ar: "",
     muscleHead: "",
+    muscleHead_ar: "",
     description: "",
+    description_ar: "",
     image: "",
     videoUrl: "",
     difficulty: "Beginner",
-    links: [],
+    importance: 5,
+    links: [], // each link: { label, label_ar, url }
   });
-  // == LINKS STATE
-  const [linkInput, setLinkInput] = useState({ label: "", url: "" });
+
+  // Link input (both languages)
+  const [linkInput, setLinkInput] = useState({
+    label: "",
+    label_ar: "",
+    url: "",
+  });
+
   const addLink = () => {
     if (linkInput.label && linkInput.url) {
       setFormData({
         ...formData,
-        links: [...formData.links, linkInput],
+        links: [
+          ...formData.links,
+          {
+            label: linkInput.label,
+            label_ar: linkInput.label_ar || "",
+            url: linkInput.url,
+          },
+        ],
       });
-      setLinkInput({ label: "", url: "" });
+      setLinkInput({ label: "", label_ar: "", url: "" });
     }
   };
   const removeLink = (index) => {
@@ -48,7 +66,7 @@ const CreateExerciseForm = () => {
     newLinks.splice(index, 1);
     setFormData({ ...formData, links: newLinks });
   };
-  // == HANDLERS
+
   const [uploadingImage, setUploadingImage] = useState(false);
   const handleImageFile = async (file) => {
     if (!file) return;
@@ -64,20 +82,16 @@ const CreateExerciseForm = () => {
       setUploadingImage(false);
     }
   };
+
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
-  // == SUBMIT
+
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    // Validation
-    if (
-      !formData.name ||
-      !formData.muscle ||
-      !formData.description ||
-      !formData.image
-    ) {
+    // Validation (English required fields)
+    if (!formData.name || !formData.muscle || !formData.description) {
       toast.error("Please fill all required fields and upload an image");
       return;
     }
@@ -112,6 +126,7 @@ const CreateExerciseForm = () => {
     });
   };
 
+  // Populate form when editing
   useEffect(() => {
     if (location.state?.isEditing && location.state?.exercise) {
       const ex = location.state.exercise;
@@ -119,33 +134,46 @@ const CreateExerciseForm = () => {
       setEditingId(ex._id);
       setFormData({
         name: ex.name || "",
+        name_ar: ex.name_ar || "",
         muscle: ex.muscle || "",
+        muscle_ar: ex.muscle_ar || "",
         muscleHead: ex.muscleHead || "",
+        muscleHead_ar: ex.muscleHead_ar || "",
         description: ex.description || "",
+        description_ar: ex.description_ar || "",
         image: ex.image || "",
         videoUrl: ex.videoUrl || "",
         difficulty: ex.difficulty || "Beginner",
-        links: ex.links || [],
+        importance: ex.importance || 5,
+        links: (ex.links || []).map((link) => ({
+          label: link.label,
+          label_ar: link.label_ar || "",
+          url: link.url,
+        })),
       });
     } else {
-      // Reset form when entering create mode (e.g., after navigating away)
       setIsEditing(false);
       setEditingId(null);
       setFormData({
         name: "",
+        name_ar: "",
         muscle: "",
+        muscle_ar: "",
         muscleHead: "",
+        muscleHead_ar: "",
         description: "",
+        description_ar: "",
         image: "",
         videoUrl: "",
         difficulty: "Beginner",
+        importance: 5,
         links: [],
       });
     }
   }, [location.state]);
 
   return (
-    <div className=" border border-white/10 p-8">
+    <div className="border border-white/10 p-8">
       <div className="mb-8">
         <h3 className="text-white text-xl font-bold italic tracking-tight uppercase">
           {isEditing ? "Edit Exercise" : "Create New Exercise"}
@@ -154,51 +182,96 @@ const CreateExerciseForm = () => {
       </div>
 
       <form onSubmit={handleSubmit} className="space-y-8">
-        {/* == NAME == */}
-        <Input
-          label="Name *"
-          type="text"
-          name="name"
-          value={formData.name}
-          onChange={handleChange}
-          required
-          placeholder="exercise name"
-        />
-
-        {/* == MUSCLE AND MUSCLE HEAD == */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        {/* === NAME (English + Arabic) === */}
+        <div className="space-y-4">
           <Input
-            label="  Muscle *"
+            label="Name (English) *"
             type="text"
-            name="muscle"
-            value={formData.muscle}
+            name="name"
+            value={formData.name}
             onChange={handleChange}
             required
-            placeholder="e.g., chest, back, legs"
+            placeholder="e.g., Bench Press"
           />
           <Input
-            label=" Muscle Head"
+            dir="rtl"
+            label="Name (Arabic)"
             type="text"
-            name="muscleHead"
-            value={formData.muscleHead}
+            name="name_ar"
+            value={formData.name_ar}
             onChange={handleChange}
-            placeholder="e.g., upper, lower, middle"
+            placeholder="مثال: ضغط الصدر"
           />
         </div>
 
-        {/* == DESCRIPTION == */}
-        <Input
-          label="Description *"
-          type="textarea"
-          name="description"
-          value={formData.description}
-          onChange={handleChange}
-          required
-          rows={4}
-          placeholder="description"
-        />
+        {/* === MUSCLE & MUSCLE HEAD (English + Arabic) === */}
+        <div className="space-y-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <Input
+              label="Muscle (English) *"
+              type="text"
+              name="muscle"
+              value={formData.muscle}
+              onChange={handleChange}
+              required
+              placeholder="e.g., chest"
+            />
+            <Input
+              dir="rtl"
+              label="Muscle (Arabic)"
+              type="text"
+              name="muscle_ar"
+              value={formData.muscle_ar}
+              onChange={handleChange}
+              placeholder="مثال: صدر"
+            />
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <Input
+              label="Muscle Head (English)"
+              type="text"
+              name="muscleHead"
+              value={formData.muscleHead}
+              onChange={handleChange}
+              placeholder="e.g., upper chest"
+            />
+            <Input
+              dir="rtl"
+              label="Muscle Head (Arabic)"
+              type="text"
+              name="muscleHead_ar"
+              value={formData.muscleHead_ar}
+              onChange={handleChange}
+              placeholder="مثال: أعلى الصدر"
+            />
+          </div>
+        </div>
 
-        {/* == IMAGE UPLOAD == */}
+        {/* === DESCRIPTION (English + Arabic) === */}
+        <div className="space-y-4">
+          <Input
+            label="Description (English) *"
+            type="textarea"
+            name="description"
+            value={formData.description}
+            onChange={handleChange}
+            required
+            rows={4}
+            placeholder="Describe the exercise in English"
+          />
+          <Input
+            dir="rtl"
+            label="Description (Arabic)"
+            type="textarea"
+            name="description_ar"
+            value={formData.description_ar}
+            onChange={handleChange}
+            rows={4}
+            placeholder="شرح التمرين بالعربية"
+          />
+        </div>
+
+        {/* === IMAGE UPLOAD (same for both) === */}
         <Input
           name="image"
           type="file"
@@ -208,9 +281,9 @@ const CreateExerciseForm = () => {
           onChange={handleImageFile}
         />
 
-        {/* == DIFFICULTY == */}
+        {/* === DIFFICULTY (single, not translated) === */}
         <Input
-          label=" Difficulty *"
+          label="Difficulty *"
           type="select"
           required
           name="difficulty"
@@ -224,15 +297,52 @@ const CreateExerciseForm = () => {
           placeholder="Select difficulty"
         />
 
-        {/* == LINKS == */}
+        {/* === IMPORTANCE === */}
+        <Input
+          type="range"
+          name="importance"
+          label="Priority"
+          value={formData.importance}
+          onChange={handleChange}
+          min={1}
+          max={10}
+          step={1}
+        />
+
+        {/* === EXTRA LINKS (both label and label_ar) === */}
         <div>
-          <label className="block  tracking-[0.05rem] font-medium text-zinc-400 mb-2">
+          <label className="block tracking-[0.05rem] font-medium text-zinc-400 mb-2">
             Extra Links
           </label>
+          {formData.links.length > 0 && (
+            <div className="space-y-4 mb-4">
+              {formData.links.map((link, idx) => (
+                <div
+                  key={idx}
+                  className="flex justify-between items-center gap-3 bg-white/5 border border-white/10 hover:bg-white/10 rounded-lg p-3 ps-6 transition-all duration-200 group"
+                >
+                  <div className="flex-1 min-w-0">
+                    <span className="text-sm font-semibold text-white/90">
+                      {link.label} / {link.label_ar} :
+                    </span>
+                    <span className="text-xs text-zinc-400 ml-2 break-all">
+                      {link.url}
+                    </span>
+                  </div>
+                  <Button
+                    type="custom"
+                    onClick={() => removeLink(idx)}
+                    className="text-zinc-500 hover:!text-red-400 !transition-colors !duration-200 !rounded-md !p-2"
+                    text=" ⨉"
+                  />
+                </div>
+              ))}
+            </div>
+          )}
           <div className="flex flex-col md:flex-row gap-3 mb-4">
             <Input
               type="text"
-              placeholder="label"
+              placeholder="Label (English)"
               value={linkInput.label}
               onChange={(e) =>
                 setLinkInput({ ...linkInput, label: e.target.value })
@@ -240,8 +350,18 @@ const CreateExerciseForm = () => {
               className="flex-1"
             />
             <Input
+              dir="rtl"
+              type="text"
+              placeholder="Label (Arabic)"
+              value={linkInput.label_ar}
+              onChange={(e) =>
+                setLinkInput({ ...linkInput, label_ar: e.target.value })
+              }
+              className="flex-1"
+            />
+            <Input
               type="url"
-              placeholder="url"
+              placeholder="URL"
               value={linkInput.url}
               onChange={(e) =>
                 setLinkInput({ ...linkInput, url: e.target.value })
@@ -255,34 +375,9 @@ const CreateExerciseForm = () => {
               rounded="rounded-lg"
             />
           </div>
-          {formData.links.length > 0 && (
-            <div className=" space-y-4">
-              {formData.links.map((link, idx) => (
-                <div
-                  key={idx}
-                  className="flex justify-between items-center gap-3 bg-white/5 border border-white/10 hover:bg-white/10 rounded-lg p-3 ps-6 transition-all duration-200 group"
-                >
-                  <div className="flex-1 min-w-0">
-                    <span className="text-sm font-semibold text-white/90">
-                      {link.label + " "} :
-                    </span>
-                    <span className="text-xs text-zinc-400 ml-2 break-all">
-                      {link.url}
-                    </span>
-                  </div>
-                  <Button
-                    type="custom"
-                    onClick={() => removeLink(idx)}
-                    className="text-zinc-500 hover:!text-red-400 !transition-colors !duration-200  !rounded-md !p-2"
-                    text=" ⨉"
-                  />
-                </div>
-              ))}
-            </div>
-          )}
         </div>
 
-        {/* == SAVE AND CANCEL == */}
+        {/* === BUTTONS === */}
         <div className="flex justify-end gap-4 pt-4">
           <Button
             type="outlined"
@@ -314,7 +409,7 @@ const CreateExerciseForm = () => {
             disabled={uploadingImage || status === "loading"}
           />
         </div>
-        <ErrorTag error={error} />
+        {error && <ErrorTag type="small" error={error} severity="error" />}
       </form>
     </div>
   );

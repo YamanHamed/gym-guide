@@ -5,14 +5,18 @@ import SkeletonCard from "../../components/SkeletonCard";
 import ErrorTag from "../../components/ErrorTag";
 import { useNavigate, useParams } from "react-router-dom";
 import { MUSCLE_DETAILS } from "../../constants/muscleData";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchExercisesByMuscle } from "../../store/slices/exercisesSlice";
 import FilterBar from "../../components/FilterBar";
 import Note from "../../components/Note";
+import QuickLink from "../../components/QuickLink";
+import { useTranslation } from "react-i18next";
 
 const MusclePage = () => {
   // == GENERAL ==
+  const { i18n } = useTranslation();
+  const isArabic = i18n.language === "ar";
   const { muscle } = useParams(); // 'chest', 'back', etc.
   const dispatch = useDispatch();
   const { muscleCache } = useSelector((state) => state.exercises);
@@ -20,6 +24,10 @@ const MusclePage = () => {
     status: "idle",
     data: [],
     error: null,
+  };
+  // == HELPER TO GET LOCALIZED STRING FROM AN OBJECT ==
+  const localize = (item, field) => {
+    return isArabic && item[`${field}_ar`] ? item[`${field}_ar`] : item[field];
   };
 
   // == DEFINING PAGE CONTENT ==
@@ -31,10 +39,12 @@ const MusclePage = () => {
   }, [muscle, navigate]);
 
   // == THE MUSCLE DATA ==
-  const MuscleData = MUSCLE_DETAILS[muscle];
+  const muscleData = MUSCLE_DETAILS[muscle];
 
   // == THE EXERCISES DATA ==
+  const exercisesRef = useRef(null);
   useEffect(() => {
+    console.log(exercisesData);
     if (exercisesData.status === "idle") {
       dispatch(fetchExercisesByMuscle(muscle));
     }
@@ -45,10 +55,10 @@ const MusclePage = () => {
     if (exercisesData.status === "succeeded") {
       const hash = location.hash;
       if (hash && hash.startsWith("#exercise-")) {
-        const exerciseId = hash.replace("#exercise-", "");
+        const exerciseName = hash.replace("#exercise-", "");
         // Small delay ensures DOM is ready
         setTimeout(() => {
-          const element = document.getElementById(`exercise-${exerciseId}`);
+          const element = document.getElementById(`exercise-${exerciseName}`);
           if (element) {
             element.scrollIntoView({ behavior: "smooth", block: "start" });
           }
@@ -59,6 +69,13 @@ const MusclePage = () => {
   }, [exercisesData.status, location.hash]);
 
   // == EXERCISES FILTERING ==
+  const filterOptions = [
+    { value: "All", label: isArabic ? "الكل" : "All" },
+    ...(muscleData?.headNames || []).map((head, idx) => ({
+      value: head,
+      label: isArabic ? muscleData.headNames_ar[idx] : head,
+    })),
+  ];
   const [selectedFilters, setSelectedFilters] = useState(["All"]);
   const normalize = (str) => str?.toLowerCase().replace(/[\s-]/g, "") || ""; // Helper to normalize strings for flexible comparison
   const filteredExercises = useMemo(() => {
@@ -80,64 +97,71 @@ const MusclePage = () => {
   return (
     <div>
       <Header
-        className="mb-16"
         pageHeader={true}
-        plainTitle={MuscleData?.pageHeader?.plainTitle}
-        highlightTitle={MuscleData?.pageHeader?.highlightedTitle}
-        body={MuscleData?.pageHeader?.body}
-        image="https://images.unsplash.com/photo-1534438327276-14e5300c3a48?q=80&w=1000&auto=format&fit=crop"
+        plainTitle={localize(muscleData?.pageHeader, "plainTitle")}
+        highlightTitle={localize(muscleData?.pageHeader, "highlightedTitle")}
+        body={localize(muscleData?.pageHeader, "body")}
+        image={muscleData?.pageHeader?.image}
         imageClassName="opacity-30"
-        titleSize="text-5xl md:text-7xl"
+        titleSize="text-5xl md:text-6xl"
         bodyClassName="max-w-[280px]"
       />
 
-      {/* == MUSCLE ANATOMY SECTION ==  */}
       <Hr />
       <section>
         <Header
           className="mb-16"
-          plainTitle={MuscleData?.sectionHeader?.plainTitle}
-          highlightTitle={MuscleData?.sectionHeader?.highlightedTitle}
-          body={MuscleData?.sectionHeader?.body}
+          plainTitle={localize(muscleData?.sectionHeader, "plainTitle")}
+          highlightTitle={localize(
+            muscleData?.sectionHeader,
+            "highlightedTitle",
+          )}
+          body={localize(muscleData?.sectionHeader, "body")}
         />
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-12">
-          {MuscleData?.heads.map((head) => {
+          {muscleData?.heads.map((head) => {
             return (
               <Card
                 key={head.id}
                 rounded="rounded-2xl"
                 type="top-image"
                 image={head.image}
-                title={head.name}
-                body={head.description}
+                title={localize(head, "name")}
+                body={localize(head, "description")}
                 links={head.links}
                 imageClassName="brightness-90  object-contain"
               />
             );
           })}
         </div>
-        {MuscleData?.sectionHeader?.note && (
+        {muscleData?.sectionHeader?.note && (
           <Note
             className="mt-10 px-6 md:px-2 max-w-xl "
-            body={MuscleData.sectionHeader.note}
+            body={localize(muscleData?.sectionHeader, "note")}
           />
         )}
       </section>
 
       {/* ==  EXERCISES SECTION ==  */}
       <Hr />
+      <div className=" m-0" ref={exercisesRef} />
       <section>
         <Header
           className="mb-16"
-          plainTitle={muscle}
-          highlightTitle="exercises"
-          subTitle="One Goal, Multiple Paths"
-          body={`check the best exercises to build your ${muscle}, and how to perform them`}
+          plainTitle={isArabic ? "تمارين" : muscleData.pageHeader.plainTitle}
+          highlightTitle={
+            isArabic ? muscleData.pageHeader.highlightedTitle_ar : "exercises"
+          }
+          body={
+            isArabic
+              ? `تعرف على أفضل التمارين لبناء عضلات ${muscleData.pageHeader.highlightedTitle_ar} و كيفية ادائهم`
+              : `check the best exercises to build your ${muscle}, and how to perform them`
+          }
         />
 
         <FilterBar
-          filters={["All", ...(MuscleData?.headNames || [])]}
+          filters={filterOptions}
           value={selectedFilters}
           onChange={setSelectedFilters}
         />
@@ -167,11 +191,11 @@ const MusclePage = () => {
                 {filteredExercises.map((ex) => (
                   <Card
                     key={ex._id}
-                    id={`exercise-${ex._id}`}
+                    id={`exercise-${ex.name.toLowerCase().replace(/\s+/g, "-")}`}
                     type="side-image"
-                    title={ex.name}
-                    tag={ex.muscleHead || ex.muscle}
-                    body={ex.description}
+                    title={localize(ex, "name")}
+                    tag={localize(ex, "muscleHead")}
+                    body={localize(ex, "description")}
                     image={ex.image}
                     links={ex.links || []}
                     rounded="rounded-2xl"
@@ -182,8 +206,6 @@ const MusclePage = () => {
           </>
         )}
       </section>
-
-      <Hr className="mt-32" />
     </div>
   );
 };

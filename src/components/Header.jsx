@@ -67,7 +67,7 @@ const Header = ({
           </div>
 
           {/* == SIDE SUB TITLE == */}
-          <div className=" text-start border-l-2 md:border-r-2 md:border-l-0   border-[#0070FF] pl-4">
+          <div className=" text-start border-s-2 md:border-e-2 md:border-s-0   border-[#0070FF] ps-4 md:pe-4">
             {/* <p className="text-white text-md font-black italic tracking-tighter uppercase mb-2 leading-tight">
               {subTitle}
             </p> */}

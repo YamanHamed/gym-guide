@@ -2,6 +2,7 @@
 import React, { useRef, useState } from "react";
 
 const Input = ({
+  dir,
   type = "text",
   name,
   value,
@@ -14,6 +15,8 @@ const Input = ({
   className = "",
   disabled = false,
   required = false,
+  min,
+  max,
 }) => {
   const fileInputRef = useRef(null);
   const [fileName, setFileName] = useState("");
@@ -42,7 +45,7 @@ const Input = ({
 
   // Wrapper with optional label
   const wrapWithLabel = (inputElement) => (
-    <div className="w-full">
+    <div dir={dir} className="w-full">
       {label && (
         <label className="block  tracking-[0.05rem] font-medium text-zinc-400 mb-2">
           {label}
@@ -103,7 +106,62 @@ const Input = ({
       </select>,
     );
   }
+  // Radio group (custom styled, no visible input)
+  if (type === "radio-group") {
+    const currentValue = value;
+    return wrapWithLabel(
+      <div className="flex flex-wrap gap-3">
+        {options.map((opt) => {
+          const isSelected = currentValue === opt.value;
+          return (
+            <div
+              key={opt.value}
+              onClick={() => onChange({ target: { name, value: opt.value } })}
+              className={`cursor-pointer px-5 py-2 rounded-full border text-sm font-medium transition-all duration-200 ${
+                isSelected
+                  ? "border-[#0070FF] bg-[#0070FF]/10 text-[#0070FF] shadow-sm"
+                  : "border-white/10 bg-white/5 text-zinc-400 hover:border-[#0070FF]/40 hover:text-white"
+              }`}
+            >
+              {opt.label}
+            </div>
+          );
+        })}
+      </div>,
+    );
+  }
+  // Checkbox group (custom styled, array value)
+  if (type === "checkbox-group") {
+    const currentValues = Array.isArray(value) ? value : [];
 
+    const toggleValue = (optValue) => {
+      const newValues = currentValues.includes(optValue)
+        ? currentValues.filter((v) => v !== optValue)
+        : [...currentValues, optValue];
+      onChange({ target: { name, value: newValues } });
+    };
+
+    return wrapWithLabel(
+      <div className="flex flex-wrap gap-3">
+        {options.map((opt) => {
+          const isSelected = currentValues.includes(opt.value);
+          return (
+            <div
+              key={opt.value}
+              onClick={() => toggleValue(opt.value)}
+              className={`cursor-pointer px-5 py-2 rounded-full border text-sm font-medium transition-all duration-200 ${
+                isSelected
+                  ? "border-[#0070FF] bg-[#0070FF]/10 text-[#0070FF] shadow-sm"
+                  : "border-white/10 bg-white/5 text-zinc-400 hover:border-[#0070FF]/40 hover:text-white"
+              }`}
+            >
+              {opt.label}
+            </div>
+          );
+        })}
+      </div>,
+    );
+  }
   // Custom file input
   if (type === "file") {
     return wrapWithLabel(
@@ -164,6 +222,46 @@ const Input = ({
           </span>
         </button>
       </div>,
+    );
+  }
+  // Range input (slider) with optional value display
+  if (type === "range") {
+    return wrapWithLabel(
+      <div className="flex items-center gap-4">
+        <input
+          type="range"
+          name={name}
+          value={value ?? 0}
+          onChange={onChange}
+          min={min}
+          max={max}
+          disabled={disabled}
+          required={required}
+          className="w-full h-2 bg-white/10 rounded-lg appearance-none cursor-pointer accent-[#0070FF]"
+          style={{
+            background: `linear-gradient(to right, #0070FF 0%, #0070FF ${(((value ?? 0) - (min ?? 0)) / ((max ?? 100) - (min ?? 0))) * 100}%, #ffffff20 ${(((value ?? 0) - (min ?? 0)) / ((max ?? 100) - (min ?? 0))) * 100}%, #ffffff20 100%)`,
+          }}
+        />
+        <span className="text-white text-sm font-mono w-12 text-center">
+          {value ?? 0}
+        </span>
+      </div>,
+    );
+  }
+  if (type === "number") {
+    return wrapWithLabel(
+      <input
+        type="number"
+        name={name}
+        value={value}
+        onChange={onChange}
+        placeholder={placeholder}
+        min={min}
+        max={max}
+        disabled={disabled}
+        required={required}
+        className={baseClasses}
+      />,
     );
   }
 

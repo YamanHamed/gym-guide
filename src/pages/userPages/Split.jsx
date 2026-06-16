@@ -8,9 +8,11 @@ import { useDispatch, useSelector } from "react-redux";
 import { fetchSplitByName } from "../../store/slices/splitsSlice";
 import ErrorTag from "../../components/ErrorTag";
 import SkeletonCard from "../../components/SkeletonCard";
+import { useTranslation } from "react-i18next";
 
 const Split = () => {
-  // == GENERAL ==
+  const { t, i18n } = useTranslation();
+  const isArabic = i18n.language === "ar";
   const location = useLocation();
   const dispatch = useDispatch();
   const { name } = useParams();
@@ -18,7 +20,6 @@ const Split = () => {
   const splitFromState = location.state?.split;
   const split = splitFromState ? splitFromState : currentSplit;
 
-  // == FETCHING DATA / GETTING IT FROM LOCATION STATE ==
   useEffect(() => {
     if (!name) return;
     if (splitFromState && splitFromState.name === name) return;
@@ -27,7 +28,45 @@ const Split = () => {
     }
   }, [name, splitFromState, currentSplit, dispatch]);
 
-  // == STATUS HANDLEING ==
+  // Helper to get localized string
+  const getLocalized = (obj, field) => {
+    if (!obj) return "";
+    return isArabic ? obj[`${field}_ar`] : obj[field];
+  };
+
+  // Destructure with localized values
+  const TrainingSessions = (split.trainingDaysSection?.cards || []).map(
+    (card) => ({
+      ...card,
+      title: getLocalized(card, "title"),
+      body: getLocalized(card, "body"),
+      image: card.image,
+    }),
+  );
+  const schedulesSection = {
+    plainTitle: getLocalized(split.schedulesSection, "plainTitle"),
+    highlightedTitle: getLocalized(split.schedulesSection, "highlightedTitle"),
+    body: getLocalized(split.schedulesSection, "body"),
+    schedules: (split.schedulesSection?.schedules || []).map((schedule) => ({
+      ...schedule,
+      title: getLocalized(schedule, "title"),
+      trainingDays: (schedule.trainingDays || []).map((day) => ({
+        ...day,
+        title: getLocalized(day, "title"),
+        subTitle: getLocalized(day, "subTitle"),
+        exercises: (day.exercises || []).map((ex) => ({
+          ...ex,
+          name: getLocalized(ex, "name"),
+          muscle: getLocalized(ex, "muscle"),
+          webName: ex.webName,
+        })),
+      })),
+    })),
+    tip: {
+      body: getLocalized(split.schedulesSection?.tip, "body"),
+      externalUrl: split.schedulesSection?.tip?.externalUrl,
+    },
+  };
   if (status === "loading") {
     return (
       <>
@@ -40,43 +79,19 @@ const Split = () => {
       </>
     );
   }
-  if (status === "failed") {
-    return <ErrorTag error={error} />;
-  }
-  if (!split || !split.name) {
-    return <ErrorTag error="Split not found." />;
-  }
-
-  // == DESTRUCTURING THE SPLIT ==
-  const {
-    name: splitName,
-    description,
-    image: cardImage,
-    pageHeader = {},
-    trainingDaysSection = { cards: [] },
-    schedulesSection = { schedules: [], tip: {} },
-  } = split;
-  const {
-    plainTitle = "",
-    highlightedTitle = "",
-    body = "",
-    image: headerImage = "",
-  } = pageHeader;
-  const { cards = [] } = trainingDaysSection;
-  const { schedules = [], tip = {} } = schedulesSection;
-  const { body: tipBody = "", externalUrl: tipUrl = "" } = tip;
+  if (status === "failed") return <ErrorTag error={error} />;
+  if (!split || !split.name) return <ErrorTag error={t("splitNotFound")} />;
 
   return (
     <div>
       <Header
         pageHeader={true}
-        plainTitle={plainTitle || splitName}
-        highlightTitle={highlightedTitle}
-        subTitle={description} // optional: use split description as sub title
-        body={body}
+        plainTitle={getLocalized(split.pageHeader, "plainTitle")}
+        highlightTitle={getLocalized(split.pageHeader, "highlightedTitle")}
+        body={getLocalized(split.pageHeader, "body")}
         className="mb-20"
-        image={headerImage || cardImage}
-        titleSize="text-5xl md:text-7xl"
+        image={split?.pageHeader?.image}
+        titleSize="text-5xl md:text-6xl"
         bodyClassName="max-w-[280px]"
         isSubPage={true}
       />
@@ -86,14 +101,12 @@ const Split = () => {
       {/* Training Days Section (cards) */}
       <section>
         <Header
-          className="mb-16"
-          plainTitle="PROTOCOL"
-          highlightTitle="BREAKDOWN"
-          subTitle="Movement Pattern Architecture"
-          body="The training split focuses on movement‑pattern grouping to maximise recovery and performance."
+          plainTitle={t("split.sec1PlainTitle")}
+          highlightTitle={t("split.sec1highlightedTitle")}
+          body={getLocalized(split.trainingDaysSection, "body")}
         />
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {cards.map((card, idx) => (
+          {TrainingSessions.map((card, idx) => (
             <Card
               key={card._id || idx}
               rounded="rounded-2xl"
@@ -111,41 +124,39 @@ const Split = () => {
       {/* Schedules Section */}
       <section>
         <Header
-          plainTitle="SESSION"
-          highlightTitle="BREAKDOWN"
-          body="A tactical distribution of volume across the weekly cycle. This example sequence prioritises compound movements followed by targeted isolation."
+          plainTitle={t("split.sec2PlainTitle")}
+          highlightTitle={t("split.sec2highlightedTitle")}
+          body={schedulesSection.body}
           className="mb-16"
         />
 
-        {schedules.map((accordion, idx) => {
-          // Transform trainingDays into the format expected by SplitSchedule
-          // SplitSchedule expects: schedule = [{ focus, sub, exercises, rest }]
-          const scheduleData = accordion.trainingDays.map((day) => ({
+        {schedulesSection.schedules.map((schedule, idx) => {
+          const scheduleData = schedule.trainingDays.map((day) => ({
             focus: day.title,
             sub: day.subTitle || "",
             exercises: day.exercises.map((ex) => ({
               name: ex.name,
-              url: `#`,
-            })), // url can be dynamic
+              url: `/library/${ex.muscle}#exercise-${ex.webName || ex.name.toLowerCase().replace(/\s+/g, "-")}`,
+            })),
             rest: day.isRest || false,
           }));
 
           return (
             <SplitSchedule
-              key={accordion._id || idx}
+              key={schedule._id || idx}
               className="mb-6"
-              title={accordion.title}
+              title={schedule.title}
               schedule={scheduleData}
             />
           );
         })}
 
-        {tipBody && (
+        {schedulesSection.tip.body && (
           <Note
             className="max-w-xl"
-            body={tipBody}
-            linkText="Learn More"
-            linkUrl={tipUrl || "#"}
+            body={schedulesSection.tip.body}
+            linkText={t("split.learnMore")}
+            linkUrl={schedulesSection.tip.externalUrl || "#"}
           />
         )}
       </section>
@@ -220,7 +231,7 @@ const SplitSchedule = ({ title, schedule, className }) => {
                       row.exercises?.map((ex, idx) => (
                         <button
                           key={idx}
-                          onClick={() => navigate(`/library/${ex.muscle}`)}
+                          onClick={() => navigate(ex.url)}
                           className="px-3 py-2 md:py-1.5 bg-white/5 border border-white/10 rounded-md text-[10px] text-zinc-400 font-bold uppercase tracking-wider hover:text-white hover:border-[#0070FF]/50 transition-colors"
                         >
                           {ex.name}

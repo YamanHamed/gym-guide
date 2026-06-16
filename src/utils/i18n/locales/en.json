@@ -1,0 +1,216 @@
+{
+  "nav": {
+    "exercises": "Exercises",
+    "splits": "Splits",
+    "tips": "Tips",
+    "aicoach": "AI Coach",
+    "searchLabel": "search what you think"
+  },
+  "footer": {
+    "brand": "GYM GUIDE",
+    "tagline": "Built for the next generation of lifters. All protocols encrypted.",
+    "home": "Home",
+    "exercises": "Exercises",
+    "splits": "Splits",
+    "tips": "Tips",
+    "coach": "Coach",
+    "coreArchitecture": "Core Architecture //",
+    "contentCuration": "Content Curation //",
+    "yaman": "Yaman",
+    "majd": "Majd",
+    "linkedin": "LinkedIn",
+    "instagram": "Instagram",
+    "email": "Email"
+  },
+  "hero": {
+    "sweat": "Sweat Now,",
+    "shine": "Shine Later.",
+    "description": "Gym Guide is made for people who are new to fitness or want a clear path without feeling lost.",
+    "browseButton": "Browse Exercises"
+  },
+  "about": {
+    "plainTitle": "ABOUT",
+    "highlightTitle": "GYM GUIDE",
+    "body": "Our guide is designed to provide you with all the necessary information for the gym. To benefit from it, we highly recommend following these steps.",
+    "steps": [
+      {
+        "title": "EXPLORE",
+        "desc": "Check the exercises and splits sections to understand the basic anatomy of the body and how exercising works."
+      },
+      {
+        "title": "SELECT",
+        "desc": "After understanding basic muscle anatomy and knowing \"What is an exercise?\" and \"What is a split?\", choose one of the splits that suits your routine, or try creating one yourself!"
+      },
+      {
+        "title": "CONSULT",
+        "desc": "Ask the AI coach for anything you find confusing. And of course we encourage you to search in other references to know exactly what you are doing in the gym."
+      }
+    ]
+  },
+  "tools": {
+    "plainTitle": "OUR",
+    "highlightTitle": "TOOLS",
+    "body": "What you get: explained exercises and workout plans, practical tips, and an AI coach you can ask anything. No complicated stuff – just tools that actually help.",
+    "exerciseLibrary": {
+      "tag": "Build Strength",
+      "title": "Exercise Library"
+    },
+    "trainingSplits": {
+      "title": "Training Splits",
+      "tip": "your best trainer is yourself"
+    },
+    "aiGymPartner": {
+      "status": "Online Now",
+      "title": "AI Gym Partner",
+      "chat": "\"Got a question? Ask the Coach.\""
+    },
+    "dailyTip": {
+      "label": "Daily Tip",
+      "consistency": "Consistency",
+      "intensity": "Intensity",
+      "desc": "Showing up 4 times a week at 70% effort will always beat a single 100% workout followed by 2 weeks of recovery. Focus on the habit first."
+    }
+  },
+  "feedback": {
+    "plainTitle": "YOUR",
+    "highlightTitle": "FEEDBACK",
+    "body": "We would be so happy to receive your suggestions, criticisms, or anything you would like to share with us regarding this guide ♥",
+    "status": "Uplink Status: Active",
+    "quote": "\"Your feedback is the data that drives our progression. Every report is reviewed for system optimization.\"",
+    "formTitle": "contact us"
+  },
+  "contactForm": {
+    "namePlaceholder": "NAME",
+    "emailPlaceholder": "EMAIL (optional)",
+    "messagePlaceholder": "TYPE YOUR MESSAGE HERE...",
+    "sending": "sending...",
+    "send": "send message"
+  },
+  "libraryPage": {
+    "header": {
+      "plainTitle": "EXERCISES",
+      "highlightTitle": "LIBRARY",
+      "body": "the exercises you need to build muscle"
+    },
+    "quickLink": "jump to exercises",
+    "anatomySection": {
+      "plainTitle": "muscles",
+      "highlightTitle": "work",
+      "subTitle": "The Science of Hypertrophy",
+      "paragraph1": "Exercise does a lot for your heart, your mind, and burning fat. But the main focus here is building and growing muscle. (Some exercises aren't meant for muscle growth – but in this guide, we'll talk specifically about muscle‑building.)",
+      "paragraph2": "Your body has several major muscle groups: chest, shoulders, legs, back, and more – see the map below. Each group can be trained with a certain motion. That motion becomes an exercise when you add tension to the muscle, for example by grabbing some dumbbells while moving.",
+      "anterior": "anterior",
+      "posterior": "posterior"
+    },
+    "muscleGroupsSection": {
+      "plainTitle": "muscle",
+      "highlightTitle": "groups",
+      "subTitle": "Targeted Training Protocols",
+      "body": "Now here our exercises are divided by muscle groups. Click at any group to see its exercises"
+    },
+    "muscleNames": {
+      "chest": "Chest",
+      "back": "Back",
+      "shoulders": "Shoulders",
+      "legs": "Legs",
+      "biceps": "Biceps",
+      "triceps": "Triceps",
+      "abs": "Abs",
+      "forearms": "Forearms"
+    },
+    "muscleAccents": {
+      "push": "PUSH",
+      "pull": "PULL",
+      "deltoids": "DELTOIDS",
+      "lower": "LOWER",
+      "arms": "ARMS",
+      "core": "CORE",
+      "grip": "GRIP"
+    },
+    "exerciseCount": "{{count}} Exercises"
+  },
+  "splitsPage": {
+    "header": {
+      "plainTitle": "TRAINING",
+      "highlightTitle": "SPLITS",
+      "body": "the needed knowledge to create your training routine"
+    },
+    "quickLink": "jump to splits",
+    "splitCreation": {
+      "steps": [
+        {
+          "title": "HOW MANY DAYS",
+          "desc": "Before anything, answer yourself honestly: how many days can you go to the gym? 1 day? 2 days? 3 days? Or more?"
+        },
+        {
+          "title": "CHOOSE A SUITABLE PLAN",
+          "desc": "If you have 1 day, train full body. If you have 2 days, train upper/lower split. If you have 3 days, train push/pull/legs split, and so on."
+        },
+        {
+          "title": "CHOOSING THE EXERCISES",
+          "desc": "Choose the exercises for each training session. For example, if the session is chest and triceps: for chest – bench press; for triceps – rope pushdown, etc."
+        },
+        {
+          "title": "PRIORITIZE WEAK MUSCLES",
+          "desc": "For intermediate and advanced levels, prioritize muscle groups or heads that lag behind. For instance, if your upper chest is weaker, replace a lower chest exercise with an upper chest one."
+        }
+      ]
+    },
+    "whatIsSplit": {
+      "plainTitle": "what is a",
+      "highlightTitle": "training split",
+      "subTitle": "One Goal, Multiple Paths",
+      "paragraph1": "First of all, we don't recommend creating your first training split yourself as a complete beginner. But it is preferable to understand how the split is generally created.",
+      "paragraph2": "To create a training split, the first most important question is: how many days can you train a week? And to answer this question you must consider time, food and sleep factors."
+    },
+    "selectSplit": {
+      "plainTitle": "SELECT YOUR",
+      "highlightTitle": "SPLIT",
+      "subTitle": "Deployment Options",
+      "body": "choose the training split that best suits your schedule and goals."
+    },
+    "daysFilter": {
+      "all": "All",
+      "1": "1 day/week",
+      "2": "2 days/week",
+      "3": "3 days/week",
+      "4": "4 days/week",
+      "5": "5 days/week",
+      "6": "6 days/week",
+      "7": "7 days/week"
+    },
+    "noSplits": "No splits match your filters.",
+    "cardTag": "[ {{days}} days/week ]"
+  },
+  "split": {
+    "sec1PlainTitle": " training",
+    "sec1highlightedTitle": "sessions",
+    "sec2PlainTitle": " training",
+    "sec2highlightedTitle": "SCHEDULES",
+    "learnMore": "Learn More"
+  },
+  "tipsPage": {
+    "header": {
+      "plainTitle": "PRACTICAL",
+      "highlightTitle": "TIPS",
+      "subTitle": "Optimize Every Rep",
+      "body": "the experienced advice you need to build muscle"
+    },
+    "secondHeader": {
+      "plainTitle": "TIPS",
+      "highlightTitle": " & INSIGHTS ",
+      "body": "check out our practical tips and insights to develop your training routine"
+    },
+    "filters": {
+      "general": "General",
+      "exercises": "Exercises",
+      "splits": "Splits",
+      "nutrition": "Nutrition"
+    }
+  },
+  "chat": {
+    "welcome": "Welcome back, ready to crush your workout?",
+    "placeholder": "Ask Coach about your performance...",
+    "footer": "Coach can make mistakes."
+  }
+}

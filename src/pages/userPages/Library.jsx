@@ -16,116 +16,113 @@ import Card from "../../components/Card";
 import Hr from "../../components/Hr";
 import Anatomy from "../../components/Anatomy";
 import QuickLink from "../../components/QuickLink";
+import { useTranslation } from "react-i18next";
 
 const muscleGroups = [
   {
     id: "01",
-    title: "Chest",
-    label: "CHEST",
-    accent: "PUSH",
-    count: "18 Exercises",
+    titleKey: "chest",
+    accentKey: "push",
+    count: 18,
     img: chestCardImg,
     size: "md:col-span-2 md:row-span-2",
     large: true,
   },
   {
     id: "02",
-    title: "Back",
-    label: "BACK",
-    accent: "PULL",
-    count: "22 Exercises",
+    titleKey: "back",
+    accentKey: "pull",
+    count: 22,
     img: backCardImg,
     size: "md:col-span-2",
   },
   {
     id: "04",
-    title: "Shoulders",
-    accent: "DELTOIDS",
+    titleKey: "shoulders",
+    accentKey: "deltoids",
+    count: null,
     img: shouldersCardImg,
     size: "md:col-span-1",
   },
   {
     id: "03",
-    title: "Legs",
-    accent: "LOWER",
+    titleKey: "legs",
+    accentKey: "lower",
+    count: null,
     img: legsCardImg,
     size: "md:col-span-1",
   },
   {
     id: "05",
-    title: "Biceps",
-    accent: "ARMS",
+    titleKey: "biceps",
+    accentKey: "arms",
+    count: null,
     img: bicepsCardImg,
     size: "md:col-span-1",
   },
   {
     id: "06",
-    title: "Triceps",
-    accent: "ARMS",
+    titleKey: "triceps",
+    accentKey: "arms",
+    count: null,
     img: tricepsCardImg,
     size: "md:col-span-1",
   },
   {
     id: "07",
-    title: "Abs",
-    accent: "CORE",
+    titleKey: "abs",
+    accentKey: "core",
+    count: null,
     img: absCardImg,
     size: "md:col-span-1",
   },
   {
     id: "08",
-    title: "Forearms",
-    accent: "GRIP",
+    titleKey: "forearms",
+    accentKey: "grip",
+    count: null,
     img: forearmsCardImg,
     size: "md:col-span-1",
   },
 ];
 
 const Library = () => {
+  const { t } = useTranslation();
   const navigate = useNavigate();
-
   const libraryRef = useRef(null);
+
   return (
     <div>
       <Header
         // className="mb-16"
         pageHeader={true}
-        plainTitle="EXERCISES"
-        highlightTitle="LIBRARY"
-        body="the exercises you need to build muscle"
+        plainTitle={t("libraryPage.header.plainTitle")}
+        highlightTitle={t("libraryPage.header.highlightTitle")}
+        body={t("libraryPage.header.body")}
         image={cover}
-        titleSize="text-5xl md:text-7xl"
+        titleSize="text-5xl md:text-6xl"
         bodyClassName="max-w-[280px]"
       />
 
       <QuickLink
         className="mb-0 sm:mb-16 mt-8 sm:mt-10 "
-        label="jump to exercises"
+        label={t("libraryPage.quickLink")}
         targetRef={libraryRef}
       />
       <Hr className="lg:hidden" />
       <section>
         <Header
           className="mb-16"
-          plainTitle=" muscles"
-          highlightTitle=" work"
-          subTitle="The Science of Hypertrophy"
+          plainTitle={t("libraryPage.anatomySection.plainTitle")}
+          highlightTitle={t("libraryPage.anatomySection.highlightTitle")}
+          subTitle={t("libraryPage.anatomySection.subTitle")}
           bodyClassName="!max-w-3xl"
           body={
             <>
               <p className="mb-1">
-                Exercise does a lot for your heart, your mind, and burning fat.
-                But the main focus here is building and growing muscle. (Some
-                exercises aren't meant for muscle growth – but in this guide,
-                we'll talk specifically about muscle‑building.)
+                {t("libraryPage.anatomySection.paragraph1")}
               </p>
-              <p>
-                Your body has several major muscle groups: chest, shoulders,
-                legs, back, and more – see the map below. Each group can be
-                trained with a certain motion. That motion becomes an exercise
-                when you add tension to the muscle, for example by grabbing some
-                dumbbells while moving.
-              </p>
+              <p>{t("libraryPage.anatomySection.paragraph2")}</p>
             </>
           }
         />
@@ -135,27 +132,29 @@ const Library = () => {
       <section ref={libraryRef}>
         <Header
           className="mb-16"
-          plainTitle="muscle "
-          highlightTitle="groups"
-          subTitle="Targeted Training Protocols"
-          body="Now here our exercises are divided by muscle groups. Click at any group to see its exercises "
+          plainTitle={t("libraryPage.muscleGroupsSection.plainTitle")}
+          highlightTitle={t("libraryPage.muscleGroupsSection.highlightTitle")}
+          subTitle={t("libraryPage.muscleGroupsSection.subTitle")}
+          body={t("libraryPage.muscleGroupsSection.body")}
         />
         {/* ==  MUSCLES GRID == */}
         <div className="grid grid-cols-1 md:grid-cols-4 auto-rows-[300px] gap-8 ">
-          {muscleGroups.map((group) => (
-            <Card
-              className={group.size}
-              rounded="rounded-xl"
-              type="full-image"
-              title={group.title}
-              tag={group.accent}
-              image={group.img}
-              key={group.id}
-              onClick={() => {
-                navigate("/library/" + group.title.toLowerCase());
-              }}
-            />
-          ))}
+          {muscleGroups.map((group) => {
+            return (
+              <Card
+                className={group.size}
+                rounded="rounded-xl"
+                type="full-image"
+                title={t(`libraryPage.muscleNames.${group.titleKey}`)}
+                tag={t(`libraryPage.muscleAccents.${group.accentKey}`)}
+                image={group.img}
+                key={group.id}
+                onClick={() => {
+                  navigate("/library/" + group.titleKey.toLowerCase());
+                }}
+              />
+            );
+          })}
         </div>
       </section>
     </div>

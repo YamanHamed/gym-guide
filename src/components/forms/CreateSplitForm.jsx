@@ -1,8 +1,6 @@
-// src/components/forms/CreateSplitForm.jsx
 import React, { useRef, useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-// import { createSplit } from "../../store/splitsSlice";
 import Button from "../Button";
 import Input from "../Input";
 import Card from "../Card";
@@ -13,7 +11,6 @@ import { uploadImage } from "../../utils/uploadImage";
 import ErrorTag from "../ErrorTag";
 
 const CreateSplitForm = () => {
-  // === GENERAL ===
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const location = useLocation();
@@ -21,24 +18,52 @@ const CreateSplitForm = () => {
   const [isEditing, setIsEditing] = useState(false);
   const [editingId, setEditingId] = useState(null);
   const { status, error } = useSelector((state) => state.splits);
-  // === MAIN STATE ===
+
+  // === MAIN STATE (with Arabic fields) ===
   const [formData, setFormData] = useState({
     name: "",
+    name_ar: "",
+    daysAWeek: [],
     description: "",
+    description_ar: "",
     image: "",
     links: [],
-    pageHeader: { plainTitle: "", highlightedTitle: "", body: "", image: "" },
+    pageHeader: {
+      plainTitle: "",
+      plainTitle_ar: "",
+      highlightedTitle: "",
+      highlightedTitle_ar: "",
+      body: "",
+      body_ar: "",
+      image: "",
+    },
     trainingDaysSection: {
-      sectionHeader: { plainTitle: "", highlightedTitle: "", body: "" },
+      sectionHeader: {
+        plainTitle: "",
+        plainTitle_ar: "",
+        highlightedTitle: "",
+        highlightedTitle_ar: "",
+        body: "",
+        body_ar: "",
+      },
       cards: [],
     },
     schedulesSection: {
-      sectionHeader: { plainTitle: "", highlightedTitle: "", body: "" },
-      schedules: [], // [  {  title, trainingDays: [ {title, subTitle, exercises: [name, webName, muscle]} ]  },  ]
-      tip: {}, // { body, externalUrl }
+      sectionHeader: {
+        plainTitle: "",
+        plainTitle_ar: "",
+        highlightedTitle: "",
+        highlightedTitle_ar: "",
+        body: "",
+        body_ar: "",
+      },
+      schedules: [],
+      tip: { body: "", body_ar: "", externalUrl: "" },
     },
+    importance: 5,
   });
 
+  // Populate form when editing
   useEffect(() => {
     if (location.state?.isEditing && location.state?.split) {
       const split = location.state.split;
@@ -46,68 +71,134 @@ const CreateSplitForm = () => {
       setEditingId(split._id);
       setFormData({
         name: split.name || "",
+        name_ar: split.name_ar || "",
+        daysAWeek: split.daysAWeek || [],
         description: split.description || "",
+        description_ar: split.description_ar || "",
         image: split.image || "",
-        links: split.links || [],
+        links: (split.links || []).map((link) => ({
+          label: link.label,
+          label_ar: link.label_ar || "",
+          url: link.url,
+        })),
         pageHeader: {
           plainTitle: split.pageHeader?.plainTitle || "",
+          plainTitle_ar: split.pageHeader?.plainTitle_ar || "",
           highlightedTitle: split.pageHeader?.highlightedTitle || "",
+          highlightedTitle_ar: split.pageHeader?.highlightedTitle_ar || "",
           body: split.pageHeader?.body || "",
+          body_ar: split.pageHeader?.body_ar || "",
           image: split.pageHeader?.image || "",
         },
         trainingDaysSection: {
           sectionHeader: {
             plainTitle:
               split.trainingDaysSection?.sectionHeader?.plainTitle || "",
+            plainTitle_ar:
+              split.trainingDaysSection?.sectionHeader?.plainTitle_ar || "",
             highlightedTitle:
               split.trainingDaysSection?.sectionHeader?.highlightedTitle || "",
+            highlightedTitle_ar:
+              split.trainingDaysSection?.sectionHeader?.highlightedTitle_ar ||
+              "",
             body: split.trainingDaysSection?.sectionHeader?.body || "",
+            body_ar: split.trainingDaysSection?.sectionHeader?.body_ar || "",
           },
-          cards: split.trainingDaysSection?.cards || [],
+          cards: (split.trainingDaysSection?.cards || []).map((card) => ({
+            title: card.title,
+            title_ar: card.title_ar || "",
+            body: card.body,
+            body_ar: card.body_ar || "",
+            image: card.image || "",
+          })),
         },
         schedulesSection: {
           sectionHeader: {
             plainTitle: split.schedulesSection?.sectionHeader?.plainTitle || "",
+            plainTitle_ar:
+              split.schedulesSection?.sectionHeader?.plainTitle_ar || "",
             highlightedTitle:
               split.schedulesSection?.sectionHeader?.highlightedTitle || "",
+            highlightedTitle_ar:
+              split.schedulesSection?.sectionHeader?.highlightedTitle_ar || "",
             body: split.schedulesSection?.sectionHeader?.body || "",
+            body_ar: split.schedulesSection?.sectionHeader?.body_ar || "",
           },
-          schedules: split.schedulesSection?.schedules || [],
+          schedules: (split.schedulesSection?.schedules || []).map(
+            (schedule) => ({
+              title: schedule.title,
+              title_ar: schedule.title_ar || "",
+              trainingDays: (schedule.trainingDays || []).map((day) => ({
+                title: day.title,
+                title_ar: day.title_ar || "",
+                subTitle: day.subTitle || "",
+                subTitle_ar: day.subTitle_ar || "",
+                exercises: (day.exercises || []).map((ex) => ({
+                  name: ex.name,
+                  name_ar: ex.name_ar || "",
+                  webName: ex.webName || "",
+                  muscle: ex.muscle,
+                  muscle_ar: ex.muscle_ar || "",
+                })),
+              })),
+            }),
+          ),
           tip: {
             body: split.schedulesSection?.tip?.body || "",
+            body_ar: split.schedulesSection?.tip?.body_ar || "",
             externalUrl: split.schedulesSection?.tip?.externalUrl || "",
           },
         },
+        importance: split.importance || 5,
       });
     } else {
-      // Reset form for create mode
       setIsEditing(false);
       setEditingId(null);
       setFormData({
         name: "",
+        name_ar: "",
+        daysAWeek: [],
         description: "",
+        description_ar: "",
         image: "",
         links: [],
         pageHeader: {
           plainTitle: "",
+          plainTitle_ar: "",
           highlightedTitle: "",
+          highlightedTitle_ar: "",
           body: "",
+          body_ar: "",
           image: "",
         },
         trainingDaysSection: {
-          sectionHeader: { plainTitle: "", highlightedTitle: "", body: "" },
+          sectionHeader: {
+            plainTitle: "",
+            plainTitle_ar: "",
+            highlightedTitle: "",
+            highlightedTitle_ar: "",
+            body: "",
+            body_ar: "",
+          },
           cards: [],
         },
         schedulesSection: {
-          sectionHeader: { plainTitle: "", highlightedTitle: "", body: "" },
+          sectionHeader: {
+            plainTitle: "",
+            plainTitle_ar: "",
+            highlightedTitle: "",
+            highlightedTitle_ar: "",
+            body: "",
+            body_ar: "",
+          },
           schedules: [],
-          tip: { body: "", externalUrl: "" },
+          tip: { body: "", body_ar: "", externalUrl: "" },
         },
+        importance: 5,
       });
     }
   }, [location.state]);
 
-  console.log(location.state);
   // === HANDLERS ===
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -133,17 +224,14 @@ const CreateSplitForm = () => {
       setUploadingImage(false);
     }
   };
+
   const handleSubmit = (e) => {
     e.preventDefault();
-
-    // Validation for splits
-    if (!formData.name || !formData.description || !formData.image) {
-      toast.error(
-        "Please fill all required fields: name, description, and card image",
-      );
+    // validation
+    if (!formData.name || !formData.description) {
+      toast.error("Please fill all required fields: name, description");
       return;
     }
-    // Page header: at least one title
     if (
       !formData.pageHeader.plainTitle &&
       !formData.pageHeader.highlightedTitle
@@ -151,12 +239,10 @@ const CreateSplitForm = () => {
       toast.error("Page header needs at least a plain or highlighted title");
       return;
     }
-    // Training days cards: at least one card with title and body
     if (!formData.trainingDaysSection.cards.length) {
       toast.error("Add at least one training day card (title + body)");
       return;
     }
-    // Schedules: at least one schedule, and each schedule must have a title and at least one training day
     if (!formData.schedulesSection.schedules.length) {
       toast.error("Add at least one schedule (e.g., Week 1)");
       return;
@@ -166,12 +252,10 @@ const CreateSplitForm = () => {
     const message = isEditing
       ? "Are you sure you want to save these changes?"
       : "Are you sure you want to create this split?";
-    const confirmText = isEditing ? "Save" : "Create";
-
     openModal({
       title,
       message,
-      confirmText,
+      confirmText: isEditing ? "Save" : "Create",
       confirmVariant: "primary",
       onConfirm: async () => {
         try {
@@ -192,15 +276,26 @@ const CreateSplitForm = () => {
     });
   };
 
-  // === OUTER CARD ===
-  const [linkInput, setLinkInput] = useState({ label: "", url: "" });
+  // === LINKS ===
+  const [linkInput, setLinkInput] = useState({
+    label: "",
+    label_ar: "",
+    url: "",
+  });
   const addLink = () => {
     if (linkInput.label && linkInput.url) {
       setFormData({
         ...formData,
-        links: [...formData.links, linkInput],
+        links: [
+          ...formData.links,
+          {
+            label: linkInput.label,
+            label_ar: linkInput.label_ar || "",
+            url: linkInput.url,
+          },
+        ],
       });
-      setLinkInput({ label: "", url: "" });
+      setLinkInput({ label: "", label_ar: "", url: "" });
     }
   };
   const removeLink = (index) => {
@@ -209,35 +304,33 @@ const CreateSplitForm = () => {
     setFormData({ ...formData, links: newLinks });
   };
 
-  // === TRAINING DAY ===
+  // === TRAINING DAY CARDS ===
   const [newCard, setNewCard] = useState({
     title: "",
+    title_ar: "",
     body: "",
+    body_ar: "",
     image: null,
   });
   const [fileInputKey, setFileInputKey] = useState(0);
   const [editingCardIndex, setEditingCardIndex] = useState(null);
   const [showTrainingDayBuilder, setShowTrainingDayBuilder] = useState(false);
   const trainingDayCardBuilderRef = useRef(null);
+
   const saveNewTrainingDayCard = async () => {
-    // Validation
     if (!newCard.title.trim() || !newCard.body.trim()) {
       toast.error("Title and body are required");
       return;
     }
-    if (!newCard.image) {
-      toast.error("Please upload an image");
-      return;
-    }
 
     let imageUrl = newCard.image;
-
     if (editingCardIndex !== null) {
-      // Update existing card at same position
       const updatedCards = [...formData.trainingDaysSection.cards];
       updatedCards[editingCardIndex] = {
         title: newCard.title,
+        title_ar: newCard.title_ar,
         body: newCard.body,
+        body_ar: newCard.body_ar,
         image: imageUrl,
       };
       setFormData((prev) => ({
@@ -251,28 +344,31 @@ const CreateSplitForm = () => {
       setEditingCardIndex(null);
       setShowTrainingDayBuilder(false);
     } else {
-      // Add new card at the end
       setFormData((prev) => ({
         ...prev,
         trainingDaysSection: {
           ...prev.trainingDaysSection,
           cards: [
             ...prev.trainingDaysSection.cards,
-            { title: newCard.title, body: newCard.body, image: imageUrl },
+            {
+              title: newCard.title,
+              title_ar: newCard.title_ar,
+              body: newCard.body,
+              body_ar: newCard.body_ar,
+              image: imageUrl,
+            },
           ],
         },
       }));
       toast.success("Card added");
       setShowTrainingDayBuilder(false);
     }
-
-    // Reset form
-    setNewCard({ title: "", body: "", image: null });
-    setFileInputKey((prev) => prev + 1); // clear file input if using key trick
+    setNewCard({ title: "", title_ar: "", body: "", body_ar: "", image: null });
+    setFileInputKey((prev) => prev + 1);
   };
   const cancelNewTrainingDayCard = () => {
     setEditingCardIndex(null);
-    setNewCard({ title: "", body: "", image: null });
+    setNewCard({ title: "", title_ar: "", body: "", body_ar: "", image: null });
     setFileInputKey((prev) => prev + 1);
     setShowTrainingDayBuilder(false);
   };
@@ -286,43 +382,46 @@ const CreateSplitForm = () => {
     }));
   };
   const startEditTrainingDayCard = (index) => {
-    setShowTrainingDayBuilder(true);
     const card = formData.trainingDaysSection.cards[index];
     setNewCard({
       title: card.title,
+      title_ar: card.title_ar || "",
       body: card.body,
-      image: card.image, // existing URL string (no preview)
+      body_ar: card.body_ar || "",
+      image: card.image,
     });
     setEditingCardIndex(index);
+    setShowTrainingDayBuilder(true);
     trainingDayCardBuilderRef.current?.scrollIntoView({
       behavior: "smooth",
       block: "start",
     });
   };
 
-  // === SCHEDULE ===
+  // === SCHEDULES (ACCORDIONS) ===
   const [newSchedule, setNewSchedule] = useState({
     title: "",
+    title_ar: "",
     trainingDays: [],
   });
   const [editingScheduleIndex, setEditingScheduleIndex] = useState(null);
   const [showScheduleBuilder, setShowScheduleBuilder] = useState(false);
   const trainingScheduleBuilderRef = useRef();
+
   const saveSchedule = () => {
     if (!newSchedule.title.trim()) {
-      toast.error("Session title is required");
+      toast.error("Schedule title is required");
       return;
     }
     if (newSchedule.trainingDays.length === 0) {
-      toast.error("Session exercises is required");
+      toast.error("Schedule must have at least one training day");
       return;
     }
-
-    // Updating existing schedule
     if (editingScheduleIndex !== null) {
       const updatedSchedules = [...formData.schedulesSection.schedules];
       updatedSchedules[editingScheduleIndex] = {
         title: newSchedule.title,
+        title_ar: newSchedule.title_ar,
         trainingDays: newSchedule.trainingDays,
       };
       setFormData((prev) => ({
@@ -334,26 +433,27 @@ const CreateSplitForm = () => {
       }));
       toast.success("Schedule updated");
       setEditingScheduleIndex(null);
-    }
-    // adding new schedule
-    else {
+    } else {
       setFormData((prev) => ({
         ...prev,
         schedulesSection: {
           ...prev.schedulesSection,
-          schedules: [...prev.schedulesSection.schedules, { ...newSchedule }],
+          schedules: [
+            ...prev.schedulesSection.schedules,
+            {
+              title: newSchedule.title,
+              title_ar: newSchedule.title_ar,
+              trainingDays: newSchedule.trainingDays,
+            },
+          ],
         },
       }));
+      toast.success("Schedule added");
     }
-
-    // success alert
-    toast.success("new schedule is created");
-
-    // reset
     cancelSchedule();
   };
   const cancelSchedule = () => {
-    setNewSchedule({ title: "", trainingDays: [] });
+    setNewSchedule({ title: "", title_ar: "", trainingDays: [] });
     setShowScheduleBuilder(false);
   };
   const removeSchedule = (idx) => {
@@ -367,21 +467,22 @@ const CreateSplitForm = () => {
   };
   const startEditSchedule = (index) => {
     const schedule = formData.schedulesSection.schedules[index];
-    setEditingScheduleIndex(index);
     setNewSchedule({
       title: schedule.title,
-      trainingDays: JSON.parse(JSON.stringify(schedule.trainingDays)), // deep copy
+      title_ar: schedule.title_ar || "",
+      trainingDays: JSON.parse(JSON.stringify(schedule.trainingDays)),
     });
-    setShowScheduleBuilder(true); // open the builder if hidden
-
-    //  scroll to builder
+    setEditingScheduleIndex(index);
+    setShowScheduleBuilder(true);
     trainingScheduleBuilderRef.current?.scrollIntoView({ behavior: "smooth" });
   };
 
-  // === TRAINING SESSIONS ===
+  // === TRAINING DAYS INSIDE SCHEDULE ===
   const [newTrainingSession, setNewTrainingSession] = useState({
     title: "",
+    title_ar: "",
     subTitle: "",
+    subTitle_ar: "",
     isRest: false,
     exercises: [],
   });
@@ -391,60 +492,48 @@ const CreateSplitForm = () => {
     setShowScheduleTrainingSessionBuilder,
   ] = useState(false);
   const trainingSessionBuilderRef = useRef();
+
   const saveNewTrainingSession = () => {
     if (!newTrainingSession.title.trim()) {
-      toast.error("Session title is required");
+      toast.error("Training day title is required");
       return;
     }
     if (
       newTrainingSession.exercises.length === 0 &&
       !newTrainingSession.isRest
     ) {
-      toast.error("Session exersies is required");
+      toast.error("Add at least one exercise (or mark as rest day)");
       return;
     }
-
     const session = {
       title: newTrainingSession.title,
+      title_ar: newTrainingSession.title_ar,
       subTitle: newTrainingSession.subTitle,
+      subTitle_ar: newTrainingSession.subTitle_ar,
       exercises: newTrainingSession.exercises,
       isRest: newTrainingSession.isRest,
     };
-
-    // updating existing Session
     if (editingSessionIndex !== null) {
-      const updatedTrainingSession = [...newSchedule.trainingDays];
-
-      updatedTrainingSession[editingSessionIndex] = { ...session };
-
-      setNewSchedule((prev) => ({
-        ...prev,
-        trainingDays: [...updatedTrainingSession],
-      }));
-
-      // success alert
-      toast.success("session updated");
-
+      const updatedDays = [...newSchedule.trainingDays];
+      updatedDays[editingSessionIndex] = session;
+      setNewSchedule((prev) => ({ ...prev, trainingDays: updatedDays }));
+      toast.success("Training day updated");
       setEditingSessionIndex(null);
-    }
-
-    // adding new training session
-    else {
+    } else {
       setNewSchedule((prev) => ({
         ...prev,
         trainingDays: [...prev.trainingDays, session],
       }));
-      // success alert
-      toast.success("new session is created");
+      toast.success("Training day added");
     }
-
-    // reset builder
     cancelNewTrainingSession();
   };
   const cancelNewTrainingSession = () => {
     setNewTrainingSession({
       title: "",
+      title_ar: "",
       subTitle: "",
+      subTitle_ar: "",
       isRest: false,
       exercises: [],
     });
@@ -458,56 +547,75 @@ const CreateSplitForm = () => {
   };
   const startEditTrainingSession = (index) => {
     const session = newSchedule.trainingDays[index];
-
+    setNewTrainingSession({
+      title: session.title,
+      title_ar: session.title_ar || "",
+      subTitle: session.subTitle || "",
+      subTitle_ar: session.subTitle_ar || "",
+      isRest: session.isRest || false,
+      exercises: session.exercises || [],
+    });
     setEditingSessionIndex(index);
-
-    setNewTrainingSession({ ...session });
-
-    setShowScheduleTrainingSessionBuilder(true); // open the builder if hidden
-
-    //  scroll to builder
+    setShowScheduleTrainingSessionBuilder(true);
     trainingSessionBuilderRef.current?.scrollIntoView({ behavior: "smooth" });
   };
   const handleRestToggle = (checked) => {
     if (checked) {
       setNewTrainingSession({
         title: "Rest Day",
+        title_ar: "يوم راحة",
         subTitle: "Recovery",
+        subTitle_ar: "استشفاء",
         isRest: true,
         exercises: [],
       });
     } else {
       setNewTrainingSession({
         title: "",
+        title_ar: "",
         subTitle: "",
+        subTitle_ar: "",
         isRest: false,
         exercises: [],
       });
     }
   };
 
-  // === TRAINING SESSION EXERCISE ===
+  // === EXERCISES INSIDE TRAINING DAY ===
   const [newExercise, setNewExercise] = useState({
     name: "",
+    name_ar: "",
     webName: "",
     muscle: "",
+    muscle_ar: "",
   });
   const addExercise = () => {
-    if (!newExercise.name.trim()) return;
+    if (!newExercise.name.trim() || !newExercise.muscle.trim()) {
+      toast.error("Exercise name and muscle group are required");
+      return;
+    }
     setNewTrainingSession((prev) => ({
       ...prev,
       exercises: [
         ...prev.exercises,
         {
           name: newExercise.name,
+          name_ar: newExercise.name_ar || "",
           webName:
             newExercise.webName ||
             newExercise.name.toLowerCase().replace(/\s/g, "-"),
           muscle: newExercise.muscle,
+          muscle_ar: newExercise.muscle_ar || "",
         },
       ],
     }));
-    setNewExercise({ name: "", webName: "", muscle: "" });
+    setNewExercise({
+      name: "",
+      name_ar: "",
+      webName: "",
+      muscle: "",
+      muscle_ar: "",
+    });
   };
   const removeExercise = (idx) => {
     setNewTrainingSession((prev) => ({
@@ -516,40 +624,84 @@ const CreateSplitForm = () => {
     }));
   };
 
-  //================
+  // === JSX ===
   return (
-    <div className=" border border-white/10 p-8">
-      {/* === FORM HEADER === */}
+    <div className="border border-white/10 p-8">
       <div className="mb-8">
         <h3 className="text-white text-xl font-bold italic tracking-tight uppercase">
-          New Split{" "}
+          {isEditing ? "Edit Split" : "Create New Split"}
         </h3>
         <div className="h-0.5 w-12 bg-[#0070FF] mt-2"></div>
       </div>
 
       <form onSubmit={handleSubmit} className="space-y-8">
-        {/* === OUTER CARD SECTION === */}
+        {/* === CARD SECTION === */}
         <section className="space-y-4">
-          <h2 className="text-xl font-bold text-white">Card </h2>
-
+          <h2 className="text-xl font-bold text-white">Card</h2>
           <Input
             type="text"
             name="name"
-            label="Split Name *"
+            label="Split Name (English) *"
             value={formData.name}
             onChange={handleChange}
             required
             placeholder="split name"
           />
           <Input
+            dir="rtl"
+            type="text"
+            name="name_ar"
+            label="Split Name (Arabic)"
+            value={formData.name_ar}
+            onChange={handleChange}
+            placeholder="الاسم بالعربية"
+          />
+          <Input
             type="textarea"
             name="description"
-            label="Short Description *"
+            label="Short Description (English) *"
             value={formData.description}
             onChange={handleChange}
             required
             rows={4}
-            placeholder="short descrwiption "
+            placeholder="short description"
+          />
+          <Input
+            dir="rtl"
+            type="textarea"
+            name="description_ar"
+            label="Short Description (Arabic)"
+            value={formData.description_ar}
+            onChange={handleChange}
+            rows={4}
+            placeholder="الوصف بالعربية"
+          />
+          <Input
+            type="checkbox-group"
+            name="daysAWeek"
+            label="Recommended days per week"
+            value={formData.daysAWeek}
+            onChange={(e) =>
+              setFormData({ ...formData, daysAWeek: e.target.value })
+            }
+            options={[
+              { value: 1, label: "1 day/week" },
+              { value: 2, label: "2 days/week" },
+              { value: 3, label: "3 days/week" },
+              { value: 4, label: "4 days/week" },
+              { value: 5, label: "5 days/week" },
+              { value: 6, label: "6 days/week" },
+            ]}
+          />
+          <Input
+            type="range"
+            name="importance"
+            label="Priority"
+            value={formData.importance}
+            onChange={handleChange}
+            min={1}
+            max={10}
+            step={1}
           />
           <Input
             type="file"
@@ -557,18 +709,19 @@ const CreateSplitForm = () => {
             accept="image/*"
             placeholder="Upload card image"
             onChange={(file) =>
-              handleImageFile(file, (url) => {
-                setFormData({ ...formData, image: url });
-              })
+              handleImageFile(file, (url) =>
+                setFormData({ ...formData, image: url }),
+              )
             }
           />
 
+          {/* Extra links */}
           <div>
-            <label className="block  tracking-[0.05rem] font-medium text-zinc-400 mb-2">
+            <label className="block tracking-[0.05rem] font-medium text-zinc-400 mb-2">
               Extra Links
             </label>
             {formData.links.length > 0 && (
-              <div className=" space-y-4 mb-4">
+              <div className="space-y-4 mb-4">
                 {formData.links.map((link, idx) => (
                   <div
                     key={idx}
@@ -576,7 +729,7 @@ const CreateSplitForm = () => {
                   >
                     <div className="flex-1 min-w-0">
                       <span className="text-sm font-semibold text-white/90">
-                        {link.label + " "} :
+                        {link.label} / {link.label_ar} :
                       </span>
                       <span className="text-xs text-zinc-400 ml-2 break-all">
                         {link.url}
@@ -585,7 +738,7 @@ const CreateSplitForm = () => {
                     <Button
                       type="custom"
                       onClick={() => removeLink(idx)}
-                      className="text-zinc-500 hover:!text-red-400 !transition-colors !duration-200  !rounded-md !p-2"
+                      className="text-zinc-500 hover:!text-red-400 !transition-colors !duration-200 !rounded-md !p-2"
                       text=" ⨉"
                     />
                   </div>
@@ -595,7 +748,7 @@ const CreateSplitForm = () => {
             <div className="flex flex-col md:flex-row gap-3 mb-4">
               <Input
                 type="text"
-                placeholder="label"
+                placeholder="Label (English)"
                 value={linkInput.label}
                 onChange={(e) =>
                   setLinkInput({ ...linkInput, label: e.target.value })
@@ -603,8 +756,18 @@ const CreateSplitForm = () => {
                 className="flex-1"
               />
               <Input
+                dir="rtl"
+                type="text"
+                placeholder="Label (Arabic)"
+                value={linkInput.label_ar}
+                onChange={(e) =>
+                  setLinkInput({ ...linkInput, label_ar: e.target.value })
+                }
+                className="flex-1"
+              />
+              <Input
                 type="url"
-                placeholder="url"
+                placeholder="URL"
                 value={linkInput.url}
                 onChange={(e) =>
                   setLinkInput({ ...linkInput, url: e.target.value })
@@ -623,23 +786,36 @@ const CreateSplitForm = () => {
 
         <hr className="border-white/10" />
 
-        {/* === PAGE HEADER SECTION === */}
+        {/* === PAGE HEADER === */}
         <section className="space-y-4">
           <h2 className="text-xl font-bold text-white">Page Header</h2>
-
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <Input
               type="text"
-              label="Plain Title"
+              label="Plain Title (English)"
               value={formData.pageHeader.plainTitle}
               onChange={(e) =>
                 handleNestedChange("pageHeader", "plainTitle", e.target.value)
               }
-              placeholder="noncolored part of the title (before)"
+              placeholder="non‑colored part"
+            />
+            <Input
+              dir="rtl"
+              type="text"
+              label="Plain Title (Arabic)"
+              value={formData.pageHeader.plainTitle_ar}
+              onChange={(e) =>
+                handleNestedChange(
+                  "pageHeader",
+                  "plainTitle_ar",
+                  e.target.value,
+                )
+              }
+              placeholder="الجزء غير الملون"
             />
             <Input
               type="text"
-              label="Highlighted Title"
+              label="Highlighted Title (English)"
               value={formData.pageHeader.highlightedTitle}
               onChange={(e) =>
                 handleNestedChange(
@@ -648,13 +824,26 @@ const CreateSplitForm = () => {
                   e.target.value,
                 )
               }
-              placeholder=" colored part of the title (after)"
+              placeholder="colored part"
             />
-
+            <Input
+              dir="rtl"
+              type="text"
+              label="Highlighted Title (Arabic)"
+              value={formData.pageHeader.highlightedTitle_ar}
+              onChange={(e) =>
+                handleNestedChange(
+                  "pageHeader",
+                  "highlightedTitle_ar",
+                  e.target.value,
+                )
+              }
+              placeholder="الجزء الملون"
+            />
             <div className="col-span-full">
               <Input
                 type="textarea"
-                label="Body Text"
+                label="Body Text (English)"
                 rows={3}
                 value={formData.pageHeader.body}
                 onChange={(e) =>
@@ -662,24 +851,33 @@ const CreateSplitForm = () => {
                 }
                 placeholder="body text"
               />
-            </div>
-
-            <div>
               <Input
-                type="file"
-                label="Header Image (optional)"
-                accept="image/*"
-                placeholder="Upload header image"
-                onChange={(file) =>
-                  handleImageFile(file, (url) => {
-                    setFormData({
-                      ...formData,
-                      pageHeader: { ...formData.pageHeader, image: url },
-                    });
-                  })
+                dir="rtl"
+                type="textarea"
+                label="Body Text (Arabic)"
+                rows={3}
+                value={formData.pageHeader.body_ar}
+                onChange={(e) =>
+                  handleNestedChange("pageHeader", "body_ar", e.target.value)
                 }
+                placeholder="النص"
+                className="mt-2"
               />
             </div>
+            <Input
+              type="file"
+              label="Header Image (optional)"
+              accept="image/*"
+              placeholder="Upload header image"
+              onChange={(file) =>
+                handleImageFile(file, (url) =>
+                  setFormData({
+                    ...formData,
+                    pageHeader: { ...formData.pageHeader, image: url },
+                  }),
+                )
+              }
+            />
           </div>
         </section>
 
@@ -689,12 +887,11 @@ const CreateSplitForm = () => {
         <section className="space-y-4">
           <h2 className="text-xl font-bold text-white">Training Days</h2>
 
-          {/* == TRAINING DAYS SECTION HEADER == */}
+          {/* Section header */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
             <Input
               type="text"
-              label="Section Plain Title"
-              placeholder="e.g., Weekly"
+              label="Section Plain Title (English)"
               value={formData.trainingDaysSection.sectionHeader.plainTitle}
               onChange={(e) =>
                 setFormData((prev) => ({
@@ -708,11 +905,30 @@ const CreateSplitForm = () => {
                   },
                 }))
               }
+              placeholder="e.g., Weekly"
+            />
+            <Input
+              dir="rtl"
+              type="text"
+              label="Section Plain Title (Arabic)"
+              value={formData.trainingDaysSection.sectionHeader.plainTitle_ar}
+              onChange={(e) =>
+                setFormData((prev) => ({
+                  ...prev,
+                  trainingDaysSection: {
+                    ...prev.trainingDaysSection,
+                    sectionHeader: {
+                      ...prev.trainingDaysSection.sectionHeader,
+                      plainTitle_ar: e.target.value,
+                    },
+                  },
+                }))
+              }
+              placeholder="مثال: أسبوعي"
             />
             <Input
               type="text"
-              label="Section Highlighted Title"
-              placeholder="e.g., Schedule"
+              label="Section Highlighted Title (English)"
               value={
                 formData.trainingDaysSection.sectionHeader.highlightedTitle
               }
@@ -728,14 +944,34 @@ const CreateSplitForm = () => {
                   },
                 }))
               }
+              placeholder="e.g., Schedule"
             />
-
+            <Input
+              dir="rtl"
+              type="text"
+              label="Section Highlighted Title (Arabic)"
+              value={
+                formData.trainingDaysSection.sectionHeader.highlightedTitle_ar
+              }
+              onChange={(e) =>
+                setFormData((prev) => ({
+                  ...prev,
+                  trainingDaysSection: {
+                    ...prev.trainingDaysSection,
+                    sectionHeader: {
+                      ...prev.trainingDaysSection.sectionHeader,
+                      highlightedTitle_ar: e.target.value,
+                    },
+                  },
+                }))
+              }
+              placeholder="مثال: جدول"
+            />
             <div className="col-span-full">
               <Input
                 type="textarea"
-                label="Section Body"
+                label="Section Body (English)"
                 rows={2}
-                placeholder="Optional description"
                 value={formData.trainingDaysSection.sectionHeader.body}
                 onChange={(e) =>
                   setFormData((prev) => ({
@@ -749,64 +985,78 @@ const CreateSplitForm = () => {
                     },
                   }))
                 }
+                placeholder="Optional description"
+              />
+              <Input
+                dir="rtl"
+                type="textarea"
+                label="Section Body (Arabic)"
+                rows={2}
+                value={formData.trainingDaysSection.sectionHeader.body_ar}
+                onChange={(e) =>
+                  setFormData((prev) => ({
+                    ...prev,
+                    trainingDaysSection: {
+                      ...prev.trainingDaysSection,
+                      sectionHeader: {
+                        ...prev.trainingDaysSection.sectionHeader,
+                        body_ar: e.target.value,
+                      },
+                    },
+                  }))
+                }
+                placeholder="وصف اختياري"
+                className="mt-2"
               />
             </div>
           </div>
 
-          {/* == TRAINING DAY CARDS == */}
+          {/* Existing cards */}
           {formData.trainingDaysSection.cards.length > 0 && (
             <div className="space-y-2">
-              <h3 className="block  tracking-[0.05rem] font-medium text-zinc-400 mb-4">
+              <h3 className="block tracking-[0.05rem] font-medium text-zinc-400 mb-4">
                 Added Training days
               </h3>
               <div className="grid grid-cols-1 xl:grid-cols-3 gap-6">
-                {formData.trainingDaysSection.cards.map((card, idx) => {
-                  return (
-                    <div key={idx} className="relative">
-                      <Card
-                        type="top-image"
-                        title={card.title}
-                        body={card.body}
-                        image={card.image}
+                {formData.trainingDaysSection.cards.map((card, idx) => (
+                  <div key={idx} className="relative">
+                    <Card
+                      type="top-image"
+                      title={card.title}
+                      body={card.body}
+                      image={card.image}
+                    />
+                    <div className="absolute bottom-2 right-2 flex gap-1">
+                      <Button
+                        type="custom"
+                        icon="edit"
+                        onClick={() => startEditTrainingDayCard(idx)}
+                        className="!p-2"
                       />
-
-                      <div className="absolute bottom-2 right-2 flex gap-1">
-                        <div className="flex justify-end">
-                          <Button
-                            type="custom"
-                            icon="edit"
-                            onClick={() => {
-                              startEditTrainingDayCard(idx);
-                            }} // handleEditCard(idx)
-                            className="!p-2" // optional: reduce padding for icon-only button
-                          />
-                          <Button
-                            type="custom"
-                            icon="delete"
-                            onClick={() =>
-                              openModal({
-                                title: "Delete Card?",
-                                message:
-                                  "Are you sure you want to delete this?",
-                                confirmText: "delete",
-                                cancelText: "cancel",
-                                confirmVariant: "danger",
-                                onConfirm: () => removeTrainingDayCard(idx),
-                              })
-                            }
-                            className="!p-2 text-red-400 hover:text-red-300"
-                          />
-                        </div>
-                      </div>
+                      <Button
+                        type="custom"
+                        icon="delete"
+                        onClick={() =>
+                          openModal({
+                            title: "Delete Card?",
+                            message: "Are you sure you want to delete this?",
+                            confirmText: "delete",
+                            cancelText: "cancel",
+                            confirmVariant: "danger",
+                            onConfirm: () => removeTrainingDayCard(idx),
+                          })
+                        }
+                        className="!p-2 text-red-400 hover:text-red-300"
+                      />
                     </div>
-                  );
-                })}
+                  </div>
+                ))}
               </div>
             </div>
           )}
 
-          {/* == ADD NEW TRAINING DAY == */}
-          <div className="m-0 p-0" ref={trainingDayCardBuilderRef}></div>
+          {/* Add new card builder */}
+          <div ref={trainingDayCardBuilderRef}></div>
           {!showTrainingDayBuilder ? (
             <Button
               type="outlined"
@@ -815,40 +1065,63 @@ const CreateSplitForm = () => {
               className="mb-6"
             />
           ) : (
-            <div className="border border-white/10 p-6  rounded-sm space-y-4">
-              <h3 className="text-lg font-bold text-white">New Training Day</h3>
-
+            <div className="border border-white/10 p-6 rounded-sm space-y-4">
+              <h3 className="text-lg font-bold text-white">
+                {editingCardIndex !== null
+                  ? "Edit Training Day"
+                  : "New Training Day"}
+              </h3>
               <Input
                 required
                 type="text"
-                placeholder="training day ( eg. push ) "
+                placeholder="Title (English)"
                 value={newCard.title}
                 onChange={(e) =>
                   setNewCard({ ...newCard, title: e.target.value })
                 }
               />
+
+              <Input
+                dir="rtl"
+                type="text"
+                placeholder="Title (Arabic)"
+                value={newCard.title_ar}
+                onChange={(e) =>
+                  setNewCard({ ...newCard, title_ar: e.target.value })
+                }
+              />
               <Input
                 required
                 type="textarea"
-                placeholder="muscles targeted ( eg. in push day we train the chest and . . . )"
+                placeholder="Body (English)"
                 value={newCard.body}
                 onChange={(e) =>
                   setNewCard({ ...newCard, body: e.target.value })
                 }
+                rows={3}
+              />
+              <Input
+                dir="rtl"
+                type="textarea"
+                placeholder="Body (Arabic)"
+                value={newCard.body_ar}
+                onChange={(e) =>
+                  setNewCard({ ...newCard, body_ar: e.target.value })
+                }
+                rows={3}
               />
               <Input
                 key={fileInputKey}
                 required
                 type="file"
-                placeholder="Upload training day image * "
+                placeholder="Upload training day image *"
                 accept="image/*"
                 onChange={(file) =>
-                  handleImageFile(file, (url) => {
-                    setNewCard({ ...newCard, image: url });
-                  })
+                  handleImageFile(file, (url) =>
+                    setNewCard({ ...newCard, image: url }),
+                  )
                 }
               />
-
               <div className="flex gap-2 items-center">
                 <Button
                   type="filled"
@@ -856,13 +1129,10 @@ const CreateSplitForm = () => {
                   onClick={saveNewTrainingDayCard}
                   className="flex-1"
                 />
-
                 <Button
                   type="outlined"
                   text="Cancel"
-                  onClick={() => {
-                    cancelNewTrainingDayCard();
-                  }}
+                  onClick={cancelNewTrainingDayCard}
                 />
               </div>
             </div>
@@ -871,15 +1141,15 @@ const CreateSplitForm = () => {
 
         <hr className="border-white/10" />
 
-        {/* === TRAINING SCHEDULES SECTION ===  */}
+        {/* === SCHEDULES SECTION === */}
         <section>
           <h2 className="text-xl font-bold text-white mb-6">Schedules</h2>
 
-          {/* === TRAINING SCHEDULES SECTION HEADER === */}
+          {/* Section header */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
             <Input
               type="text"
-              label="Section Plain Title"
+              label="Section Plain Title (English)"
               value={formData.schedulesSection.sectionHeader.plainTitle}
               onChange={(e) =>
                 setFormData((prev) => ({
@@ -895,10 +1165,28 @@ const CreateSplitForm = () => {
               }
               placeholder="e.g., Weekly"
             />
-
+            <Input
+              dir="rtl"
+              type="text"
+              label="Section Plain Title (Arabic)"
+              value={formData.schedulesSection.sectionHeader.plainTitle_ar}
+              onChange={(e) =>
+                setFormData((prev) => ({
+                  ...prev,
+                  schedulesSection: {
+                    ...prev.schedulesSection,
+                    sectionHeader: {
+                      ...prev.schedulesSection.sectionHeader,
+                      plainTitle_ar: e.target.value,
+                    },
+                  },
+                }))
+              }
+              placeholder="مثال: أسبوعي"
+            />
             <Input
               type="text"
-              label="Section Highlighted Title"
+              label="Section Highlighted Title (English)"
               value={formData.schedulesSection.sectionHeader.highlightedTitle}
               onChange={(e) =>
                 setFormData((prev) => ({
@@ -914,11 +1202,31 @@ const CreateSplitForm = () => {
               }
               placeholder="e.g., Schedule"
             />
-
+            <Input
+              dir="rtl"
+              type="text"
+              label="Section Highlighted Title (Arabic)"
+              value={
+                formData.schedulesSection.sectionHeader.highlightedTitle_ar
+              }
+              onChange={(e) =>
+                setFormData((prev) => ({
+                  ...prev,
+                  schedulesSection: {
+                    ...prev.schedulesSection,
+                    sectionHeader: {
+                      ...prev.schedulesSection.sectionHeader,
+                      highlightedTitle_ar: e.target.value,
+                    },
+                  },
+                }))
+              }
+              placeholder="مثال: جدول"
+            />
             <div className="col-span-full">
               <Input
                 type="textarea"
-                label="Section Body"
+                label="Section Body (English)"
                 rows={2}
                 value={formData.schedulesSection.sectionHeader.body}
                 onChange={(e) =>
@@ -935,16 +1243,36 @@ const CreateSplitForm = () => {
                 }
                 placeholder="Optional description"
               />
+              <Input
+                dir="rtl"
+                type="textarea"
+                label="Section Body (Arabic)"
+                rows={2}
+                value={formData.schedulesSection.sectionHeader.body_ar}
+                onChange={(e) =>
+                  setFormData((prev) => ({
+                    ...prev,
+                    schedulesSection: {
+                      ...prev.schedulesSection,
+                      sectionHeader: {
+                        ...prev.schedulesSection.sectionHeader,
+                        body_ar: e.target.value,
+                      },
+                    },
+                  }))
+                }
+                placeholder="وصف اختياري"
+                className="mt-2"
+              />
             </div>
           </div>
 
-          {/* === ADDED TRAINING SCHEDULES === */}
+          {/* Display added schedules */}
           {formData.schedulesSection.schedules.length > 0 && (
             <div className="space-y-4 mb-6">
               <h3 className="tracking-[0.05rem] font-medium text-zinc-400 mb-2">
                 Added Schedules
               </h3>
-
               {formData.schedulesSection.schedules.map((schedule, idx) => (
                 <div
                   key={idx}
@@ -953,13 +1281,12 @@ const CreateSplitForm = () => {
                   <div className="flex justify-between items-start mb-3">
                     <div>
                       <h4 className="text-white font-bold text-lg">
-                        {schedule.title}
+                        {schedule.title} / {schedule.title_ar}
                       </h4>
                       <p className="text-zinc-400 text-xs">
                         {schedule.trainingDays.length} training days
                       </p>
                     </div>
-
                     <div className="flex gap-2">
                       <Button
                         type="custom"
@@ -981,10 +1308,12 @@ const CreateSplitForm = () => {
                         key={dIdx}
                         className="border-l-2 border-[#0070FF]/30 pl-3"
                       >
-                        <p className="text-white font-semibold">{day.title}</p>
-                        {day.subTitle && (
+                        <p className="text-white font-semibold">
+                          {day.title} / {day.title_ar}
+                        </p>
+                        {(day.subTitle || day.subTitle_ar) && (
                           <p className="text-zinc-400 text-xs">
-                            {day.subTitle}
+                            {day.subTitle} / {day.subTitle_ar}
                           </p>
                         )}
                         <div className="flex flex-wrap gap-1 mt-1">
@@ -993,7 +1322,7 @@ const CreateSplitForm = () => {
                               key={eIdx}
                               className="bg-white/10 text-[10px] text-zinc-300 px-2 py-0.5 rounded"
                             >
-                              {ex.name}
+                              {ex.name} / {ex.name_ar}
                             </span>
                           ))}
                         </div>
@@ -1005,8 +1334,8 @@ const CreateSplitForm = () => {
             </div>
           )}
 
-          {/* === ADD NEW TRAINING SCHEDULES === */}
-          <div className="m-0 p-0" ref={trainingScheduleBuilderRef}></div>
+          {/* Add new schedule builder */}
+          <div ref={trainingScheduleBuilderRef}></div>
           {!showScheduleBuilder ? (
             <Button
               type="outlined"
@@ -1016,237 +1345,270 @@ const CreateSplitForm = () => {
             />
           ) : (
             <div className="border border-white/10 rounded-sm p-6 space-y-4">
-              {/* == SCHEDULE HEADER == */}
-              <h3 className="text-lg font-bold text-white">New Schedule</h3>
-
-              {/* == SCHEDULE TITLE == */}
+              <h3 className="text-lg font-bold text-white">
+                {editingScheduleIndex !== null
+                  ? "Edit Schedule"
+                  : "New Schedule"}
+              </h3>
               <Input
                 type="text"
-                label="Schedule Title *"
+                label="Schedule Title (English) *"
                 value={newSchedule.title}
                 onChange={(e) =>
                   setNewSchedule((prev) => ({ ...prev, title: e.target.value }))
                 }
-                placeholder="eg. ppl-1"
+                placeholder="e.g., Week 1"
+              />
+              <Input
+                dir="rtl"
+                type="text"
+                label="Schedule Title (Arabic)"
+                value={newSchedule.title_ar}
+                onChange={(e) =>
+                  setNewSchedule((prev) => ({
+                    ...prev,
+                    title_ar: e.target.value,
+                  }))
+                }
+                placeholder="مثال: أسبوع 1"
               />
 
-              {/* == TRAINING SESSIONS  == */}
-              <div className="space-y-3 mt-4 ">
-                {/* == ADDED TRAINING SESSIONS NUMBER == */}
-                {newSchedule.trainingDays.length > 0 && (
-                  <div className="flex justify-between items-center">
-                    <span className="text-base text-zinc-400">
-                      Added Sessions
-                    </span>
-                  </div>
-                )}
-
-                {/* == ADDED TRAINING SESSIONS  == */}
-                {newSchedule.trainingDays.map((day, idx) => (
-                  <div
-                    key={idx}
-                    className="bg-white/5 border border-white/10 rounded-xl p-3 flex justify-between items-start"
-                  >
-                    <div>
-                      <p className="text-white font-medium">{day.title}</p>
-                      {day.subTitle && (
-                        <p className="text-zinc-400 text-xs">{day.subTitle}</p>
-                      )}
-                      <div className="flex flex-wrap gap-1 mt-1">
-                        {day.exercises.map((ex, exIdx) => (
-                          <span
-                            key={exIdx}
-                            className="bg-white/10 text-[10px] text-zinc-300 px-2 py-0.5 rounded"
-                          >
-                            {ex.name}
-                          </span>
-                        ))}
-                      </div>
-                    </div>
-
-                    <div className="flex gap-2">
-                      <Button
-                        type="custom"
-                        icon="edit"
-                        onClick={() => startEditTrainingSession(idx)}
-                        className="!p-2"
-                      />
-                      <Button
-                        icon="delete"
-                        type="custom"
-                        onClick={() => removeTrainingSession(idx)}
-                        className="!p-2 text-red-400 text-xs"
-                      />
-                    </div>
-                  </div>
-                ))}
-
-                {/* == FORM TO ADD THE TRAINING SESSION  == */}
-                <div className="m-0 p-0" ref={trainingSessionBuilderRef}></div>
-                {!showScheduleTrainingSessionBuilder ? (
-                  <Button
-                    type="outlined"
-                    text="+ Add Training Session"
-                    onClick={() => setShowScheduleTrainingSessionBuilder(true)}
-                    className="mt-2 w-full"
-                  />
-                ) : (
-                  <div className="border border-white/10 p-4  mt-2">
-                    {/* == SESSION HEADER == */}
-                    <h3 className="text-base font-bold text-white mb-6">
-                      New Training Session
-                    </h3>
-
-                    {/* == IS REST DAY CHECKBOX == */}
-                    <div className="flex items-center gap-4 mb-2">
-                      <label className="text-zinc-400 text-sm flex items-center gap-2">
-                        <input
-                          type="checkbox"
-                          checked={newTrainingSession.isRest}
-                          onChange={(e) => handleRestToggle(e.target.checked)}
-                          className="accent-[#0070FF]"
-                        />
-                        This is a rest day
-                      </label>
-                    </div>
-
-                    {/* == SESSION BUILDER == */}
-                    {!newTrainingSession.isRest ? (
-                      <div className="space-y-2 mb-4">
-                        {/* == SESSION TITLE == */}
-                        <Input
-                          type="text"
-                          placeholder="Day title (e.g., Push Day)"
-                          value={newTrainingSession.title}
-                          onChange={(e) =>
-                            setNewTrainingSession((prev) => ({
-                              ...prev,
-                              title: e.target.value,
-                            }))
-                          }
-                        />
-                        {/* == SESSION SUBTITLE == */}
-                        <Input
-                          type="text"
-                          placeholder="Subtitle (optional)"
-                          value={newTrainingSession.subTitle}
-                          onChange={(e) =>
-                            setNewTrainingSession((prev) => ({
-                              ...prev,
-                              subTitle: e.target.value,
-                            }))
-                          }
-                        />
-                        {/* == ADDED EXERCISES == */}
-                        {newTrainingSession.exercises.length > 0 && (
-                          <div className="flex flex-wrap gap-2 ">
-                            {newTrainingSession.exercises.map((ex, exIdx) => (
-                              <span
-                                key={exIdx}
-                                className="bg-white/10 text-white text-xs px-2 py-1 rounded flex items-center gap-1"
-                              >
-                                {ex.name}
-                                <button
-                                  type="button"
-                                  onClick={() => removeExercise(exIdx)}
-                                  className="text-red-400 text-xs ml-1"
-                                >
-                                  ×
-                                </button>
-                              </span>
-                            ))}
-                          </div>
-                        )}
-                        <label className="text-zinc-400 text-sm flex items-center gap-2">
-                          added exercises
-                        </label>
-
-                        {/* == FORM TO ADD EXERCISES == */}
-                        <div className="flex flex-col md:flex-row gap-3 mb-4">
-                          <Input
-                            type="text"
-                            placeholder="Exercise name (e.g., Bench Press)"
-                            value={newExercise.name}
-                            onChange={(e) =>
-                              setNewExercise((prev) => ({
-                                ...prev,
-                                name: e.target.value,
-                              }))
-                            }
-                            className="flex-1"
-                          />
-                          <Input
-                            type="text"
-                            placeholder="Web name (slug)"
-                            value={newExercise.webName}
-                            onChange={(e) =>
-                              setNewExercise((prev) => ({
-                                ...prev,
-                                webName: e.target.value,
-                              }))
-                            }
-                            className="flex-1"
-                          />
-                          <Input
-                            type="text"
-                            placeholder="Web name (slug)"
-                            value={newExercise.muscle}
-                            onChange={(e) =>
-                              setNewExercise((prev) => ({
-                                ...prev,
-                                muscle: e.target.value,
-                              }))
-                            }
-                            className="flex-1"
-                          />
-                          <Button
-                            type="filled"
-                            text="Add"
-                            onClick={addExercise}
-                            rounded="rounded-md"
-                          />
+              {/* Existing training days in new schedule */}
+              {newSchedule.trainingDays.length > 0 && (
+                <div className="space-y-3">
+                  <span className="text-base text-zinc-400">
+                    Added Sessions
+                  </span>
+                  {newSchedule.trainingDays.map((day, idx) => (
+                    <div
+                      key={idx}
+                      className="bg-white/5 border border-white/10 rounded-xl p-3 flex justify-between items-start"
+                    >
+                      <div>
+                        <p className="text-white font-medium">
+                          {day.title} / {day.title_ar}
+                        </p>
+                        <p className="text-zinc-400 text-xs">
+                          {day.subTitle} / {day.subTitle_ar}
+                        </p>
+                        <div className="flex flex-wrap gap-1 mt-1">
+                          {day.exercises.map((ex, eIdx) => (
+                            <span
+                              key={eIdx}
+                              className="bg-white/10 text-[10px] text-zinc-300 px-2 py-0.5 rounded"
+                            >
+                              {ex.name} / {ex.name_ar}
+                            </span>
+                          ))}
                         </div>
                       </div>
-                    ) : (
-                      <div className="text-zinc-400 italic text-sm  mb-4">
-                        Rest day – no exercises
-                      </div>
-                    )}
-
-                    {/* == SAVING SESSION == */}
-                    <div className="flex justify-end ">
-                      <div className="flex gap-2 items-center ">
+                      <div className="flex gap-2">
                         <Button
-                          type="filled"
-                          text="save"
-                          onClick={saveNewTrainingSession}
-                          className="w-full flex-1"
-                          disabled={
-                            !newTrainingSession.isRest &&
-                            !newTrainingSession.title.trim()
-                          }
+                          type="custom"
+                          icon="edit"
+                          onClick={() => startEditTrainingSession(idx)}
+                          className="!p-2"
                         />
                         <Button
-                          type="outlined"
-                          text="Cancel"
-                          onClick={cancelNewTrainingSession}
+                          type="custom"
+                          icon="delete"
+                          onClick={() => removeTrainingSession(idx)}
+                          className="!p-2 text-red-400"
                         />
                       </div>
                     </div>
-                  </div>
-                )}
-              </div>
+                  ))}
+                </div>
+              )}
 
-              {/* == SAVING SCHEDULE == */}
-              <div className="flex gap-2 items-center  mt-10">
+              {/* Add training day builder */}
+              <div ref={trainingSessionBuilderRef}></div>
+              {!showScheduleTrainingSessionBuilder ? (
+                <Button
+                  type="outlined"
+                  text="+ Add Training Session"
+                  onClick={() => setShowScheduleTrainingSessionBuilder(true)}
+                  className="mt-2 w-full"
+                />
+              ) : (
+                <div className="border border-white/10 p-4 mt-2">
+                  <h3 className="text-base font-bold text-white mb-6">
+                    {editingSessionIndex !== null
+                      ? "Edit Training Session"
+                      : "New Training Session"}
+                  </h3>
+                  <div className="flex items-center gap-4 mb-2">
+                    <label className="text-zinc-400 text-sm flex items-center gap-2">
+                      <input
+                        type="checkbox"
+                        checked={newTrainingSession.isRest}
+                        onChange={(e) => handleRestToggle(e.target.checked)}
+                        className="accent-[#0070FF]"
+                      />
+                      This is a rest day
+                    </label>
+                  </div>
+                  {!newTrainingSession.isRest ? (
+                    <div className="space-y-2 mb-4">
+                      <Input
+                        type="text"
+                        placeholder="Day title (English)"
+                        value={newTrainingSession.title}
+                        onChange={(e) =>
+                          setNewTrainingSession((prev) => ({
+                            ...prev,
+                            title: e.target.value,
+                          }))
+                        }
+                      />
+                      <Input
+                        dir="rtl"
+                        type="text"
+                        placeholder="Day title (Arabic)"
+                        value={newTrainingSession.title_ar}
+                        onChange={(e) =>
+                          setNewTrainingSession((prev) => ({
+                            ...prev,
+                            title_ar: e.target.value,
+                          }))
+                        }
+                      />
+                      <Input
+                        type="text"
+                        placeholder="Subtitle (English optional)"
+                        value={newTrainingSession.subTitle}
+                        onChange={(e) =>
+                          setNewTrainingSession((prev) => ({
+                            ...prev,
+                            subTitle: e.target.value,
+                          }))
+                        }
+                      />
+                      <Input
+                        dir="rtl"
+                        type="text"
+                        placeholder="Subtitle (Arabic optional)"
+                        value={newTrainingSession.subTitle_ar}
+                        onChange={(e) =>
+                          setNewTrainingSession((prev) => ({
+                            ...prev,
+                            subTitle_ar: e.target.value,
+                          }))
+                        }
+                      />
+                      {newTrainingSession.exercises.length > 0 && (
+                        <div className="flex flex-wrap gap-2">
+                          {newTrainingSession.exercises.map((ex, exIdx) => (
+                            <span
+                              key={exIdx}
+                              className="bg-white/10 text-white text-xs px-2 py-1 rounded flex items-center gap-1"
+                            >
+                              {ex.name} / {ex.name_ar}
+                              <button
+                                type="button"
+                                onClick={() => removeExercise(exIdx)}
+                                className="text-red-400 text-xs ml-1"
+                              >
+                                ×
+                              </button>
+                            </span>
+                          ))}
+                        </div>
+                      )}
+                      <label className="text-zinc-400 text-sm flex items-center gap-2">
+                        added exercises
+                      </label>
+                      <div className="flex flex-col md:flex-row gap-3 mb-4">
+                        <Input
+                          type="text"
+                          placeholder="Exercise name (English)"
+                          value={newExercise.name}
+                          onChange={(e) =>
+                            setNewExercise((prev) => ({
+                              ...prev,
+                              name: e.target.value,
+                            }))
+                          }
+                          className="flex-1"
+                        />
+                        <Input
+                          dir="rtl"
+                          type="text"
+                          placeholder="Exercise name (Arabic)"
+                          value={newExercise.name_ar}
+                          onChange={(e) =>
+                            setNewExercise((prev) => ({
+                              ...prev,
+                              name_ar: e.target.value,
+                            }))
+                          }
+                          className="flex-1"
+                        />
+                        <Input
+                          type="text"
+                          placeholder="Muscle group (English)"
+                          value={newExercise.muscle}
+                          onChange={(e) =>
+                            setNewExercise((prev) => ({
+                              ...prev,
+                              muscle: e.target.value,
+                            }))
+                          }
+                          className="flex-1"
+                        />
+                        <Input
+                          dir="rtl"
+                          type="text"
+                          placeholder="Muscle group (Arabic)"
+                          value={newExercise.muscle_ar}
+                          onChange={(e) =>
+                            setNewExercise((prev) => ({
+                              ...prev,
+                              muscle_ar: e.target.value,
+                            }))
+                          }
+                          className="flex-1"
+                        />
+                        <Button
+                          type="filled"
+                          text="Add"
+                          onClick={addExercise}
+                          rounded="rounded-md"
+                        />
+                      </div>
+                    </div>
+                  ) : (
+                    <div className="text-zinc-400 italic text-sm mb-4">
+                      Rest day – no exercises
+                    </div>
+                  )}
+                  <div className="flex justify-end">
+                    <div className="flex gap-2 items-center">
+                      <Button
+                        type="filled"
+                        text="Save"
+                        onClick={saveNewTrainingSession}
+                        disabled={
+                          !newTrainingSession.isRest &&
+                          !newTrainingSession.title.trim()
+                        }
+                      />
+                      <Button
+                        type="outlined"
+                        text="Cancel"
+                        onClick={cancelNewTrainingSession}
+                      />
+                    </div>
+                  </div>
+                </div>
+              )}
+              <div className="flex gap-2 items-center mt-10">
                 <Button
                   type="filled"
-                  text={editingCardIndex !== null ? "Update Card" : "Save Card"}
                   text="Save Schedule"
                   onClick={saveSchedule}
                   className="flex-1"
                 />
-
                 <Button
                   type="outlined"
                   text="Cancel"
@@ -1259,13 +1621,13 @@ const CreateSplitForm = () => {
 
         <hr className="border-white/10" />
 
-        {/* === TIP OR INFO SECTION === */}
+        {/* === TIP SECTION === */}
         <section>
           <h2 className="text-xl font-bold text-white mb-6">Optional Tip</h2>
           <div className="grid gap-4">
             <Input
               type="textarea"
-              label="Tip Body"
+              label="Tip Body (English)"
               rows={3}
               value={formData.schedulesSection.tip.body}
               onChange={(e) =>
@@ -1277,7 +1639,26 @@ const CreateSplitForm = () => {
                   },
                 }))
               }
-              placeholder="Add a helpful tip for this split..."
+              placeholder="Add a helpful tip..."
+            />
+            <Input
+              type="textarea"
+              label="Tip Body (Arabic)"
+              rows={3}
+              value={formData.schedulesSection.tip.body_ar}
+              onChange={(e) =>
+                setFormData((prev) => ({
+                  ...prev,
+                  schedulesSection: {
+                    ...prev.schedulesSection,
+                    tip: {
+                      ...prev.schedulesSection.tip,
+                      body_ar: e.target.value,
+                    },
+                  },
+                }))
+              }
+              placeholder="أضف نصيحة مفيدة..."
             />
             <Input
               type="url"
@@ -1300,12 +1681,12 @@ const CreateSplitForm = () => {
           </div>
         </section>
 
-        {/* == SAVE AND CANCEL == */}
+        {/* Action buttons */}
         <div className="flex justify-end gap-4 pt-4">
           <Button
             type="outlined"
             text="Cancel"
-            onClick={() => {
+            onClick={() =>
               openModal({
                 title: "Discard changes?",
                 message:
@@ -1314,8 +1695,8 @@ const CreateSplitForm = () => {
                 cancelText: "Stay",
                 confirmVariant: "warning",
                 onConfirm: () => navigate("/dashboard/splits"),
-              });
-            }}
+              })
+            }
           />
           <Button
             submit
@@ -1332,7 +1713,7 @@ const CreateSplitForm = () => {
             disabled={uploadingImage || status === "loading"}
           />
         </div>
-        <ErrorTag error={error} />
+        {error && <ErrorTag type="small" error={error} severity="error" />}
       </form>
     </div>
   );

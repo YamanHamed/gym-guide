@@ -24,15 +24,65 @@
   -webkit-backdrop-filter: blur(20px);
 }
 
-/* Base styles to make sure the dark theme feels right */
+/* When Arabic mode is active (class added to html) */
+html.arabic {
+  font-family: "Noto Kufi Arabic", sans-serif;
+}
 body {
   background-color: var(--color-background);
   color: white;
   margin: 0;
+}
+
+html {
   font-family: "Inter", sans-serif;
 }
-/* index.css */
+/* Remove italics globally in Arabic */
+html.arabic i,
+html.arabic em,
+html.arabic [class*="italic"] {
+  font-style: normal !important;
+}
 
+/* Increase font sizes for Arabic to compensate for lack of uppercase */
+html.arabic .text-\[8px\] {
+  font-size: 9px !important;
+}
+html.arabic .text-\[10px\] {
+  font-size: 12px !important;
+}
+html.arabic .text-\[11px\] {
+  font-size: 13px !important;
+}
+/* html.arabic .text-xs {
+  font-size: 14px !important;
+}
+html.arabic .text-sm {
+  font-size: 15px !important;
+}
+html.arabic .text-base {
+  font-size: 16px !important;
+}
+html.arabic .text-lg {
+  font-size: 18px !important;
+}
+html.arabic .text-xl {
+  font-size: 20px !important;
+}
+html.arabic .text-2xl {
+  font-size: 24px !important;
+}
+html.arabic .text-3xl {
+  font-size: 28px !important;
+}
+html.arabic .text-4xl {
+  font-size: 32px !important;
+}
+html.arabic .text-5xl {
+  font-size: 40px !important;
+} */
+
+/* Add any other size classes you use (e.g., tracking classes if needed) */
 /* Custom scrollbar for the Chat area */
 .custom-scrollbar::-webkit-scrollbar {
   width: 5px;

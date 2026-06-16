@@ -16,24 +16,19 @@ export const sendMessage = createAsyncThunk(
     }
   },
 );
-
+const initialState = {
+  messages: [], // start empty
+  isLoading: false,
+  error: null,
+};
 const chatSlice = createSlice({
   name: "chat",
-  initialState: {
-    messages: [
-      {
-        role: "assistant",
-        content: "Welcome back, ready to crush your workout ?",
-        time: "09:41 AM",
-      },
-    ],
-    isLoading: false,
-    error: null,
-  },
+  initialState,
   reducers: {
     addUserMessage: (state, action) => {
       state.messages.push(action.payload);
     },
+
     clearChat: (state) => {
       state.messages = [];
     },

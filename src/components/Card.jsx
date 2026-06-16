@@ -83,7 +83,7 @@ function Card({
       >
         {/* == STEP LAYER == */}
         {step && (
-          <div className="absolute top-4 right-8 text-6xl font-black italic text-white/5 group-hover:text-[#0070FF]/10 transition-colors pointer-events-none select-none">
+          <div className="absolute top-4 end-8 text-6xl font-black italic text-white/5 group-hover:text-[#0070FF]/10 transition-colors pointer-events-none select-none">
             {step}
           </div>
         )}
@@ -271,13 +271,20 @@ function Card({
         {reverse ? (
           <div className="hidden h-full md:flex  flex-row min-h-[300px]">
             {/* == IMAGE ==*/}
-            <div className="flex-2 relative overflow-hidden">
+            <div className={`flex-2 relative overflow-hidden `}>
               <img
                 src={image}
-                className="w-full h-full object-cover opacity-90"
+                className={`w-full h-full object-cover opacity-90 transition-transform duration-500 ${
+                  onClick ? "group-hover:scale-110" : ""
+                }`}
                 alt={title}
               />
               <div className="absolute inset-0 bg-gradient-to-l from-transparent to-[#0A0A0A]/60" />
+              {tag && (
+                <div className="absolute top-4 left-4 bg-white/10 backdrop-blur-sm rounded-full px-3 py-1 text-xs font-medium text-white/80 border border-white/10">
+                  {tag}
+                </div>
+              )}
             </div>
 
             {/* == CONTENT == */}
@@ -292,6 +299,7 @@ function Card({
                   <h2 className="text-2xl text-white uppercase italic font-black  leading-[1.2] max-w-[200px]">
                     {title}
                   </h2>
+
                   <span
                     className={`notranslate material-symbols-outlined ${iconColor} translate-y-[5%] `}
                   >
@@ -367,10 +375,17 @@ function Card({
               />
               <img
                 src={image}
-                className="w-full h-full object-cover opacity-90"
+                className={`w-full h-full object-cover opacity-90 transition-transform duration-500 ${
+                  onClick ? "group-hover:scale-110" : ""
+                }`}
                 alt={title}
               />
               <div className="absolute inset-0 bg-gradient-to-l from-transparent to-[#0A0A0A]/60" />
+              {tag && (
+                <div className="absolute top-4 right-4 bg-white/10 backdrop-blur-sm rounded-full px-3 py-1 text-xs font-medium text-white/80 border border-white/10">
+                  {tag}
+                </div>
+              )}
             </div>
           </div>
         )}
@@ -397,12 +412,19 @@ function Card({
           </div>
 
           {/* == IMAGE ==*/}
-          <div className="w-full h-64 border-y border-white/10">
+          <div className="relative w-full h-64 border-y border-white/10">
             <img
               src={image}
-              className="w-full h-full object-cover opacity-90"
+              className={`w-full h-full object-cover opacity-90 transition-transform duration-500 ${
+                onClick ? "group-hover:scale-110" : ""
+              }`}
               alt={title}
             />
+            {tag && (
+              <div className="absolute top-4 left-4 bg-white/10 backdrop-blur-sm rounded-full px-3 py-1 text-xs font-medium text-white/80 border border-white/10">
+                {tag}
+              </div>
+            )}
           </div>
 
           {/* == LINKS == */}

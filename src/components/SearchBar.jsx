@@ -6,6 +6,7 @@ import {
 } from "../store/slices/searchSlice";
 import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 
 const SearchBar = ({
   mobile = false,
@@ -13,6 +14,7 @@ const SearchBar = ({
   role = "user",
   onSearchEffect,
 }) => {
+  const { t } = useTranslation();
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { query, results, status, error } = useSelector(
@@ -53,13 +55,19 @@ const SearchBar = ({
     dispatch(clearSearch());
     if (role === "admin") {
       if (item.type === "exercise") {
-        navigate(`/dashboard/exercises/#exercise-${item.name}`);
+        navigate(
+          `/dashboard/exercises/#exercise-${item.name.toLowerCase().replace(/\s+/g, "-")}`,
+        );
       } else if (item.type === "split") {
-        navigate(`/dashboard/splits/#split-${item.name}`);
+        navigate(
+          `/dashboard/splits/#split-${item.name.toLowerCase().replace(/\s+/g, "-")}`,
+        );
       }
     } else {
       if (item.type === "exercise") {
-        navigate(`/library/${item.muscle}#exercise-${item.id}`);
+        navigate(
+          `/library/${item.muscle}#exercise-${item.name.toLowerCase().replace(/\s+/g, "-")}`,
+        );
       } else if (item.type === "split") {
         navigate(`/splits/${item.name}`);
       }
@@ -100,7 +108,9 @@ const SearchBar = ({
         </button>
         <input
           type="text"
-          placeholder={mobile ? "SEARCH PROTOCOLS" : "SEARCH EXERCISES"}
+          placeholder={
+            role === "user" ? t("nav.searchLabel") : "search what you think "
+          }
           className={`bg-transparent border-none outline-none font-bold tracking-widest text-white placeholder-zinc-600 ml-2 ${
             mobile ? "text-xs w-full ml-3" : "text-[10px] w-32"
           }`}

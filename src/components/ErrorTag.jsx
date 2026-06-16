@@ -11,6 +11,7 @@ const ErrorTag = ({
     if (onRetry) onRetry();
     else window.location.reload();
   };
+  console.error("Error happened:", error);
 
   const colors = {
     error: {

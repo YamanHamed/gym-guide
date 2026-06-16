@@ -4,6 +4,7 @@ import Button from "./Button";
 import { useDispatch, useSelector } from "react-redux";
 import { addUserMessage, sendMessage } from "../store/slices/chatSlice";
 import toast from "react-hot-toast";
+import { useTranslation } from "react-i18next";
 
 // Sub-component for individual messages
 const Message = ({ role, content, time }) => {
@@ -75,39 +76,18 @@ const LoadingDots = () => {
     </div>
   );
 };
-const quickActions = [
-  {
-    id: 1,
-    label: "Form Check",
-    prompt: "Can you help me check my form for my deadlift?",
-  },
-  {
-    id: 2,
-    label: "Meal Plan",
-    prompt: "I need a high-protein meal plan for lean bulking.",
-  },
-  {
-    id: 3,
-    label: "Fix My Split",
-    prompt: "My current 3-day split feels stale. How can I optimize it?",
-  },
-  {
-    id: 4,
-    label: "Supplement Guide",
-    prompt: "What are the essential supplements for muscle recovery?",
-  },
-];
+
 const AICoach = () => {
   const [inputValue, setInputValue] = useState("");
   const scrollRef = useRef(null);
   const dispatch = useDispatch();
   const { messages, isLoading } = useSelector((state) => state.chat);
+  const { t } = useTranslation();
 
   // Auto-scroll to bottom when a new message arrives
   useEffect(() => {
     if (scrollRef.current) {
       const scrollContainer = scrollRef.current;
-      // We use a small delay to ensure the new message is rendered in the DOM
       const scrollToBottom = () => {
         scrollContainer.scrollTo({
           top: scrollContainer.scrollHeight,
@@ -141,15 +121,21 @@ const AICoach = () => {
   };
 
   return (
-    <div className="flex flex-col h-[calc(100vh-80px)] overflow-hidden relative">
+    <div className="flex flex-col supports-[height:100dvh]:h-[calc(100dvh-80px)] h-[calc(100vh-80px)] overflow-hidden relative">
       {/* Messages Scroll Area */}
       <main
         ref={scrollRef}
-        className="flex-grow overflow-y-auto px-4 md:px-0 py-8 custom-scrollbar scroll-smooth"
+        className="flex-grow overflow-y-auto py-8 custom-scrollbar scroll-smooth"
       >
         <div className="max-w-4xl mx-auto flex flex-col space-y-8 pb-10">
-          {/* Messages go here... */}
-
+          <Message
+            role="assistant"
+            content={t("chat.welcome")}
+            time={new Date().toLocaleTimeString([], {
+              hour: "2-digit",
+              minute: "2-digit",
+            })}
+          />
           {messages.map((msg, index) => (
             <Message
               key={index}
@@ -158,57 +144,32 @@ const AICoach = () => {
               time={msg.time}
             />
           ))}
-
           {isLoading && <LoadingDots />}
         </div>
       </main>
 
-      {/* Floating Input Area - Fixed Background Color */}
-      <div className="w-full bg-background/80 backdrop-blur-xl px-4 pb-8 pt-4 border-t border-white/5">
-        <div className="max-w-4xl mx-auto flex flex-col gap-4">
-          {/* Quick Action Pills - Added no-scrollbar class */}
-          <div className="flex gap-2 overflow-x-auto pb-2 no-scrollbar">
-            {quickActions.map((action) => (
-              <button
-                key={action.id}
-                className="whitespace-nowrap px-5 py-2 rounded-full bg-surface-container/50 border border-white/5 text-[10px] font-bold uppercase tracking-tighter hover:bg-[#0070FF] hover:text-white transition-all active:scale-95 text-on-surface-variant"
-                onClick={() => {
-                  setInputValue(action.prompt);
-                }}
-              >
-                {action.label}
-              </button>
-            ))}
-          </div>
-
-          {/* Main Input Container */}
+      {/* Floating Input Area – sticks to bottom of container */}
+      <div className="sticky  bottom-0 pt-3 pb-2">
+        <div className="max-w-4xl mx-auto">
           <div className="relative group">
-            {/* Outer glow (same as your original) */}
-            <div className="absolute -inset-0.5 bg-gradient-to-r from-[#0070FF]/20 to-[#0070FF]/20 rounded-xl blur opacity-50 group-focus-within:opacity-100 transition duration-500"></div>
-
-            {/* Container: relative for absolute button */}
-            <div className="relative bg-surface-container rounded-xl border border-white/10 shadow-2xl">
-              {/* Your Input component as a textarea */}
+            <div className="relative bg-surface-container rounded-xl border border-white/10 shadow-lg">
               <Input
                 type="textarea"
-                placeholder="Ask Coach about your performance..."
+                placeholder={t("chat.placeholder")}
                 value={inputValue}
                 onChange={(e) => setInputValue(e.target.value)}
                 rows={1}
-                className="w-full pr-12 resize-none overflow-hidden !bg-transparent !border-none focus:ring-0 mb-20"
+                className="w-full pe-12 resize-none overflow-hidden !bg-transparent !border-none focus:ring-0 mb-10"
               />
-
-              {/* Send button – absolute at bottom-right */}
               <Button
                 onClick={handleSendMessage}
                 icon="arrow_upward"
-                className="absolute bottom-2 right-2 flex items-center justify-center w-10 h-10 m-1 !rounded-1xl"
+                className="absolute bottom-2 end-2 flex items-center justify-center w-10 h-10 m-1 !rounded-1xl"
               />
             </div>
           </div>
-
-          <p className="text-center text-[10px] text-zinc-600 uppercase tracking-widest font-bold">
-            Coach can make mistakes. Verify critical training data.
+          <p className="text-center text-[10px] text-zinc-600 uppercase tracking-widest font-bold mt-2">
+            {t("chat.footer")}
           </p>
         </div>
       </div>
