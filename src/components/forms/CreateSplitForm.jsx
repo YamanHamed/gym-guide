@@ -1,5 +1,5 @@
 import React, { useRef, useState, useEffect } from "react";
-import { useNavigate, useLocation } from "react-router-dom";
+import { useNavigate, useLocation, useBlocker } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import Button from "../Button";
 import Input from "../Input";
@@ -19,7 +19,40 @@ const CreateSplitForm = () => {
   const [editingId, setEditingId] = useState(null);
   const { status, error } = useSelector((state) => state.splits);
 
-  // === MAIN STATE (with Arabic fields) ===
+  // ===  HANDELING QUITING WITOUT SAVING ===
+  const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
+  useEffect(() => {
+    const handleBeforeUnload = (e) => {
+      if (hasUnsavedChanges) {
+        e.preventDefault();
+        e.returnValue = "";
+      }
+    };
+    window.addEventListener("beforeunload", handleBeforeUnload);
+    return () => window.removeEventListener("beforeunload", handleBeforeUnload);
+  }, [hasUnsavedChanges]);
+  // Block client‑side navigation
+  const blocker = useBlocker(
+    ({ currentLocation, nextLocation }) =>
+      hasUnsavedChanges && currentLocation.pathname !== nextLocation.pathname,
+  );
+  useEffect(() => {
+    if (blocker.state === "blocked") {
+      openModal({
+        title: "Unsaved changes",
+        message: "You have unsaved changes. Are you sure you want to leave?",
+        confirmText: "Leave",
+        cancelText: "Stay",
+        onConfirm: () => {
+          blocker.proceed();
+          setHasUnsavedChanges(false);
+        },
+        onCancel: () => blocker.reset(),
+      });
+    }
+  }, [blocker, openModal]);
+
+  // === MAIN STATE  ===
   const [formData, setFormData] = useState({
     name: "",
     name_ar: "",
@@ -202,12 +235,14 @@ const CreateSplitForm = () => {
   // === HANDLERS ===
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
+    setHasUnsavedChanges(true);
   };
   const handleNestedChange = (section, field, value) => {
     setFormData((prev) => ({
       ...prev,
       [section]: { ...prev[section], [field]: value },
     }));
+    setHasUnsavedChanges(true);
   };
   const [uploadingImage, setUploadingImage] = useState(false);
   const handleImageFile = async (file, setState) => {
@@ -216,6 +251,7 @@ const CreateSplitForm = () => {
     try {
       const url = await uploadImage(file);
       setState(url);
+      setHasUnsavedChanges(true);
       toast.success("Image uploaded");
     } catch (err) {
       console.log(err);
@@ -232,21 +268,21 @@ const CreateSplitForm = () => {
       toast.error("Please fill all required fields: name, description");
       return;
     }
-    if (
-      !formData.pageHeader.plainTitle &&
-      !formData.pageHeader.highlightedTitle
-    ) {
-      toast.error("Page header needs at least a plain or highlighted title");
-      return;
-    }
-    if (!formData.trainingDaysSection.cards.length) {
-      toast.error("Add at least one training day card (title + body)");
-      return;
-    }
-    if (!formData.schedulesSection.schedules.length) {
-      toast.error("Add at least one schedule (e.g., Week 1)");
-      return;
-    }
+    // if (
+    //   !formData.pageHeader.plainTitle &&
+    //   !formData.pageHeader.highlightedTitle
+    // ) {
+    //   toast.error("Page header needs at least a plain or highlighted title");
+    //   return;
+    // }
+    // if (!formData.trainingDaysSection.cards.length) {
+    //   toast.error("Add at least one training day card (title + body)");
+    //   return;
+    // }
+    // if (!formData.schedulesSection.schedules.length) {
+    //   toast.error("Add at least one schedule (e.g., Week 1)");
+    //   return;
+    // }
 
     const title = isEditing ? "Update Split" : "Create Split";
     const message = isEditing
@@ -295,6 +331,7 @@ const CreateSplitForm = () => {
           },
         ],
       });
+      setHasUnsavedChanges(true);
       setLinkInput({ label: "", label_ar: "", url: "" });
     }
   };
@@ -302,6 +339,7 @@ const CreateSplitForm = () => {
     const newLinks = [...formData.links];
     newLinks.splice(index, 1);
     setFormData({ ...formData, links: newLinks });
+    setHasUnsavedChanges(true);
   };
 
   // === TRAINING DAY CARDS ===
@@ -363,6 +401,7 @@ const CreateSplitForm = () => {
       toast.success("Card added");
       setShowTrainingDayBuilder(false);
     }
+    setHasUnsavedChanges(true);
     setNewCard({ title: "", title_ar: "", body: "", body_ar: "", image: null });
     setFileInputKey((prev) => prev + 1);
   };
@@ -380,6 +419,7 @@ const CreateSplitForm = () => {
         cards: prev.trainingDaysSection.cards.filter((_, i) => i !== index),
       },
     }));
+    setHasUnsavedChanges(true);
   };
   const startEditTrainingDayCard = (index) => {
     const card = formData.trainingDaysSection.cards[index];
@@ -450,6 +490,7 @@ const CreateSplitForm = () => {
       }));
       toast.success("Schedule added");
     }
+    setHasUnsavedChanges(true);
     cancelSchedule();
   };
   const cancelSchedule = () => {
@@ -464,6 +505,7 @@ const CreateSplitForm = () => {
         schedules: prev.schedulesSection.schedules.filter((_, i) => i !== idx),
       },
     }));
+    setHasUnsavedChanges(true);
   };
   const startEditSchedule = (index) => {
     const schedule = formData.schedulesSection.schedules[index];
@@ -709,9 +751,9 @@ const CreateSplitForm = () => {
             accept="image/*"
             placeholder="Upload card image"
             onChange={(file) =>
-              handleImageFile(file, (url) =>
-                setFormData({ ...formData, image: url }),
-              )
+              handleImageFile(file, (url) => {
+                setFormData({ ...formData, image: url });
+              })
             }
           />
 
@@ -870,12 +912,12 @@ const CreateSplitForm = () => {
               accept="image/*"
               placeholder="Upload header image"
               onChange={(file) =>
-                handleImageFile(file, (url) =>
+                handleImageFile(file, (url) => {
                   setFormData({
                     ...formData,
                     pageHeader: { ...formData.pageHeader, image: url },
-                  }),
-                )
+                  });
+                })
               }
             />
           </div>

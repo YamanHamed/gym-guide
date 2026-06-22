@@ -1,8 +1,8 @@
 import { useState, useRef, useEffect } from "react";
-import Input from "./Input";
-import Button from "./Button";
+import Input from "../../components/Input";
+import Button from "../../components/Button";
 import { useDispatch, useSelector } from "react-redux";
-import { addUserMessage, sendMessage } from "../store/slices/chatSlice";
+import { addUserMessage, sendMessage } from "../../store/slices/chatSlice";
 import toast from "react-hot-toast";
 import { useTranslation } from "react-i18next";
 

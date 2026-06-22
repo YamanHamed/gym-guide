@@ -3,9 +3,11 @@ import Navbar from "../components/Navbar";
 import { Outlet } from "react-router";
 import Sidebar from "../components/Sidebar";
 import { ModalProvider } from "../contexts/ModalContext";
+import ScrollToTop from "../components/ScrollToTop";
 const AdminLayout = () => {
   return (
     <>
+      <ScrollToTop />
       <ModalProvider>
         <Navbar role="admin" />
         <Sidebar />

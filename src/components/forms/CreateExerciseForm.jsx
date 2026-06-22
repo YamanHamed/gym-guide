@@ -4,7 +4,7 @@ import {
   createExercise,
   updateExercise,
 } from "../../store/slices/exercisesSlice";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useBlocker, useLocation, useNavigate } from "react-router-dom";
 import Button from "../Button";
 import Input from "../Input";
 import toast from "react-hot-toast";
@@ -20,6 +20,39 @@ const CreateExerciseForm = () => {
   const { status, error } = useSelector((state) => state.exercises);
   const [isEditing, setIsEditing] = useState(false);
   const [editingId, setEditingId] = useState(null);
+
+  // ===  HANDELING QUITING WITOUT SAVING ===
+  const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
+  useEffect(() => {
+    const handleBeforeUnload = (e) => {
+      if (hasUnsavedChanges) {
+        e.preventDefault();
+        e.returnValue = "";
+      }
+    };
+    window.addEventListener("beforeunload", handleBeforeUnload);
+    return () => window.removeEventListener("beforeunload", handleBeforeUnload);
+  }, [hasUnsavedChanges]);
+  // Block client‑side navigation
+  const blocker = useBlocker(
+    ({ currentLocation, nextLocation }) =>
+      hasUnsavedChanges && currentLocation.pathname !== nextLocation.pathname,
+  );
+  useEffect(() => {
+    if (blocker.state === "blocked") {
+      openModal({
+        title: "Unsaved changes",
+        message: "You have unsaved changes. Are you sure you want to leave?",
+        confirmText: "Leave",
+        cancelText: "Stay",
+        onConfirm: () => {
+          blocker.proceed();
+          setHasUnsavedChanges(false);
+        },
+        onCancel: () => blocker.reset(),
+      });
+    }
+  }, [blocker, openModal]);
 
   // State with Arabic fields
   const [formData, setFormData] = useState({
@@ -58,6 +91,7 @@ const CreateExerciseForm = () => {
           },
         ],
       });
+      setHasUnsavedChanges(true);
       setLinkInput({ label: "", label_ar: "", url: "" });
     }
   };
@@ -65,6 +99,7 @@ const CreateExerciseForm = () => {
     const newLinks = [...formData.links];
     newLinks.splice(index, 1);
     setFormData({ ...formData, links: newLinks });
+    setHasUnsavedChanges(true);
   };
 
   const [uploadingImage, setUploadingImage] = useState(false);
@@ -74,6 +109,7 @@ const CreateExerciseForm = () => {
     try {
       const url = await uploadImage(file);
       setFormData((prev) => ({ ...prev, image: url }));
+      setHasUnsavedChanges(true);
       toast.success("Image uploaded");
     } catch (err) {
       console.log(err);
@@ -85,6 +121,7 @@ const CreateExerciseForm = () => {
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
+    setHasUnsavedChanges(true);
   };
 
   const handleSubmit = (e) => {

@@ -7,10 +7,10 @@ import { useTranslation } from "react-i18next";
 
 // Nav Items outside the component to avoid re-creation on every render
 const USER_NAV_LINKS = [
-  { name: "Exercises", path: "library" },
-  { name: "Splits", path: "splits" },
-  { name: "Tips", path: "tips" },
-  { name: "Ai Coach", path: "aicoach" },
+  { name: "Exercises", path: "/library" },
+  { name: "Splits", path: "/splits" },
+  { name: "Tips", path: "/tips" },
+  { name: "Ai Coach", path: "/aicoach" },
 ];
 const ADMIN_NAV_LINKS = [
   { name: "Exercises", path: "exercises" },

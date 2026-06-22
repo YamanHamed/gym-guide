@@ -1,7 +1,7 @@
 import Navbar from "./components/Navbar";
 import Hero from "./components/Hero";
 import BentoGrid from "./components/BentoGrid";
-import AICoach from "./components/AiCoach";
+import AICoach from "./pages/userPages/AICoach";
 import Library from "./pages/userPages/Library";
 import Tips from "./pages/userPages/Tips";
 import { Route, Routes } from "react-router";
@@ -22,40 +22,14 @@ import Login from "./pages/adminPages/Login";
 import ProtectedRoute from "./components/ProtectedRoute";
 import NotFound from "./pages/NotFound";
 import ScrollToTop from "./components/ScrollToTop";
+import { RouterProvider } from "react-router-dom";
+import router from "./router";
 // import { useState, useEffect, useRef } from "react";
 function App() {
   return (
     <>
       <Toaster position="top-right" />
-      <ScrollToTop />
-      <Routes>
-        <Route path="/" element={<UserLayout />}>
-          <Route index element={<Home />} />
-          <Route path="library" element={<Library />} />
-          <Route path="library/:muscle" element={<MusclePage />} />
-          <Route path="splits" element={<Splits />} />
-          <Route path="tips" element={<Tips />} />
-          <Route path="splits/:name" element={<Split />} />
-        </Route>
-        <Route element={<UserLayout hideFooter={true} mainClassName="pb-0" />}>
-          <Route path="/aicoach" element={<AICoach />} />
-        </Route>
-
-        <Route path="/dashboard/login" element={<Login />} />
-        <Route path="/login" element={<Login />} />
-
-        <Route element={<ProtectedRoute />}>
-          <Route path="/dashboard" element={<AdminLayout />}>
-            <Route index element={<DashboardHome />} />
-            <Route index element={<DashboardHome />} />
-            <Route path=":type" element={<BrowsePage />} />
-            <Route path="create/:type" element={<CreatePage />} />
-          </Route>
-        </Route>
-
-        <Route path="*" element={<NotFound />} />
-        <Route path="/404" element={<NotFound />} />
-      </Routes>
+      <RouterProvider router={router} />
     </>
   );
 }
