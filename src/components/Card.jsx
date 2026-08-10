@@ -279,9 +279,11 @@ function Card({
                 }`}
                 alt={title}
               />
+              {/* Note: Gradients might also need RTL adjustments depending on your design */}
               <div className="absolute inset-0 bg-gradient-to-l from-transparent to-[#0A0A0A]/60" />
               {tag && (
-                <div className="absolute top-4 left-4 bg-white/10 backdrop-blur-sm rounded-full px-3 py-1 text-xs font-medium text-white/80 border border-white/10">
+                // Changed from left-4 to start-4
+                <div className="absolute top-4 start-4 bg-white/10 backdrop-blur-sm rounded-full px-3 py-1 text-xs font-medium text-white/80 border border-white/10">
                   {tag}
                 </div>
               )}
@@ -290,7 +292,8 @@ function Card({
             {/* == CONTENT == */}
             <div className="flex-1 relative ">
               <div
-                className={`absolute inset-y-0 -left-11 w-18  ${bgStyles[bg] || "bg-[#131313]"}  -skew-x-[6deg] z-0 `}
+                // Changed from -left-11 to -start-11
+                className={`absolute inset-y-0 -start-11 w-18  ${bgStyles[bg] || "bg-[#131313]"}  -skew-x-[6deg] z-0 `}
               />
               {/* == CONTENT WRAPPER == */}
               <div className="relative flex flex-col h-full z-10 ps-6 p-12">
@@ -371,7 +374,8 @@ function Card({
             {/* == IMAGE ==*/}
             <div className="flex-2 relative overflow-hidden">
               <div
-                className={`absolute inset-y-0 -left-11 w-18  ${bgStyles[bg] || "bg-[#131313]"}  -skew-x-[7deg] z-10 `}
+                // Changed from -left-11 to -start-11
+                className={`absolute inset-y-0 -start-11 w-18  ${bgStyles[bg] || "bg-[#131313]"}  -skew-x-[7deg] z-10 `}
               />
               <img
                 src={image}
@@ -382,7 +386,8 @@ function Card({
               />
               <div className="absolute inset-0 bg-gradient-to-l from-transparent to-[#0A0A0A]/60" />
               {tag && (
-                <div className="absolute top-4 right-4 bg-white/10 backdrop-blur-sm rounded-full px-3 py-1 text-xs font-medium text-white/80 border border-white/10">
+                // Changed from right-4 to end-4
+                <div className="absolute top-4 end-4 bg-white/10 backdrop-blur-sm rounded-full px-3 py-1 text-xs font-medium text-white/80 border border-white/10">
                   {tag}
                 </div>
               )}

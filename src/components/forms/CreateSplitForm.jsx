@@ -631,26 +631,47 @@ const CreateSplitForm = () => {
     muscle: "",
     muscle_ar: "",
   });
-  const addExercise = () => {
+  const [editingExerciseIndex, setEditingExerciseIndex] = useState(null);
+  const [draggedExerciseIndex, setDraggedExerciseIndex] = useState(null);
+  const removeExercise = (idx) => {
+    setNewTrainingSession((prev) => ({
+      ...prev,
+      exercises: prev.exercises.filter((_, i) => i !== idx),
+    }));
+  };
+  const saveExercise = () => {
     if (!newExercise.name.trim() || !newExercise.muscle.trim()) {
       toast.error("Exercise name and muscle group are required");
       return;
     }
-    setNewTrainingSession((prev) => ({
-      ...prev,
-      exercises: [
-        ...prev.exercises,
-        {
-          name: newExercise.name,
-          name_ar: newExercise.name_ar || "",
-          webName:
-            newExercise.webName ||
-            newExercise.name.toLowerCase().replace(/\s/g, "-"),
-          muscle: newExercise.muscle,
-          muscle_ar: newExercise.muscle_ar || "",
-        },
-      ],
-    }));
+
+    const exerciseData = {
+      name: newExercise.name,
+      name_ar: newExercise.name_ar || "",
+      webName:
+        newExercise.webName ||
+        newExercise.name.toLowerCase().replace(/\s/g, "-"),
+      muscle: newExercise.muscle,
+      muscle_ar: newExercise.muscle_ar || "",
+    };
+
+    if (editingExerciseIndex !== null) {
+      // Update existing exercise
+      setNewTrainingSession((prev) => {
+        const updatedExercises = [...prev.exercises];
+        updatedExercises[editingExerciseIndex] = exerciseData;
+        return { ...prev, exercises: updatedExercises };
+      });
+      setEditingExerciseIndex(null);
+    } else {
+      // Add new exercise
+      setNewTrainingSession((prev) => ({
+        ...prev,
+        exercises: [...prev.exercises, exerciseData],
+      }));
+    }
+
+    // Reset inputs
     setNewExercise({
       name: "",
       name_ar: "",
@@ -659,11 +680,45 @@ const CreateSplitForm = () => {
       muscle_ar: "",
     });
   };
-  const removeExercise = (idx) => {
-    setNewTrainingSession((prev) => ({
-      ...prev,
-      exercises: prev.exercises.filter((_, i) => i !== idx),
-    }));
+  const startEditExercise = (idx) => {
+    setNewExercise(newTrainingSession.exercises[idx]);
+    setEditingExerciseIndex(idx);
+  };
+  const cancelEditExercise = () => {
+    setNewExercise({
+      name: "",
+      name_ar: "",
+      webName: "",
+      muscle: "",
+      muscle_ar: "",
+    });
+    setEditingExerciseIndex(null);
+  };
+
+  /* -- drag handlers for the session exercises -- */
+  const handleDragStart = (e, index) => {
+    setDraggedExerciseIndex(index);
+    // Firefox requires dataTransfer to be set for dragging to work
+    e.dataTransfer.effectAllowed = "move";
+    e.dataTransfer.setData("text/html", e.target);
+  };
+  const handleDragOver = (e) => {
+    e.preventDefault(); // Necessary to allow dropping
+  };
+  const handleDrop = (e, dropIndex) => {
+    e.preventDefault();
+    if (draggedExerciseIndex === null || draggedExerciseIndex === dropIndex)
+      return;
+
+    setNewTrainingSession((prev) => {
+      const updatedExercises = [...prev.exercises];
+      // Remove the item from its original position
+      const [draggedItem] = updatedExercises.splice(draggedExerciseIndex, 1);
+      // Insert it into the new position
+      updatedExercises.splice(dropIndex, 0, draggedItem);
+      return { ...prev, exercises: updatedExercises };
+    });
+    setDraggedExerciseIndex(null);
   };
 
   // === JSX ===
@@ -1539,26 +1594,64 @@ const CreateSplitForm = () => {
                         }
                       />
                       {newTrainingSession.exercises.length > 0 && (
-                        <div className="flex flex-wrap gap-2">
+                        <div className="flex flex-col gap-2 mb-6">
+                          <label className="text-zinc-400 text-sm">
+                            Added exercises (Drag to reorder)
+                          </label>
                           {newTrainingSession.exercises.map((ex, exIdx) => (
-                            <span
+                            <div
                               key={exIdx}
-                              className="bg-white/10 text-white text-xs px-2 py-1 rounded flex items-center gap-1"
+                              draggable
+                              onDragStart={(e) => handleDragStart(e, exIdx)}
+                              onDragOver={handleDragOver}
+                              onDrop={(e) => handleDrop(e, exIdx)}
+                              className={`bg-white/5 border ${
+                                editingExerciseIndex === exIdx
+                                  ? "border-[#0070FF]"
+                                  : "border-white/10"
+                              } rounded-md p-3 flex justify-between items-center cursor-move hover:bg-white/10 transition-colors duration-200 group`}
                             >
-                              {ex.name} / {ex.name_ar}
-                              <button
-                                type="button"
-                                onClick={() => removeExercise(exIdx)}
-                                className="text-red-400 text-xs ml-1"
-                              >
-                                ×
-                              </button>
-                            </span>
+                              <div className="flex items-center gap-3">
+                                {/* Drag Handle Icon */}
+                                <div className="text-zinc-500 group-hover:text-zinc-300">
+                                  ⋮⋮
+                                </div>
+                                <div className="flex flex-col">
+                                  <span className="text-white text-sm font-semibold">
+                                    {ex.name} {ex.name_ar && `/ ${ex.name_ar}`}
+                                  </span>
+                                  <span className="text-zinc-400 text-xs">
+                                    {ex.muscle}{" "}
+                                    {ex.muscle_ar && `/ ${ex.muscle_ar}`}
+                                  </span>
+                                </div>
+                              </div>
+
+                              <div className="flex gap-2">
+                                <button
+                                  type="button"
+                                  onClick={() => startEditExercise(exIdx)}
+                                  className="text-zinc-400 hover:text-white text-xs px-2 py-1 transition-colors"
+                                >
+                                  Edit
+                                </button>
+                                <button
+                                  type="button"
+                                  onClick={() => removeExercise(exIdx)}
+                                  className="text-red-400 hover:text-red-300 text-xs px-2 py-1 transition-colors"
+                                >
+                                  Delete
+                                </button>
+                              </div>
+                            </div>
                           ))}
                         </div>
                       )}
-                      <label className="text-zinc-400 text-sm flex items-center gap-2">
-                        added exercises
+
+                      <label className="text-zinc-400 text-sm flex items-center gap-2 mb-2">
+                        {editingExerciseIndex !== null
+                          ? "Edit exercise"
+                          : "Add new exercise"}
                       </label>
                       <div className="flex flex-col md:flex-row gap-3 mb-4">
                         <Input
@@ -1611,12 +1704,38 @@ const CreateSplitForm = () => {
                           }
                           className="flex-1"
                         />
-                        <Button
-                          type="filled"
-                          text="Add"
-                          onClick={addExercise}
-                          rounded="rounded-md"
+                        <Input
+                          type="text"
+                          placeholder="Web name (e.g., bench-press)"
+                          value={newExercise.webName}
+                          onChange={(e) =>
+                            setNewExercise((prev) => ({
+                              ...prev,
+                              webName: e.target.value,
+                            }))
+                          }
+                          className="flex-1"
                         />
+                        <div className="flex gap-2">
+                          <Button
+                            type="filled"
+                            text={
+                              editingExerciseIndex !== null ? "Update" : "Add"
+                            }
+                            onClick={saveExercise}
+                            rounded="rounded-md"
+                            className="whitespace-nowrap"
+                          />
+                          {editingExerciseIndex !== null && (
+                            <Button
+                              type="outlined"
+                              text="Cancel"
+                              onClick={cancelEditExercise}
+                              rounded="rounded-md"
+                              className="whitespace-nowrap"
+                            />
+                          )}
+                        </div>
                       </div>
                     </div>
                   ) : (

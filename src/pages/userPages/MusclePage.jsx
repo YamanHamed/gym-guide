@@ -30,14 +30,6 @@ const MusclePage = () => {
     return isArabic && item[`${field}_ar`] ? item[`${field}_ar`] : item[field];
   };
 
-  // == DEFINING PAGE CONTENT ==
-  const navigate = useNavigate();
-  useEffect(() => {
-    if (!muscle || !MUSCLE_DETAILS[muscle]) {
-      navigate("/404", { replace: true });
-    }
-  }, [muscle, navigate]);
-
   // == THE MUSCLE DATA ==
   const muscleData = MUSCLE_DETAILS[muscle];
 
@@ -78,6 +70,7 @@ const MusclePage = () => {
   ];
   const [selectedFilters, setSelectedFilters] = useState(["All"]);
   const normalize = (str) => str?.toLowerCase().replace(/[\s-]/g, "") || ""; // Helper to normalize strings for flexible comparison
+
   const filteredExercises = useMemo(() => {
     // If "All" is selected (and it's the only one or explicitly included), show all
     if (selectedFilters.includes("All")) return exercisesData.data;
@@ -85,14 +78,25 @@ const MusclePage = () => {
     // Otherwise, filter exercises where the normalized muscleHead matches any selected filter
     if (exercisesData.data) {
       return exercisesData.data.filter((ex) =>
-        selectedFilters.some(
-          (filter) => normalize(ex.muscleHead) === normalize(filter),
+        selectedFilters.some((filter) =>
+          normalize(ex.muscleHead).includes(normalize(filter)),
         ),
       );
     } else {
       return [];
     }
   }, [exercisesData.data, selectedFilters]);
+
+  // == DEFINING PAGE CONTENT ==
+  const navigate = useNavigate();
+  useEffect(() => {
+    if (!muscle || !MUSCLE_DETAILS[muscle]) {
+      navigate("/404", { replace: true });
+    }
+  }, [muscle, navigate]);
+  if (!muscle || !muscleData) {
+    return null;
+  }
 
   return (
     <div>

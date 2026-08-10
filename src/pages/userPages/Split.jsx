@@ -28,13 +28,24 @@ const Split = () => {
     }
   }, [name, splitFromState, currentSplit, dispatch]);
 
-  // Helper to get localized string
+  // == Helper for translation ==
   const getLocalized = (obj, field) => {
     if (!obj) return "";
     return isArabic ? obj[`${field}_ar`] : obj[field];
   };
 
-  // Destructure with localized values
+  // == DEFINING PAGE CONTENT ==
+  const navigate = useNavigate();
+  useEffect(() => {
+    if (!split) {
+      navigate("/404", { replace: true });
+    }
+  }, [split, navigate]);
+  if (!split) {
+    return null;
+  }
+
+  // == Destructure with localized values ==
   const TrainingSessions = (split.trainingDaysSection?.cards || []).map(
     (card) => ({
       ...card,
@@ -46,7 +57,7 @@ const Split = () => {
   const schedulesSection = {
     plainTitle: getLocalized(split.schedulesSection, "plainTitle"),
     highlightedTitle: getLocalized(split.schedulesSection, "highlightedTitle"),
-    body: getLocalized(split.schedulesSection, "body"),
+    body: getLocalized(split?.schedulesSection?.sectionHeader, "body"),
     schedules: (split.schedulesSection?.schedules || []).map((schedule) => ({
       ...schedule,
       title: getLocalized(schedule, "title"),
@@ -58,7 +69,7 @@ const Split = () => {
           ...ex,
           name: getLocalized(ex, "name"),
           muscle: getLocalized(ex, "muscle"),
-          webName: ex.webName,
+          url: `/library/${ex.muscle.toLowerCase().replace(/\s+/g, "-")}#exercise-${ex.name.toLowerCase().replace(/\s+/g, "-")}`,
         })),
       })),
     })),
@@ -67,6 +78,7 @@ const Split = () => {
       externalUrl: split.schedulesSection?.tip?.externalUrl,
     },
   };
+
   if (status === "loading") {
     return (
       <>
@@ -103,7 +115,8 @@ const Split = () => {
         <Header
           plainTitle={t("split.sec1PlainTitle")}
           highlightTitle={t("split.sec1highlightedTitle")}
-          body={getLocalized(split.trainingDaysSection, "body")}
+          body={getLocalized(split?.trainingDaysSection?.sectionHeader, "body")}
+          className="mb-16"
         />
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {TrainingSessions.map((card, idx) => (
@@ -131,15 +144,17 @@ const Split = () => {
         />
 
         {schedulesSection.schedules.map((schedule, idx) => {
-          const scheduleData = schedule.trainingDays.map((day) => ({
-            focus: day.title,
-            sub: day.subTitle || "",
-            exercises: day.exercises.map((ex) => ({
-              name: ex.name,
-              url: `/library/${ex.muscle}#exercise-${ex.webName || ex.name.toLowerCase().replace(/\s+/g, "-")}`,
-            })),
-            rest: day.isRest || false,
-          }));
+          const scheduleData = schedule.trainingDays.map((day) => {
+            return {
+              focus: day.title,
+              sub: day.subTitle || "",
+              exercises: day.exercises.map((ex) => ({
+                name: ex.name,
+                url: ex.url,
+              })),
+              rest: day.isRest || false,
+            };
+          });
 
           return (
             <SplitSchedule
@@ -231,7 +246,10 @@ const SplitSchedule = ({ title, schedule, className }) => {
                       row.exercises?.map((ex, idx) => (
                         <button
                           key={idx}
-                          onClick={() => navigate(ex.url)}
+                          onClick={() => {
+                            navigate(ex.url);
+                            // console.log("Navigating to:", ex.url);
+                          }}
                           className="px-3 py-2 md:py-1.5 bg-white/5 border border-white/10 rounded-md text-[10px] text-zinc-400 font-bold uppercase tracking-wider hover:text-white hover:border-[#0070FF]/50 transition-colors"
                         >
                           {ex.name}

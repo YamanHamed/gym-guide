@@ -26,13 +26,14 @@ const Header = ({
           <div className="absolute hidden sm:block inset-0 z-0 overflow-hidden pointer-events-none">
             <img
               src={image}
-              className={`w-full h-full object-cover object-center transition-opacity opacity-70 duration-1000 mix-blend-lighten ${imageClassName}`}
+              className={`w-full h-full object-cover object-center transition-opacity opacity-70 duration-1000 mix-blend-lighten rtl:-scale-x-100 ${imageClassName}`}
               alt=""
             />
 
-            {/* 1. The Main Deep Mask: This makes the left side (text area) solid black */}
-            <div className="absolute inset-0 bg-gradient-to-r from-[#131313] via-[#131313]/90 to-transparent"></div>
-            {/* 2. The Edge Softener: A very wide radial mask that hides the image edges */}
+            {/* 1. The Main Deep Mask: Adapts based on text direction (LTR vs RTL) */}
+            <div className="absolute inset-0 ltr:bg-gradient-to-r rtl:bg-gradient-to-l from-[#131313] via-[#131313]/90 to-transparent"></div>
+
+            {/* 2. The Edge Softener: A very wide radial mask that hides the image edges (symmetrical) */}
             <div
               className="absolute inset-0"
               style={{
@@ -41,7 +42,7 @@ const Header = ({
               }}
             ></div>
 
-            {/* 3. The Bottom Fade: Critical for integrating with the page content below */}
+            {/* 3. The Bottom Fade: Critical for integrating with the page content below (vertical) */}
             <div className="absolute inset-0 bg-gradient-to-t from-[#131313] via-transparent to-transparent"></div>
           </div>
         )}

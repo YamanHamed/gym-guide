@@ -142,6 +142,7 @@ const Library = () => {
           {muscleGroups.map((group) => {
             return (
               <Card
+                id={group.id}
                 className={group.size}
                 rounded="rounded-xl"
                 type="full-image"
