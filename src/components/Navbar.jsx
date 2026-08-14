@@ -4,7 +4,7 @@ import SearchBar from "./SearchBar";
 import Button from "./Button";
 import LanguageSwitcher from "./LanguageSwitcher";
 import { useTranslation } from "react-i18next";
-
+import logo from "../imgs/isolated-logo.png";
 // Nav Items outside the component to avoid re-creation on every render
 const USER_NAV_LINKS = [
   { name: "Exercises", path: "/library" },
@@ -32,23 +32,19 @@ const Navbar = ({ role = "user" }) => {
   if (role === "user") {
     return (
       <>
-        <nav className="fixed top-0 w-full h-20 z-50 bg-[#131313] border-b border-white/10 transition-all duration-500">
-          <div className="flex justify-between items-center px-8 py-5 max-w-7xl mx-auto">
+        <nav className="[direction:ltr] fixed top-0 w-full h-20 z-50 bg-[#131313] border-b border-white/10 transition-all duration-500">
+          <div className="flex justify-between items-center px-8 2xl:px-0 py-5 max-w-7xl mx-auto">
             {/* Logo Area */}
             <div
               onClick={() => handleNavigation("/")}
-              className="flex items-center gap-3 group cursor-pointer"
+              className="flex items-center group cursor-pointer select-none"
             >
-              <div className="w-8 h-8 bg-[#0070FF] rounded-lg flex items-center justify-center rotate-3 group-hover:rotate-0 transition-transform duration-300">
-                <span className="material-symbols-outlined text-white text-lg font-bold">
-                  bolt
-                </span>
-              </div>
-              <div className="text-xl font-black italic tracking-tighter text-white uppercase leading-none">
-                GYM <span className="text-[#0070FF]">GUIDE</span>
-              </div>
+              <img
+                src={logo}
+                alt="SPOTTER Logo"
+                className="h-8 md:h-9 w-auto object-contain transition-all duration-300 group-hover:scale-105 group-hover:brightness-110 group-hover:drop-shadow-[0_0_10px_rgba(0,123,255,0.5)]"
+              />
             </div>
-
             {/* Desktop Navigation */}
             <div className="hidden md:flex items-center space-x-10">
               {USER_NAV_LINKS.map((item) => {
@@ -67,7 +63,6 @@ const Navbar = ({ role = "user" }) => {
                 );
               })}
             </div>
-
             {/* Actions: Search, Language Switcher & Hamburger */}
             <div className="flex items-center gap-4">
               <SearchBar />
@@ -139,16 +134,13 @@ const Navbar = ({ role = "user" }) => {
           {/* Logo Area */}
           <div
             onClick={() => handleNavigation("/dashboard")}
-            className="flex items-center gap-3 group cursor-pointer"
+            className="flex items-center group cursor-pointer select-none"
           >
-            <div className="w-8 h-8 bg-[#0070FF] rounded-lg flex items-center justify-center rotate-3 group-hover:rotate-0 transition-transform duration-300">
-              <span className="material-symbols-outlined text-white text-lg font-bold">
-                bolt
-              </span>
-            </div>
-            <div className="text-xl font-black italic tracking-tighter text-white uppercase leading-none">
-              GYM <span className="text-[#0070FF]">GUIDE</span>
-            </div>
+            <img
+              src={logo}
+              alt="SPOTTER Logo"
+              className="h-8 md:h-9 w-auto object-contain transition-all duration-300 group-hover:scale-105 group-hover:brightness-110 group-hover:drop-shadow-[0_0_10px_rgba(0,123,255,0.5)]"
+            />
           </div>
 
           <SearchBar role="admin" />

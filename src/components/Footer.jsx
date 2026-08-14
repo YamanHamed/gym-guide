@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import { copyToClipboard } from "../utils/copyToClipboard";
 import { useTranslation } from "react-i18next";
+import logo from "../imgs/isolated-logo.png";
 
 const Footer = () => {
   const { t } = useTranslation();
@@ -48,12 +49,16 @@ const Footer = () => {
         <div className="flex flex-col md:flex-row justify-between items-start gap-12 md:gap-10">
           {/* 1. Brand Section */}
           <div className="flex flex-col gap-4">
-            <div className="flex items-center gap-2">
-              <div className="w-1.5 h-1.5 rounded-full bg-[#0070FF]"></div>
-              <span className="text-[10px] font-black uppercase tracking-[0.3em] text-white">
-                Gym <span className="text-[#0070FF]">Guide</span>
-              </span>
-            </div>
+            <Link
+              to="/"
+              className="flex items-center group cursor-pointer select-none"
+            >
+              <img
+                src={logo}
+                alt="SPOTTER Logo"
+                className="h-4 md:h-6 w-auto object-contain transition-all duration-300 group-hover:scale-105 group-hover:brightness-110 group-hover:drop-shadow-[0_0_10px_rgba(0,123,255,0.5)]"
+              />
+            </Link>
             <p className="text-[10px] text-zinc-600 uppercase tracking-[0.2em] font-medium max-w-[200px] leading-relaxed italic">
               {t("footer.tagline")}
             </p>

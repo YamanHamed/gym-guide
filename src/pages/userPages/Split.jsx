@@ -69,7 +69,7 @@ const Split = () => {
           ...ex,
           name: getLocalized(ex, "name"),
           muscle: getLocalized(ex, "muscle"),
-          url: `/library/${ex.muscle.toLowerCase().replace(/\s+/g, "-")}#exercise-${ex.name.toLowerCase().replace(/\s+/g, "-")}`,
+          url: `/library/${ex.muscle.toLowerCase().replace(/\s+/g, "-")}#exercise-${ex?.webName.toLowerCase().replace(/\s+/g, "-")}`,
         })),
       })),
     })),
@@ -247,8 +247,9 @@ const SplitSchedule = ({ title, schedule, className }) => {
                         <button
                           key={idx}
                           onClick={() => {
+                            console.log("Navigating to:", ex.url);
                             navigate(ex.url);
-                            // console.log("Navigating to:", ex.url);
+                            //
                           }}
                           className="px-3 py-2 md:py-1.5 bg-white/5 border border-white/10 rounded-md text-[10px] text-zinc-400 font-bold uppercase tracking-wider hover:text-white hover:border-[#0070FF]/50 transition-colors"
                         >

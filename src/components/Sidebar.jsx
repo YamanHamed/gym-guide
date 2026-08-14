@@ -4,6 +4,7 @@ import Button from "./Button";
 import { useModal } from "../contexts/ModalContext";
 import toast from "react-hot-toast";
 import SearchBar from "./SearchBar";
+import logo from "../imgs/isolated-logo.png";
 
 const ADMIN_NAV_LINKS = [
   {
@@ -44,17 +45,14 @@ const BrandLogo = () => {
   const navigate = useNavigate();
   return (
     <div
-      onClick={() => navigate("/")}
-      className="flex items-center gap-3 group cursor-pointer"
+      onClick={() => navigate("/dashboard")}
+      className="flex items-center group cursor-pointer select-none"
     >
-      <div className="w-8 h-8 bg-[#0070FF] rounded-lg flex items-center justify-center rotate-3 group-hover:rotate-0 transition-transform duration-300 shadow-[0_0_15px_rgba(0,112,255,0.4)]">
-        <span className="material-symbols-outlined text-white text-[20px] font-bold">
-          bolt
-        </span>
-      </div>
-      <div className="text-xl font-black italic tracking-tighter text-white uppercase leading-none">
-        GYM <span className="text-[#0070FF]">GUIDE</span>
-      </div>
+      <img
+        src={logo}
+        alt="SPOTTER Logo"
+        className="h-8 md:h-9 w-auto object-contain transition-all duration-300 group-hover:scale-105 group-hover:brightness-110 group-hover:drop-shadow-[0_0_10px_rgba(0,123,255,0.5)]"
+      />
     </div>
   );
 };

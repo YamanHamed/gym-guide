@@ -25,12 +25,12 @@
   "hero": {
     "sweat": "Sweat Now,",
     "shine": "Shine Later.",
-    "description": "Gym Guide is made for people who are new to fitness or want a clear path without feeling lost.",
+    "description": "Spotter is made for people who are new to fitness or want a clear path without feeling lost.",
     "browseButton": "Browse Exercises"
   },
   "about": {
     "plainTitle": "ABOUT",
-    "highlightTitle": "GYM GUIDE",
+    "highlightTitle": "THIS GUIDE",
     "body": "Our guide is designed to provide you with all the necessary information for the gym. To benefit from it, we highly recommend following these steps.",
     "steps": [
       {
