@@ -1,16 +1,16 @@
-# React + Vite
+# Spotter: AI-Powered Fitness Platform
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+## Overview
+Spotter is a comprehensive, full-stack fitness web application designed to guide beginners through their fitness journey with structured, scientifically-backed content and AI-driven assistance.
 
-Currently, two official plugins are available:
+## Technology Stack
+- **Frontend:** React, Tailwind CSS, Redux (State Management)
+- **Backend:** Node.js, Express.js
+- **Database:** MongoDB
+- **Authentication:** JWT (JSON Web Tokens)
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
-
-## React Compiler
-
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
-
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+## Key Features
+- **AI Coach Assistant:** Real-time, intelligent responses to user fitness queries.
+- **Anatomy & Exercises:** Interactive mapping to visualize target muscle groups.
+- **Admin Dashboard:** Custom interface for content management, user control, and dashboard analytics.
+- **Role-Based Routing:** Protected routes and secure API endpoints.
