@@ -1,18 +1,20 @@
-# Spotter: Frontend Architecture
+# Spotter: Admin Dashboard Architecture
 
 ## Overview
-The frontend of Spotter is a high-performance React application designed to provide a seamless, dark-mode-first user experience[cite: 4]. It serves as the primary interface for users to interact with fitness guides, AI coaching, and personal progress tracking[cite: 4].
+The Spotter Admin Dashboard is a secure, role-based management interface designed to give administrators full control over platform content, exercise libraries, user metrics, and system configurations. It serves as the operational command center for the full-stack application.
 
-## Core Technologies
-- **Library:** React (Functional components, Hooks)[cite: 4]
-- **Styling:** Tailwind CSS (Responsive design, custom theme implementation)[cite: 4]
-- **State Management:** Redux Toolkit (Orchestrating global state for user data, training logs, and AI chat history)[cite: 4]
-- **Routing:** React Router (Protected routing for authenticated sessions)[cite: 4]
-- **Optimization:** Vite (Build tool with image optimization plugins)[cite: 4]
+## Frontend Implementation (React & Tailwind CSS)
+- **Protected Route Access:** Guarded by client-side router checks ensuring only users with verified admin privileges can access the dashboard views.
+- **Component Structure:** Modular layout featuring statistics cards, dynamic data tables, modal forms for content creation/editing, and real-time activity indicators.
+- **Styling:** Built strictly within the dark-mode visual identity (`#000000` pitch-black background with `#007BFF` electric blue accents) using Tailwind CSS.
+- **State Management:** Redux Toolkit handles asynchronous data fetching, local caching, and optimistic UI updates when modifying exercises or platform settings.
 
-## Key Technical Details
-- **Component-Driven Development:** Modular structure for reusable UI elements (Buttons, Cards, Modals)[cite: 4].
-- **Dark Mode Implementation:** Full implementation of the pitch-black branding (`#000000`) with electric blue (`#007BFF`) accent system[cite: 4].
-- **Interactive Anatomy Map:** DOM-based interactions to visualize target muscle groups dynamically[cite: 4].
-- **AI Coach UI:** Real-time chat interface with loading states and markdown rendering for AI responses[cite: 4].
-- **Responsive Design:** Mobile-first approach ensuring consistent experience across all screen sizes[cite: 4].
+## Backend & API Integration (Node.js, Express & MongoDB)
+- **Role-Based Access Control (RBAC) Middleware:** Intercepts API requests to verify user roles via JSON Web Tokens (JWT) before granting access to sensitive administrative endpoints.
+- **CRUD Operations & Endpoints:**
+  - **Exercise Library Management:** Secure endpoints to create, update, or remove exercises, target muscle mappings, and instructional guides.
+  - **User & Content Moderation:** Endpoints to view active user statistics, manage account permissions, and oversee platform data integrity.
+- **Database Schemas:** Optimized Mongoose schemas supporting efficient querying and relational data structures between admin operations and the core database.
+
+## Related Repositories
+* [backend Repository](https://github.com/YamanHamed/gym-guide-backend) .
