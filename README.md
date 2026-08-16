@@ -1,4 +1,4 @@
-# Spotter: AI-Powered Fitness Platform
+# Spotter: Fitness Guide
 
 ## Overview
 Spotter is a comprehensive, full-stack fitness web application designed to guide beginners through their fitness journey with structured, scientifically-backed content and AI-driven assistance.
