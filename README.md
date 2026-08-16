@@ -1,16 +1,18 @@
-# Spotter: Fitness Guide
+# Spotter: Frontend Architecture
 
 ## Overview
-Spotter is a comprehensive, full-stack fitness web application designed to guide beginners through their fitness journey with structured, scientifically-backed content and AI-driven assistance.
+The frontend of Spotter is a high-performance React application designed to provide a seamless, dark-mode-first user experience[cite: 4]. It serves as the primary interface for users to interact with fitness guides, AI coaching, and personal progress tracking[cite: 4].
 
-## Technology Stack
-- **Frontend:** React, Tailwind CSS, Redux (State Management)
-- **Backend:** Node.js, Express.js
-- **Database:** MongoDB
-- **Authentication:** JWT (JSON Web Tokens)
+## Core Technologies
+- **Library:** React (Functional components, Hooks)[cite: 4]
+- **Styling:** Tailwind CSS (Responsive design, custom theme implementation)[cite: 4]
+- **State Management:** Redux Toolkit (Orchestrating global state for user data, training logs, and AI chat history)[cite: 4]
+- **Routing:** React Router (Protected routing for authenticated sessions)[cite: 4]
+- **Optimization:** Vite (Build tool with image optimization plugins)[cite: 4]
 
-## Key Features
-- **AI Coach Assistant:** Real-time, intelligent responses to user fitness queries.
-- **Anatomy & Exercises:** Interactive mapping to visualize target muscle groups.
-- **Admin Dashboard:** Custom interface for content management, user control, and dashboard analytics.
-- **Role-Based Routing:** Protected routes and secure API endpoints.
+## Key Technical Details
+- **Component-Driven Development:** Modular structure for reusable UI elements (Buttons, Cards, Modals)[cite: 4].
+- **Dark Mode Implementation:** Full implementation of the pitch-black branding (`#000000`) with electric blue (`#007BFF`) accent system[cite: 4].
+- **Interactive Anatomy Map:** DOM-based interactions to visualize target muscle groups dynamically[cite: 4].
+- **AI Coach UI:** Real-time chat interface with loading states and markdown rendering for AI responses[cite: 4].
+- **Responsive Design:** Mobile-first approach ensuring consistent experience across all screen sizes[cite: 4].
