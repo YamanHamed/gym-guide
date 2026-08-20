@@ -1,16 +1,20 @@
-# React + Vite
+# Spotter: Admin Dashboard Architecture
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+## Overview
+The Spotter Admin Dashboard is a secure, role-based management interface designed to give administrators full control over platform content, exercise libraries, user metrics, and system configurations. It serves as the operational command center for the full-stack application.
 
-Currently, two official plugins are available:
+## Frontend Implementation (React & Tailwind CSS)
+- **Protected Route Access:** Guarded by client-side router checks ensuring only users with verified admin privileges can access the dashboard views.
+- **Component Structure:** Modular layout featuring statistics cards, dynamic data tables, modal forms for content creation/editing, and real-time activity indicators.
+- **Styling:** Built strictly within the dark-mode visual identity (`#000000` pitch-black background with `#007BFF` electric blue accents) using Tailwind CSS.
+- **State Management:** Redux Toolkit handles asynchronous data fetching, local caching, and optimistic UI updates when modifying exercises or platform settings.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+## Backend & API Integration (Node.js, Express & MongoDB)
+- **Role-Based Access Control (RBAC) Middleware:** Intercepts API requests to verify user roles via JSON Web Tokens (JWT) before granting access to sensitive administrative endpoints.
+- **CRUD Operations & Endpoints:**
+  - **Exercise Library Management:** Secure endpoints to create, update, or remove exercises, target muscle mappings, and instructional guides.
+  - **User & Content Moderation:** Endpoints to view active user statistics, manage account permissions, and oversee platform data integrity.
+- **Database Schemas:** Optimized Mongoose schemas supporting efficient querying and relational data structures between admin operations and the core database.
 
-## React Compiler
-
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
-
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+## Related Repositories
+* [backend Repository](https://github.com/YamanHamed/gym-guide-backend) .
