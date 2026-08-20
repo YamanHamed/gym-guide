@@ -9,16 +9,16 @@ export default defineConfig({
     react(),
     ViteImageOptimizer({
       png: {
-        quality: 80,
+        quality: 70,
       },
       jpeg: {
-        quality: 80,
+        quality: 70,
       },
       webp: {
-        quality: 80,
+        quality: 70,
       },
       avif: {
-        quality: 75,
+        quality: 70,
       },
     }),
     tailwindcss(),
